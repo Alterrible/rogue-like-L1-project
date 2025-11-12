@@ -59,7 +59,7 @@ struct joueur {
 };
 
 // a finir 
-struct inventaire {
+struct carte {
     static const int nb_murs = 5; #valeur a réfléchir
     static const int nb_portes = 3; #valeur a réfléchir
     static const int nb_monstres = 2; #valeur a réfléchir
@@ -69,4 +69,5 @@ struct inventaire {
     Item armure[nb_monstres ];
 };
 //
+
 
