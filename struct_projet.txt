@@ -27,6 +27,8 @@ struct item {
     std::string nom;
     std::string description;
     bool sur_carte;
+	bool stackable;
+	bool consommable;
     Coord coordonnee
     int stat_item[5]
 };
@@ -56,4 +58,15 @@ struct joueur {
     Statistiques stats
 };
 
+// a finir 
+struct inventaire {
+    static const int nb_murs = 5; #valeur a réfléchir
+    static const int nb_portes = 3; #valeur a réfléchir
+    static const int nb_monstres = 2; #valeur a réfléchir
+    static const int nb_items = 2; #valeur a réfléchir
+    Coord mur[nb_murs];
+    porte main[nb_portes];
+    Item armure[nb_monstres ];
+};
+//
 
