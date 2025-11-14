@@ -1,0 +1,38 @@
+Si statistiques_ouvert = vrai alors
+    Afficher "Menu des statistiques ouvert, entrez le numéro à modifier :"
+    Afficher "1 - PV"
+    Afficher "2 - Armure"
+    Afficher "3 - Force"
+    Afficher "4 - Vitesse"
+    Afficher "5 - Vision"
+    Lire choix
+
+    Si choix = 1 alors
+        Afficher "Nouveau PV :"
+        Lire nouvelle_valeur
+        joueur.stat.pv <- nouvelle_valeur
+
+    Sinon si choix = 2 alors
+        Afficher "Nouvelle armure :"
+        Lire nouvelle_valeur
+        joueur.stat.armure <- nouvelle_valeur
+
+    Sinon si choix = 3 alors
+        Afficher "Nouvelle force :"
+        Lire nouvelle_valeur
+        joueur.stat.force <- nouvelle_valeur
+
+    Sinon si choix = 4 alors
+        Afficher "Nouvelle vitesse :"
+        Lire nouvelle_valeur
+        joueur.stat.vitesse <- nouvelle_valeur
+
+    Sinon si choix = 5 alors
+        Afficher "Nouvelle vision :"
+        Lire nouvelle_valeur
+        joueur.stat.vision <- nouvelle_valeur
+    FinSi
+
+Sinon
+    Afficher "Menu statistiques fermé."
+FinSi

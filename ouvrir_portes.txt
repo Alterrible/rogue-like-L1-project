@@ -1,0 +1,34 @@
+
+
+Procédure ouvrir_porte(carte, joueur)
+    porte_trouvee ← faux
+    porte_ouverte ← faux
+
+    x_joueur ← joueur.coordonnee.x
+    y_joueur ← joueur.coordonnee.y
+
+    Pour i de 0 à carte.NB_PORTES - 1 faire
+        x_porte ← carte.porte[i].position.x
+        y_porte ← carte.porte[i].position.y
+
+        Si (x_porte >= x_joueur - 1 et x_porte <= x_joueur + 1) et
+           (y_porte >= y_joueur - 1 et y_porte <= y_joueur + 1) alors
+
+            porte_trouvee ← vrai
+            Si joueur.stat.niveau >= carte.porte[i].numero alors
+                carte.porte[i].ouverte ← vrai
+                porte_ouverte ← vrai
+                Afficher "La porte à proximité est ouverte !"
+            Sinon
+                Afficher "Niveau insuffisant pour ouvrir la porte voisine."
+            FinSi
+            Sortir de la boucle  // On ouvre ou fail sur la première porte rencontrée
+        FinSi
+    FinPour
+
+    Si non porte_trouvee alors
+        Afficher "Il n'y a pas de porte aux alentours."
+    FinSi
+FinProcédure
+
+
