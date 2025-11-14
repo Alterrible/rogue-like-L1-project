@@ -1,0 +1,64 @@
+struct Coord {
+    int x;
+    int y;
+}; 
+
+struct Statistiques {
+    int pv;
+    int armure;
+    int force;
+    int vitesse;
+    int vision;
+    int niveau;
+};
+
+struct Item {
+    int id;
+    string nom;
+    string description;
+    bool sur_carte;
+	bool stackable;
+	bool consommable;
+    Coord coordonnee;
+    int stat_item[5];
+};
+
+struct Inventaire {
+    static const int TAILLE_INV = 5; // valeur a réfléchir
+    static const int TAILLE_SLOTS_MAIN = 3; // valeur a réfléchir
+    static const int TAILLE_SLOTS_ARMURE = 2; // valeur a réfléchir
+    Item inv[TAILLE_INV];
+    Item armure[TAILLE_SLOTS_ARMURE];
+    Item main[TAILLE_SLOTS_MAIN];
+};
+
+struct monstre {
+    Coord coordonnee;
+    int pv;
+    int degats;
+    int vision;
+    int xp;
+    int id_drop;
+};
+
+struct Joueur {
+    Coord coordonnee;
+    Inventaire inventaire;
+    Statistiques stats;
+};
+
+struct Porte {
+    Coord coordonnee;
+    int pre_requis;
+};
+
+struct Carte {
+    static const int NB_MURS = 0; ????
+    static const int NB_PORTES = 10;
+    static const int NB_MONSTRES = 26;
+    static const int NB_ITEMS = 0;
+    Coord mur[NB_MURS];
+    Porte main[NB_PORTES];
+    Item armure[NB_MONSTRES];
+    Item armure[NB_ITEMS];
+};

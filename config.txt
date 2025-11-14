@@ -1,0 +1,73 @@
+VICTOIRE 
+DEFAITE
+
+symbole type nom description stat1 stat2 stat3 stat4 stat5 stat6 
+$ OBJECTIF
+@ JOUEUR 1 0 0 0 0 0
+# MURE
+
+a ITEM "item1" "description1" 1 1 1 1 1 1 
+b ITEM "item2" "description2" 1 1 1 1 1 1
+c ITEM "item3" "description3" 1 1 1 1 1 1
+d ITEM "item4" "description4" 1 1 1 1 1 1
+e ITEM "item5" "description5" 1 1 1 1 1 1 
+f ITEM "item6" "description6" 1 1 1 1 1 1
+g ITEM "item7" "description7" 1 1 1 1 1 1
+h ITEM "item8" "description8" 1 1 1 1 1 1
+i ITEM "item9" "description9" 1 1 1 1 1 1
+j ITEM "ite10" "description10" 1 1 1 1 1 1
+k ITEM "item11" "description11" 1 1 1 1 1 1
+l ITEM "item12" "description12" 1 1 1 1 1 1
+m ITEM "item13" "description13" 1 1 1 1 1 1
+n ITEM "item14" "description14" 1 1 1 1 1 1
+o ITEM "item15" "description15" 1 1 1 1 1 1
+p ITEM "item16" "description16" 1 1 1 1 1 1
+q ITEM "item17" "description17" 1 1 1 1 1 1
+r ITEM "item18" "description18" 1 1 1 1 1 1
+s ITEM "item19" "description19" 1 1 1 1 1 1
+t ITEM "item20" "description20" 1 1 1 1 1 1
+u ITEM "item21" "description21" 1 1 1 1 1 1
+v ITEM "item22" "description22" 1 1 1 1 1 1
+w ITEM "item23" "description23" 1 1 1 1 1 1
+x ITEM "item24" "description24" 1 1 1 1 1 1
+y ITEM "item25" "description25" 1 1 1 1 1 1
+z ITEM "item26" "description26" 1 1 1 1 1 1
+
+A MONSTRE "" "" 1 1 1 1 1 1
+B MONSTRE "" "" 1 1 1 1 1 1
+C MONSTRE "" "" 1 1 1 1 1 1
+D MONSTRE "" "" 1 1 1 1 1 1
+E MONSTRE "" "" 1 1 1 1 1 1
+F MONSTRE "" "" 1 1 1 1 1 1
+G MONSTRE "" "" 1 1 1 1 1 1
+H MONSTRE "" "" 1 1 1 1 1 1
+I MONSTRE "" "" 1 1 1 1 1 1
+J MONSTRE "" "" 1 1 1 1 1 1
+K MONSTRE "" "" 1 1 1 1 1 1
+L MONSTRE "" "" 1 1 1 1 1 1
+M MONSTRE "" "" 1 1 1 1 1 1
+N MONSTRE "" "" 1 1 1 1 1 1
+O MONSTRE "" "" 1 1 1 1 1 1
+P MONSTRE "" "" 1 1 1 1 1 1
+Q MONSTRE "" "" 1 1 1 1 1 1
+R MONSTRE "" "" 1 1 1 1 1 1
+S MONSTRE "" "" 1 1 1 1 1 1
+T MONSTRE "" "" 1 1 1 1 1 1
+U MONSTRE "" "" 1 1 1 1 1 1
+V MONSTRE "" "" 1 1 1 1 1 1
+W MONSTRE "" "" 1 1 1 1 1 1
+X MONSTRE "" "" 1 1 1 1 1 1
+Y MONSTRE "" "" 1 1 1 1 1 1
+Z MONSTRE "" "" 1 1 1 1 1 1
+
+symbole type 
+0 PORTE 0
+1 PORTE 0
+2 PORTE 0
+3 PORTE 0
+4 PORTE 0
+5 PORTE 0
+6 PORTE 0
+7 PORTE 0
+8 PORTE 0
+9 PORTE 0
