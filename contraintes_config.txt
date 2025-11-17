@@ -1,45 +1,17 @@
-config liste 
+CONST TAILLE_MAX = 1840
 
-TAILLE_MAX = 1840
-
-
+// --- Structures de listes génériques ---
 TYPE Liste_id_contraintes = ENREGISTREMENT
-    nb : ENTIER                          // Nombre d’identifiants dans la liste
-    ids : TABLEAU[TAILLE_MAX] D'ENTIER  // Tableau des identifiants (entiers)
+    nb : ENTIER                                // Nombre d’identifiants dans la liste
+    ids : TABLEAU[TAILLE_MAX] D'ENTIER        // Tableau des identifiants (entiers)
 FIN ENREGISTREMENT
 
 TYPE Liste_Id_Equipements = ENREGISTREMENT
-    taille : ENTIER                         // Nombre d’éléments dans la liste
-    ids : TABLEAU[TAILLE_MAX] D'ENTIER     // Tableau contenant les identifiants d’équipements
-FIN ENREGISTREMENT 
-
-
-
-TYPE Config_conditions_jeu = ENREGISTREMENT
-    contraintes : LISTE DE CONTRAINTES  // Liste ou tableau de toutes les contraintes possibles (type à définir)
-    nbContraintes : ENTIER               // Nombre total de contraintes possibles
-    victoire : Liste_id_contraintes     // Liste des identifiants correspondant aux conditions de victoire
-    defaite : Liste_id_contraintes      // Liste des identifiants correspondant aux conditions de défaite
+    taille : ENTIER                           // Nombre d’éléments dans la liste
+    ids : TABLEAU[TAILLE_MAX] D'ENTIER        // Tableau contenant les identifiants d’équipements
 FIN ENREGISTREMENT
 
-FONCTION verifier_contraintes(possede : Liste_id_contraintes, requis : Liste_id_contraintes) → BOOLEEN
-    SI possede.nb < requis.nb ALORS
-        RETOURNER FAUX      // Pas assez d’éléments pour satisfaire la contrainte
-    FIN SI
-
-    POUR i DE 0 À requis.nb - 1 FAIRE
-        SI possede.ids[i] < requis.ids[i] ALORS
-            RETOURNER FAUX  // L’id possédé est inférieur à l’id requis, contrainte non satisfaite
-        FIN SI
-    FIN POUR
-
-    RETOURNER VRAI // Toutes les contraintes satisfaites ou dépassées
-FIN FONCTION
-
-
-
-
-
+// --- Structures de configuration ---
 TYPE Config_item = ENREGISTREMENT
     id : ENTIER
     symbole : CARACTÈRE
@@ -47,9 +19,6 @@ TYPE Config_item = ENREGISTREMENT
     description : CHAINE
     bonus : TABLEAU[6] D'ENTIER
 FIN ENREGISTREMENT
-
-
-
 
 TYPE Config_monstre = ENREGISTREMENT
     id : ENTIER
@@ -60,18 +29,15 @@ TYPE Config_monstre = ENREGISTREMENT
     typeIA : ENTIER
     id_item_contrainte : ENTIER
     contrainte_stats : TABLEAU[6] D'ENTIER
-    inventaire_ids : Liste_Id_Equipements   // Liste d’ids d’équipements possédés par le monstre
+    inventaire_ids : Liste_Id_Equipements      // Liste d’ids d’équipements possédés par le monstre
 FIN ENREGISTREMENT
-
 
 TYPE Config_porte = ENREGISTREMENT
     id : ENTIER
     symbole : CARACTÈRE
-    id_item_contrainte : ENTIER              // Id de l’équipement requis pour la porte
+    id_item_contrainte : ENTIER                // Id de l’équipement requis pour la porte
     contrainte_stats : TABLEAU[6] D'ENTIER
 FIN ENREGISTREMENT
-
-
 
 TYPE Config_joueur = ENREGISTREMENT
     id : ENTIER
@@ -79,8 +45,71 @@ TYPE Config_joueur = ENREGISTREMENT
     nom : CHAINE
     description : CHAINE
     stats : TABLEAU[6] D'ENTIER
-    inventaire_ids : Liste_Id_Equipements    // Liste d’ids d’équipements possédés par le joueur
+    inventaire_ids : Liste_Id_Equipements      // Liste d’ids d’équipements possédés par le joueur
+    actif : BOOLEEN
 FIN ENREGISTREMENT
 
+TYPE Config_conditions_jeu = ENREGISTREMENT
+    contraintes : TABLEAU[TAILLE_MAX] DE Contrainte  // Toutes les contraintes possibles (à définir selon besoin réel)
+    nbContraintes : ENTIER
+    victoire : Liste_id_contraintes           // Liste des identifiants correspondant aux conditions de victoire
+    defaite : Liste_id_contraintes            // Liste des identifiants correspondant aux conditions de défaite
+FIN ENREGISTREMENT
 
+// --- Structures d’entités dynamiques ---
+TYPE Joueur = ENREGISTREMENT
+    x : ENTIER
+    y : ENTIER
+    inventaire : TABLEAU[TAILLE_MAX] D'ENTIER
+    nb_inventaire : ENTIER
+    stat : TABLEAU[6] D'ENTIER
+FIN ENREGISTREMENT
+
+TYPE Monstre = ENREGISTREMENT
+    x : ENTIER
+    y : ENTIER
+    idConfig : ENTIER
+    stats : TABLEAU[6] D'ENTIER
+    actif : BOOLEEN
+FIN ENREGISTREMENT
+
+TYPE Carte = ENREGISTREMENT
+    largeur : ENTIER
+    hauteur : ENTIER
+    cases : TABLEAU[23][80] DE CARACTERE
+    visible : TABLEAU[23][80] DE BOOLEEN     // Pour le fog of war
+    actif : BOOLEEN
+FIN ENREGISTREMENT
+
+// --- Structure principale du jeu ---
+TYPE Jeu = ENREGISTREMENT
+    carte : Carte
+    joueur : Joueur
+    cfg_joueur : Config_joueur
+    cfg_items : TABLEAU[26] DE Config_item
+    nb_cfg_items : ENTIER
+    cfg_monstres : TABLEAU[26] DE Config_monstre
+    nb_cfg_monstres : ENTIER
+    cfg_portes : TABLEAU[10] DE Config_porte
+    nb_cfg_portes : ENTIER
+    cfgConditions : Config_conditions_jeu
+    cfgSymboles : TABLE_CONFIG_SYMBOLES      // Définir selon usage réel
+    monstres : TABLEAU[TAILLE_MAX] DE Monstre
+    nb_monstres : ENTIER
+    etat_termine : BOOLEEN
+    victoire : BOOLEEN
+FIN ENREGISTREMENT
+
+// --- Exemple de fonction de vérification des contraintes ---
+FONCTION verifier_contraintes(possede : Liste_id_contraintes, requis : Liste_id_contraintes) → BOOLEEN
+    SI possede.nb < requis.nb ALORS
+        RETOURNER FAUX
+    FIN SI
+    POUR i DE 0 À requis.nb - 1 FAIRE
+        SI possede.ids[i] < requis.ids[i] ALORS
+            RETOURNER FAUX
+        FIN SI
+    FIN POUR
+    RETOURNER VRAI
+FIN FONCTION
 
