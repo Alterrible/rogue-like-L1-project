@@ -1,0 +1,86 @@
+config liste 
+
+TAILLE_MAX = 1840
+
+
+TYPE Liste_id_contraintes = ENREGISTREMENT
+    nb : ENTIER                          // Nombre d’identifiants dans la liste
+    ids : TABLEAU[TAILLE_MAX] D'ENTIER  // Tableau des identifiants (entiers)
+FIN ENREGISTREMENT
+
+TYPE Liste_Id_Equipements = ENREGISTREMENT
+    taille : ENTIER                         // Nombre d’éléments dans la liste
+    ids : TABLEAU[TAILLE_MAX] D'ENTIER     // Tableau contenant les identifiants d’équipements
+FIN ENREGISTREMENT 
+
+
+
+TYPE Config_conditions_jeu = ENREGISTREMENT
+    contraintes : LISTE DE CONTRAINTES  // Liste ou tableau de toutes les contraintes possibles (type à définir)
+    nbContraintes : ENTIER               // Nombre total de contraintes possibles
+    victoire : Liste_id_contraintes     // Liste des identifiants correspondant aux conditions de victoire
+    defaite : Liste_id_contraintes      // Liste des identifiants correspondant aux conditions de défaite
+FIN ENREGISTREMENT
+
+FONCTION verifier_contraintes(possede : Liste_id_contraintes, requis : Liste_id_contraintes) → BOOLEEN
+    SI possede.nb < requis.nb ALORS
+        RETOURNER FAUX      // Pas assez d’éléments pour satisfaire la contrainte
+    FIN SI
+
+    POUR i DE 0 À requis.nb - 1 FAIRE
+        SI possede.ids[i] < requis.ids[i] ALORS
+            RETOURNER FAUX  // L’id possédé est inférieur à l’id requis, contrainte non satisfaite
+        FIN SI
+    FIN POUR
+
+    RETOURNER VRAI // Toutes les contraintes satisfaites ou dépassées
+FIN FONCTION
+
+
+
+
+
+TYPE Config_item = ENREGISTREMENT
+    id : ENTIER
+    symbole : CARACTÈRE
+    nom : CHAINE
+    description : CHAINE
+    bonus : TABLEAU[6] D'ENTIER
+FIN ENREGISTREMENT
+
+
+
+
+TYPE Config_monstre = ENREGISTREMENT
+    id : ENTIER
+    symbole : CARACTÈRE
+    nom : CHAINE
+    description : CHAINE
+    stats_base : TABLEAU[6] D'ENTIER
+    typeIA : ENTIER
+    id_item_contrainte : ENTIER
+    contrainte_stats : TABLEAU[6] D'ENTIER
+    inventaire_ids : Liste_Id_Equipements   // Liste d’ids d’équipements possédés par le monstre
+FIN ENREGISTREMENT
+
+
+TYPE Config_porte = ENREGISTREMENT
+    id : ENTIER
+    symbole : CARACTÈRE
+    id_item_contrainte : ENTIER              // Id de l’équipement requis pour la porte
+    contrainte_stats : TABLEAU[6] D'ENTIER
+FIN ENREGISTREMENT
+
+
+
+TYPE Config_joueur = ENREGISTREMENT
+    id : ENTIER
+    symbole : CARACTÈRE
+    nom : CHAINE
+    description : CHAINE
+    stats : TABLEAU[6] D'ENTIER
+    inventaire_ids : Liste_Id_Equipements    // Liste d’ids d’équipements possédés par le joueur
+FIN ENREGISTREMENT
+
+
+
