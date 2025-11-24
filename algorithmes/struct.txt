@@ -100,6 +100,22 @@ TYPE Jeu = ENREGISTREMENT
     victoire : BOOLEEN
 FIN ENREGISTREMENT
 
+TYPE Contrainte = ENREGISTREMENT
+
+id : ENTIER
+description : CHAINE
+stats_min : TABLEAU[6] D'ENTIER
+
+FIN ENREGISTREMENT
+
+Rôle : Représente une contrainte de jeu. 
+- id : identifiant unique de la contrainte
+- description : texte explicatif (ex. "Force ≥ 5 pour ouvrir la porte")
+- stats_min : tableau de 6 entiers indiquant les valeurs minimales requises 
+              pour les statistiques du joueur (comparées aux stats du joueur).
+
+
+
 // --- Exemple de fonction de vérification des contraintes ---
 FONCTION verifier_contraintes(possede : Liste_id_contraintes, requis : Liste_id_contraintes) → BOOLEEN
     SI possede.nb < requis.nb ALORS
@@ -112,4 +128,5 @@ FONCTION verifier_contraintes(possede : Liste_id_contraintes, requis : Liste_id_
     FIN POUR
     RETOURNER VRAI
 FIN FONCTION
+
 
