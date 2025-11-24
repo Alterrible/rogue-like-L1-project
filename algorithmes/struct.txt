@@ -47,6 +47,8 @@ TYPE Config_joueur = ENREGISTREMENT
     stats : TABLEAU[6] D'ENTIER
     inventaire_ids : Liste_Id_Equipements      // Liste d’ids d’équipements possédés par le joueur
     actif : BOOLEEN
+    spawn_x : ENTIER
+    spawn_y : ENTIER
 FIN ENREGISTREMENT
 
 TYPE Config_conditions_jeu = ENREGISTREMENT
