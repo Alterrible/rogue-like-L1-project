@@ -30,6 +30,8 @@ TYPE Config_monstre = ENREGISTREMENT
     id_item_contrainte : ENTIER
     contrainte_stats : TABLEAU[6] D'ENTIER
     inventaire_ids : Liste_Id_Equipements      // Liste d’ids d’équipements possédés par le monstre
+    spawn_x : ENTIER
+    spawn_y : ENTIER
 FIN ENREGISTREMENT
 
 TYPE Config_porte = ENREGISTREMENT
