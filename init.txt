@@ -1,0 +1,107 @@
+[Items]
+nb = 26
+
+# id | symbole | nom | description | bonus[6]
+1 = 'a'; "Anneau de force"; "Augmente la force"; 3,0,0,0,0,0
+2 = 'b'; "Bottes agiles"; "Vitesse améliorée"; 0,4,0,0,0,0
+3 = 'c'; "Tome ancien"; "Savoir interdit"; 0,0,3,0,0,0
+4 = 'd'; "Potion de vie"; "Restaure la vitalité"; 0,0,0,5,0,0
+5 = 'e'; "Cape d’ombre"; "Camouflage léger"; 0,0,0,0,3,0
+6 = 'f'; "Gants de précision"; "Améliore l’adresse"; 0,2,1,0,0,0
+7 = 'g'; "Casque runique"; "Protège des attaques magiques"; 0,0,2,3,0,0
+8 = 'h'; "Amulette du sage"; "Stimule l’esprit"; 0,0,4,0,0,0
+9 = 'i'; "Bracelet robuste"; "Renforce légèrement"; 1,1,0,1,0,0
+10 = 'j'; "Sandales légères"; "Pas silencieux"; 0,3,0,0,1,0
+11 = 'k'; "Potion de mana"; "Restaure l’énergie magique"; 0,0,0,0,3,0
+12 = 'l'; "Bouclier en bois"; "Protection basique"; 0,0,0,2,0,1
+13 = 'm'; "Épée courte"; "Arme simple mais fiable"; 2,0,0,0,0,0
+14 = 'n'; "Hache lourde"; "Inflige de lourds dégâts"; 4,0,0,0,0,0
+15 = 'o'; "Grimoire brûlé"; "Accroît les sorts de feu"; 0,0,3,0,2,0
+16 = 'p'; "Collier du vent"; "Accélère les mouvements"; 0,3,0,0,0,1
+17 = 'q'; "Potion d’endurance"; "Améliore la constitution"; 0,0,0,3,0,2
+18 = 'r'; "Cuirasse de fer"; "Protection avancée"; 0,0,0,4,0,0
+19 = 's'; "Pique acérée"; "Augmente les dégâts perforants"; 3,1,0,0,0,0
+20 = 't'; "Pierre de clairvoyance"; "Améliore la perception"; 0,0,2,0,3,0
+21 = 'u'; "Cape flamboyante"; "Boost de charisme"; 0,0,0,0,0,4
+22 = 'v'; "Gourde de vigueur"; "Rend plus résistant"; 0,0,0,2,2,0
+23 = 'w'; "Talisman de chance"; "Améliore la réussite"; 0,1,1,0,1,1
+24 = 'x'; "Orbe instable"; "Puissance magique dangereuse"; 0,0,5,0,0,0
+25 = 'y'; "Dague furtive"; "Arme discrète"; 1,3,0,0,0,0
+26 = 'z'; "Couronne antique"; "Relique oubliée"; 0,0,4,1,0,2
+
+
+[Monstres]
+nb = 26
+
+# id | symbole | nom | description | stats_base[6] | IA | id_item_contrainte | contrainte_stats[6]
+1 = 'g'; "Gobelin"; "Petit mais agressif"; 3,2,1,1,1,0; 0; 0; 0,0,0,0,0,0
+2 = 'O'; "Ogre"; "Lourd et puissant"; 8,3,1,3,3,0; 1; 1; 5,0,0,0,0,0
+3 = 'M'; "Mage noir"; "Magie sombre"; 2,2,8,2,2,0; 2; 3; 0,0,8,0,0,0
+4 = 'H'; "Harpyie"; "Rapide et imprévisible"; 1,7,3,1,2,0; 1; 2; 0,7,0,0,0,0
+5 = 'T'; "Troll"; "Régénération lente mais continue"; 7,2,1,6,3,0; 1; 4; 0,0,0,6,0,0
+6 = 'S'; "Serpent géant"; "Venimeux et silencieux"; 2,6,2,1,3,0; 0; 5; 0,6,0,0,0,0
+7 = 'K'; "Kobold"; "Fourbe et lâche"; 2,3,1,1,2,0; 0; 10; 0,3,0,0,0,0
+8 = 'F'; "Fantôme"; "Insaisissable et glacial"; 1,1,5,0,5,0; 2; 24; 0,0,5,0,0,0
+9 = 'D'; "Dragonnet"; "Petit mais cracheur de flammes"; 4,3,2,3,2,0; 1; 20; 0,0,2,0,2,0
+10 = 'R'; "Rat mutant"; "Très rapide"; 1,5,1,1,1,0; 0; 7; 0,5,0,0,0,0
+11 = 'A'; "Archer squelettique"; "Tire avec précision"; 2,4,2,1,1,0; 1; 6; 0,4,0,0,0,0
+12 = 'P'; "Pillard"; "Humain hostile"; 4,3,1,2,1,0; 0; 13; 2,0,0,0,0,0
+13 = 'W'; "Warg"; "Prédateur féroce"; 5,6,1,2,3,0; 1; 19; 5,6,0,0,0,0
+14 = 'L'; "Liche"; "Maître des morts"; 1,1,9,3,3,0; 2; 15; 0,0,9,0,0,0
+15 = 'E'; "Élémentaire de pierre"; "Lent mais indestructible"; 7,1,0,8,2,0; 1; 18; 7,0,0,8,0,0
+16 = 'B'; "Banshee"; "Hurlement mortel"; 0,3,7,2,4,0; 2; 21; 0,0,7,0,4,0
+17 = 'C'; "Cyclope"; "Œil unique mais redoutable"; 9,2,1,5,2,0; 1; 14; 9,0,0,0,0,0
+18 = 'Y'; "Yéti"; "Fort et endurant"; 8,4,1,4,3,0; 1; 17; 8,0,0,4,0,0
+19 = 'Z'; "Zombie"; "Lent mais résistant"; 3,1,0,6,1,0; 0; 22; 0,0,0,6,0,0
+20 = 'N'; "Nécromancien"; "Contrôle des morts"; 1,2,8,2,3,0; 2; 8; 0,0,8,0,3,0
+21 = 'Q'; "Quasit"; "Démon mineur"; 2,5,4,2,2,0; 1; 11; 0,5,4,0,0,0
+22 = 'U'; "Ursa"; "Ours monstrueux"; 7,5,1,4,2,0; 1; 23; 7,5,0,4,0,0
+23 = 'V'; "Vampire"; "Rapide, puissant et charismatique"; 4,6,5,2,5,0; 2; 25; 0,6,5,0,5,0
+24 = 'J'; "Jinn"; "Puissance magique instable"; 1,3,9,1,4,0; 2; 26; 0,0,9,0,4,0
+25 = 'X'; "Xolotl"; "Créature inconnue"; 6,4,6,3,3,0; 1; 16; 6,4,6,0,0,0
+26 = 'R'; "Ruche vivante"; "Essaim agressif animé"; 2,8,1,3,2,0; 1; 12; 0,8,0,0,0,0
+
+
+[Portes]
+nb = 10
+
+# id | symbole | id_contrainte
+1 = '0'; 1;
+2 = '1'; 3;
+3 = '2'; 2;
+4 = '3'; 1;
+5 = '4'; 3;
+6 = '5'; 2;
+7 = '6'; 1;
+8 = '7'; 3;
+9 = '8'; 2;
+10 = '9'; 1;
+
+
+[Joueur]
+nom = "Aventurier"
+description = "Un héros sans histoire... pour l'instant."
+stats = 5,5,5,5,5,5
+
+
+[Contraintes]
+nb = 3
+
+# id | description | stats_min[6]
+1 = "Force minimale pour soulever un rocher"; 5,0,0,0,0,0
+2 = "Agilité nécessaire pour franchir un piège"; 0,7,0,0,0,0
+3 = "Intelligence requise pour déverrouiller une porte"; 0,0,8,0,0,0
+
+
+[Conditions_jeu]
+nbContraintes = 3
+
+
+[Conditions_victoire]
+nb = 2
+1, 3
+
+
+[Conditions_defaite]
+nb = 1
+2

@@ -2,6 +2,7 @@
 using namespace std;
 #pragma once
 #include <string>
+#include <fstream>
 
 // --- Constantes ---
 const int TAILLE_MAX = 1840;
@@ -131,9 +132,7 @@ struct Jeu {
 };
 
 // --- Exemple de fonction de vérification des contraintes ---
-bool verifier_contraintes(const Liste_id_contraintes& possede,
-                          const Liste_id_contraintes& requis)
-{
+bool verifier_contraintes(const Liste_id_contraintes& possede, const Liste_id_contraintes& requis){
     if (possede.nb < requis.nb)
         return false;
 
