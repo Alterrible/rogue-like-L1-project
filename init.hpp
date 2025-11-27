@@ -1,6 +1,11 @@
+#ifndef INIT_HPP
+#define INIT_HPP
+
+using namespace std;
 #include <iostream>
 #include <fstream>
-using namespace std;
+#include <string>
+#include "enregistrement.hpp"
 
 bool charger_configuration(const string& fichier){
     fstream flux;
@@ -10,19 +15,26 @@ bool charger_configuration(const string& fichier){
         cout << "Erreur : impossible d'ouvrir " << fichier << endl;
         return false;
     }
+    
+    // Remise à zéro des structures de config
+    // jeu.nb_cfg_items = 0;
+    // jeu.nb_cfg_monstres = 0;
+    // jeu.nb_cfg_portes = 0;
+    // jeu.cfgConditions.nbContraintes = 0;
+    // jeu.cfgConditions.victoire.nb = 0;
+    // jeu.cfgConditions.defaite.nb = 0;
 
-    int step = 0;
-// logique : on passe
+    int section = 0;
     string ligne;
     while (getline(flux, ligne)) {
         string mot;
         for (int i = 0; i <= ligne.size(); ++i) {
             if (i == ligne.size() || ligne[i] == ' ') {
                 if (!mot.empty()) {
-                    if (mot == '[') step++
-                    if (step == 1){
-                        jeu.
+                    if (ligne[0] == '['){
+                        section++;
                     }
+                // items
                     mot.clear();
                 }
             } else {
