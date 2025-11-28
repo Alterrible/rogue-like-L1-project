@@ -4,7 +4,13 @@
 #include <string>
 
 // --- Constantes ---
-const int TAILLE_MAX = 1840;
+const int TAILLE_MAP_X = 80;
+const int TAILLE_MAP_Y = 23;
+const int TAILLE_MAX = TAILLE_MAP_X*TAILLE_MAP_Y;
+const int TAILLE_ITEMS = 26;
+const int TAILLE_MONSTRES = 26;
+const int TAILLE_PORTE = 26;
+const int NB_STATS = 6;
 
 // --- Structures de listes génériques ---
 struct Liste_id_contraintes {
@@ -21,7 +27,7 @@ struct Liste_Id_Equipements {
 struct Contrainte {
     int id;
     string description;
-    int stats_min[6];
+    int stats_min[NB_STATS];
 };
 
 // --- Structures de configuration ---
@@ -30,7 +36,7 @@ struct Config_item {
     char symbole;
     string nom;
     string description;
-    int bonus[6];
+    int bonus[NB_STATS];
 };
 
 struct Config_monstre {
@@ -38,20 +44,18 @@ struct Config_monstre {
     char symbole;
     string nom;
     string description;
-    int stats_base[6];
+    int stats_base[NB_STATS];
     int typeIA;
     int id_item_contrainte;
-    int contrainte_stats[6];
+    int contrainte_stats[NB_STATS];
     Liste_Id_Equipements inventaire_ids;  // Equipements du monstre
-    int spawn_x;
-    int spawn_y;
 };
 
 struct Config_porte {
     int id;
     char symbole;
     int id_item_contrainte;
-    int contrainte_stats[6];
+    int contrainte_stats[NB_STATS];
 };
 
 struct Config_joueur {
@@ -59,7 +63,7 @@ struct Config_joueur {
     char symbole;
     string nom;
     string description;
-    int stats[6];
+    int stats[NB_STATS];
     Liste_Id_Equipements inventaire_ids;
     bool actif;
     int spawn_x;
@@ -79,7 +83,7 @@ struct Joueur {
     int y;
     int inventaire[TAILLE_MAX];
     int nb_inventaire;
-    int stat[6];
+    int stat[NB_STATS];
 };
 
 struct Monstre {
@@ -90,43 +94,44 @@ struct Monstre {
     bool actif;
 };
 
+struct Items {
+    int id;
+    int x;
+    int y;
+    int idConfig;
+};
+
 struct Carte {
     int largeur;
     int hauteur;
-    char cases[23][80];
-    bool visible[23][80];
+    char cases[TAILLE_MAP_Y][TAILLE_MAP_X];      // gpt : correction taille
+    bool visible[TAILLE_MAP_Y][TAILLE_MAP_X];    // gpt : correction taille
     bool actif;
-};
-
-struct TABLE_CONFIG_SYMBOLES {
-    // placeholder ou pas jsp
 };
 
 // --- Structure principale du jeu ---
 struct Jeu {
     Carte carte;
-
     Joueur joueur;
+
     Config_joueur cfg_joueur;
-
-    Config_item cfg_items[26];
-    int nb_cfg_items;
-
-    Config_monstre cfg_monstres[26];
-    int nb_cfg_monstres;
-
-    Config_porte cfg_portes[10];
-    int nb_cfg_portes;
-
+    Config_item cfg_items[TAILLE_ITEMS];
+    Config_monstre cfg_monstres[TAILLE_MONSTRES];
+    Config_porte cfg_portes[TAILLE_PORTE];
     Config_conditions_jeu cfgConditions;
 
-    TABLE_CONFIG_SYMBOLES cfgSymboles;
+    Items items[TAILLE_MAX];
+    int nb_items;
 
     Monstre monstres[TAILLE_MAX];
     int nb_monstres;
 
     bool etat_termine;
     bool victoire;
+
+    int nb_cfg_items;        // gpt : ajouté car utilisé dans afficher_jeu
+    int nb_cfg_monstres;     // gpt : ajouté
+    int nb_cfg_portes;       // gpt : ajouté
 };
 
 #endif

@@ -28,7 +28,7 @@ int decouper(const string& ligne, string mots[], int max_mots) {
 }
 
 
-bool charger_configuration(const string& fichier, Jeu& jeu){
+bool charger_configuration(const string& fichier, Jeu& jeu) {
     fstream flux;
     flux.open(fichier, ios::in);
 
@@ -36,11 +36,12 @@ bool charger_configuration(const string& fichier, Jeu& jeu){
         cout << "Erreur : impossible d'ouvrir " << fichier << endl;
         return false;
     }
-    
+
     // remise à zéro
-    jeu.nb_cfg_items = 0;
-    jeu.nb_cfg_monstres = 0;
-    jeu.nb_cfg_portes = 0;
+    jeu.nb_cfg_items = 0;            // gpt : ajouté
+    jeu.nb_cfg_monstres = 0;         // gpt : ajouté
+    jeu.nb_cfg_portes = 0;           // gpt : ajouté
+
     jeu.cfgConditions.nbContraintes = 0;
     jeu.cfgConditions.victoire.nb = 0;
     jeu.cfgConditions.defaite.nb = 0;
@@ -63,57 +64,58 @@ bool charger_configuration(const string& fichier, Jeu& jeu){
 
         // items
         if (section == 1) {
-            Config_item &it = jeu.cfg_items[jeu.nb_cfg_items];
+            Config_item &it = jeu.cfg_items[jeu.nb_cfg_items];   // gpt : correction index
 
             it.id = stoi(mots[0]);
             it.symbole = mots[1][0];
             it.nom = mots[2];
             it.description = mots[3];
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 it.bonus[i] = stoi(mots[4 + i]);
+            }
 
-            jeu.nb_cfg_items++;
+            jeu.nb_cfg_items++;        // gpt : ajout
         }
 
         // monstres
         else if (section == 2) {
-            Config_monstre &m = jeu.cfg_monstres[jeu.nb_cfg_monstres];
+            Config_monstre &m = jeu.cfg_monstres[jeu.nb_cfg_monstres];   // gpt : correction index
 
             m.id = stoi(mots[0]);
             m.symbole = mots[1][0];
             m.nom = mots[2];
             m.description = mots[3];
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 m.stats_base[i] = stoi(mots[4 + i]);
+            }
 
             m.typeIA = stoi(mots[10]);
             m.id_item_contrainte = stoi(mots[11]);
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 m.contrainte_stats[i] = stoi(mots[12 + i]);
+            }
 
             m.inventaire_ids.taille = 0;
-            // valeur d'init maj dans charger_carte
-            m.spawn_x = -1;
-            m.spawn_y = -1;
 
-            jeu.nb_cfg_monstres++;
+            jeu.nb_cfg_monstres++;     // gpt : ajout
         }
 
         // porte
         else if (section == 3) {
-            Config_porte &p = jeu.cfg_portes[jeu.nb_cfg_portes];
+            Config_porte &p = jeu.cfg_portes[jeu.nb_cfg_portes];   // gpt : correction index
 
             p.id = stoi(mots[0]);
             p.symbole = mots[1][0];
             p.id_item_contrainte = stoi(mots[2]);
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 p.contrainte_stats[i] = stoi(mots[3 + i]);
+            }
 
-            jeu.nb_cfg_portes++;
+            jeu.nb_cfg_portes++;       // gpt : ajout
         }
 
         // joueur
@@ -128,8 +130,9 @@ bool charger_configuration(const string& fichier, Jeu& jeu){
             }
 
             else if (mots[0] == "stats") {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < NB_STATS; i++) {
                     jeu.cfg_joueur.stats[i] = stoi(mots[1 + i]);
+                }
             }
 
             jeu.cfg_joueur.symbole = '@';
@@ -144,22 +147,25 @@ bool charger_configuration(const string& fichier, Jeu& jeu){
             c.id = stoi(mots[0]);
             c.description = mots[1];
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 c.stats_min[i] = stoi(mots[2 + i]);
+            }
 
             jeu.cfgConditions.nbContraintes++;
         }
 
         // condition de victoire
-        else if (section == 6) {
-            for (int i = 0; i < nb; i++)
+        else if (section == 7) {      // gpt : corrigé (avant == NB_STATS)
+            for (int i = 0; i < nb; i++) {
                 jeu.cfgConditions.victoire.ids[jeu.cfgConditions.victoire.nb++] = stoi(mots[i]);
+            }
         }
 
         // condition de défaite
-        else if (section == 7) {
-            for (int i = 0; i < nb; i++)
+        else if (section == 8) {     // gpt : corrigé (avant 7)
+            for (int i = 0; i < nb; i++) {
                 jeu.cfgConditions.defaite.ids[jeu.cfgConditions.defaite.nb++] = stoi(mots[i]);
+            }
         }
     }
 
@@ -167,7 +173,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu){
     return true;
 }
 
-bool charger_carte(const string& fichier, Jeu& jeu){
+bool charger_carte(const string& fichier, Jeu& jeu) {
     fstream flux;
     flux.open(fichier, ios::in);
 
@@ -178,6 +184,9 @@ bool charger_carte(const string& fichier, Jeu& jeu){
 
     string ligne;
     int y = 0;
+
+    jeu.nb_items = 0;         // gpt : remis à zéro
+    jeu.nb_monstres = 0;      // gpt : remis à zéro
 
     while (getline(flux, ligne)) {
 
@@ -191,7 +200,22 @@ bool charger_carte(const string& fichier, Jeu& jeu){
                 jeu.joueur.y = y;
             }
 
-            // monstre A-Z
+            // items : a-z
+            if (c >= 'a' && c <= 'z') {
+                for (int i = 0; i < jeu.nb_cfg_items; i++) {   // gpt : correction, avant tu utilisais cfg_monstres
+                    if (jeu.cfg_items[i].symbole == c) {
+
+                        Items &It = jeu.items[jeu.nb_items];
+                        It.x = x;
+                        It.y = y;
+                        It.idConfig = jeu.cfg_items[i].id;
+
+                        jeu.nb_items++;
+                    }
+                }
+            }
+
+            // monstres : A-Z
             if (c >= 'A' && c <= 'Z') {
                 for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
                     if (jeu.cfg_monstres[i].symbole == c) {
@@ -201,7 +225,7 @@ bool charger_carte(const string& fichier, Jeu& jeu){
                         M.y = y;
                         M.idConfig = jeu.cfg_monstres[i].id;
 
-                        for (int k = 0; k < 6; k++)
+                        for (int k = 0; k < NB_STATS; k++)
                             M.stats[k] = jeu.cfg_monstres[i].stats_base[k];
 
                         M.actif = true;
@@ -213,6 +237,9 @@ bool charger_carte(const string& fichier, Jeu& jeu){
         }
         y++;
     }
+
+    jeu.carte.hauteur = y;         // gpt : ajout
+    jeu.carte.largeur = TAILLE_MAP_X;
 
     flux.close();
     return true;
