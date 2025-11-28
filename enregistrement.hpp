@@ -128,3 +128,5 @@ struct Jeu {
     bool etat_termine;
     bool victoire;
 };
+
+#endif
