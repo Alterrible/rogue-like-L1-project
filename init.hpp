@@ -219,3 +219,4 @@ bool charger_carte(const string& fichier, Jeu& jeu){
 }
 
 #endif
+// NOTE : stoi c'est pour transformer string en int
