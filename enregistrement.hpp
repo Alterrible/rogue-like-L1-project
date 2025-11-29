@@ -59,7 +59,6 @@ struct Config_porte {
 };
 
 struct Config_joueur {
-    int id;
     char symbole;
     string nom;
     string description;
@@ -104,8 +103,8 @@ struct Items {
 struct Carte {
     int largeur;
     int hauteur;
-    char cases[TAILLE_MAP_Y][TAILLE_MAP_X];      // gpt : correction taille
-    bool visible[TAILLE_MAP_Y][TAILLE_MAP_X];    // gpt : correction taille
+    char cases[TAILLE_MAP_Y][TAILLE_MAP_X];
+    bool visible[TAILLE_MAP_Y][TAILLE_MAP_X];
     bool actif;
 };
 
@@ -129,9 +128,10 @@ struct Jeu {
     bool etat_termine;
     bool victoire;
 
-    int nb_cfg_items;        // gpt : ajouté car utilisé dans afficher_jeu
-    int nb_cfg_monstres;     // gpt : ajouté
-    int nb_cfg_portes;       // gpt : ajouté
+    // compteurs pour éviter débordement lors de l'initialisation
+    int nb_cfg_items;
+    int nb_cfg_monstres;
+    int nb_cfg_portes;
 };
 
 #endif

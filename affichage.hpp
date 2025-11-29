@@ -26,13 +26,12 @@ void afficher_contrainte(const Contrainte& c) {
         cout << "stats_min[" << i << "] : " << c.stats_min[i] << "\n";
 }
 
-void afficher_jeu(const Jeu& jeu) {
+void afficher_jeu_debug(const Jeu& jeu) {
 
     cout << "[DEBUG]\n";
 
     // ------------------------------------------------------------
     cout << "\n=== CONFIG JOUEUR ===\n";
-    cout << "id : " << jeu.cfg_joueur.id << "\n";
     cout << "symbole : " << jeu.cfg_joueur.symbole << "\n";
     cout << "nom : " << jeu.cfg_joueur.nom << "\n";
     cout << "description : " << jeu.cfg_joueur.description << "\n";
@@ -166,6 +165,103 @@ void afficher_jeu(const Jeu& jeu) {
     cout << "victoire : " << jeu.victoire << "\n";
 
     cout << "\n[FIN DEBUG]\n";
+}
+
+
+
+
+int trouver_item_case(const Jeu& jeu, int x, int y) {
+    for (int i = 0; i < jeu.nb_items; i++) {
+        if (jeu.items[i].x == x && jeu.items[i].y == y) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int trouver_monstre_case(const Jeu& jeu, int x, int y) {
+    for (int i = 0; i < jeu.nb_monstres; i++) {
+        if (jeu.monstres[i].actif && jeu.monstres[i].x == x && jeu.monstres[i].y == y) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void afficher_map(const Jeu& jeu) {
+    for (int y = 0; y < jeu.carte.hauteur; y++) {
+        for (int x = 0; x < jeu.carte.largeur; x++) {
+            cout << jeu.carte.cases[y][x];
+        }
+        cout << endl;
+    }
+}
+
+void inspecter_case(const Jeu& jeu) {
+    int x, y;
+    cout << "Entrez X : ";
+    cin >> x;
+    cout << "Entrez Y : ";
+    cin >> y;
+
+    if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
+        cout << "Coordonnées hors de la carte.\n";
+        return;
+    }
+
+    char c = jeu.carte.cases[y][x];
+    cout << "Case (" << x << "," << y << ") : '" << c << "'\n";
+
+    // Joueur ?
+    if (jeu.joueur.x == x && jeu.joueur.y == y) {
+        cout << "-> Joueur : " << jeu.cfg_joueur.nom << endl;
+        return;
+    }
+
+    // Item ?
+    int idItem = trouver_item_case(jeu, x, y);
+    if (idItem != -1) {
+        int idConf = jeu.items[idItem].idConfig;
+
+        // Chercher dans la config item
+        for (int i = 0; i < jeu.nb_cfg_items; i++) {
+            if (jeu.cfg_items[i].id == idConf) {
+                cout << "-> Item : " << jeu.cfg_items[i].nom << endl;
+                cout << "   Description : " << jeu.cfg_items[i].description << endl;
+                cout << "   Bonus : ";
+                for (int k = 0; k < NB_STATS; k++) {
+                    cout << jeu.cfg_items[i].bonus[k] << " ";
+                }
+                cout << endl;
+                return;
+            }
+        }
+    }
+
+    // Monstre ?
+    int idMonstre = trouver_monstre_case(jeu, x, y);
+    if (idMonstre != -1) {
+        int idConf = jeu.monstres[idMonstre].idConfig;
+
+        // Chercher dans la config monstre
+        for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
+            if (jeu.cfg_monstres[i].id == idConf) {
+                cout << "-> Monstre : " << jeu.cfg_monstres[i].nom << endl;
+                cout << "   Description : " << jeu.cfg_monstres[i].description << endl;
+                cout << "   Stats : ";
+                for (int k = 0; k < NB_STATS; k++) {
+                    cout << jeu.cfg_monstres[i].stats_base[k] << " ";
+                }
+                cout << endl;
+                return;
+            }
+        }
+    }
+
+    // Sinon...
+    if (c == '#') cout << "-> Mur" << endl;
+    else if (c == '.') cout << "-> Sol vide" << endl;
+    else cout << "-> Aucun élément enregistré pour ce symbole." << endl;
 }
 
 #endif

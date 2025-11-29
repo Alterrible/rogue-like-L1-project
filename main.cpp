@@ -11,14 +11,12 @@ int main() {
     // char cmd;
 
     // Charger la configuration générale
-    ok = charger_configuration("config.txt", jeu);
+    ok = charger_configuration("init.txt", jeu);
     if (!ok) {
         cout << "Erreur : config.txt introuvable ou invalide" << endl;
     }
 
-    afficher_jeu(jeu);
-
-    // // Charger carte
+    // Charger carte
     // ok = charger_carte("level.txt", jeu);
     // if (!ok) {
     //     cout << "Erreur : level.txt introuvable ou invalide" << endl;

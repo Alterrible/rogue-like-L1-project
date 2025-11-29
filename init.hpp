@@ -8,7 +8,7 @@ using namespace std;
 #include "enregistrement.hpp"
 
 
-// découper lignes en mots
+// découper lignes en nombre de mots
 int decouper(const string& ligne, string mots[], int max_mots) {
     int nb = 0;
     string mot = "";
@@ -38,9 +38,9 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
     }
 
     // remise à zéro
-    jeu.nb_cfg_items = 0;            // gpt : ajouté
-    jeu.nb_cfg_monstres = 0;         // gpt : ajouté
-    jeu.nb_cfg_portes = 0;           // gpt : ajouté
+    jeu.nb_cfg_items = 0;
+    jeu.nb_cfg_monstres = 0;
+    jeu.nb_cfg_portes = 0;
 
     jeu.cfgConditions.nbContraintes = 0;
     jeu.cfgConditions.victoire.nb = 0;
@@ -50,21 +50,22 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
     string ligne;
 
     while (getline(flux, ligne)) {
+        bool skip = false; // évite problème de recherche dans ligne vide ou changement de section
 
         // nouvelle section -> [
         if (ligne.size() > 0 && ligne[0] == '[') {
             section++;
-            continue;
+            skip = true;
         }
 
         // mots découpés
         string mots[20];
         int nb = decouper(ligne, mots, 20);
-        if (nb == 0) continue;
+        if (nb == 0) skip = true;
 
         // items
-        if (section == 1) {
-            Config_item &it = jeu.cfg_items[jeu.nb_cfg_items];   // gpt : correction index
+        if (!skip && section == 1) {
+            Config_item &it = jeu.cfg_items[jeu.nb_cfg_items];
 
             it.id = stoi(mots[0]);
             it.symbole = mots[1][0];
@@ -75,12 +76,12 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
                 it.bonus[i] = stoi(mots[4 + i]);
             }
 
-            jeu.nb_cfg_items++;        // gpt : ajout
+            jeu.nb_cfg_items++;
         }
 
         // monstres
-        else if (section == 2) {
-            Config_monstre &m = jeu.cfg_monstres[jeu.nb_cfg_monstres];   // gpt : correction index
+        else if (!skip && section == 2) {
+            Config_monstre &m = jeu.cfg_monstres[jeu.nb_cfg_monstres];
 
             m.id = stoi(mots[0]);
             m.symbole = mots[1][0];
@@ -100,26 +101,29 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
 
             m.inventaire_ids.taille = 0;
 
-            jeu.nb_cfg_monstres++;     // gpt : ajout
+            jeu.nb_cfg_monstres++;
         }
 
         // porte
-        else if (section == 3) {
-            Config_porte &p = jeu.cfg_portes[jeu.nb_cfg_portes];   // gpt : correction index
+        else if (!skip && section == 3) {
+            Config_porte &p = jeu.cfg_portes[jeu.nb_cfg_portes];
 
             p.id = stoi(mots[0]);
             p.symbole = mots[1][0];
             p.id_item_contrainte = stoi(mots[2]);
 
             for (int i = 0; i < NB_STATS; i++) {
-                p.contrainte_stats[i] = stoi(mots[3 + i]);
+                if (!mots[3 + i].empty())
+                    p.contrainte_stats[i] = stoi(mots[3 + i]);
+                else
+                    p.contrainte_stats[i] = 0;   // par défaut
             }
 
-            jeu.nb_cfg_portes++;       // gpt : ajout
+            jeu.nb_cfg_portes++;
         }
 
         // joueur
-        else if (section == 4) {
+        else if (!skip && section == 4) {
 
             if (mots[0] == "nom") {
                 jeu.cfg_joueur.nom = mots[1];
@@ -141,7 +145,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
         }
 
         // contraintes
-        else if (section == 5) {
+        else if (!skip && section == 5) {
             Contrainte &c = jeu.cfgConditions.contraintes[jeu.cfgConditions.nbContraintes];
 
             c.id = stoi(mots[0]);
@@ -155,14 +159,14 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
         }
 
         // condition de victoire
-        else if (section == 7) {      // gpt : corrigé (avant == NB_STATS)
+        else if (!skip && section == 7) {
             for (int i = 0; i < nb; i++) {
                 jeu.cfgConditions.victoire.ids[jeu.cfgConditions.victoire.nb++] = stoi(mots[i]);
             }
         }
 
         // condition de défaite
-        else if (section == 8) {     // gpt : corrigé (avant 7)
+        else if (!skip && section == 8) {
             for (int i = 0; i < nb; i++) {
                 jeu.cfgConditions.defaite.ids[jeu.cfgConditions.defaite.nb++] = stoi(mots[i]);
             }
@@ -185,8 +189,9 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
     string ligne;
     int y = 0;
 
-    jeu.nb_items = 0;         // gpt : remis à zéro
-    jeu.nb_monstres = 0;      // gpt : remis à zéro
+    // remis à zéro
+    jeu.nb_items = 0;
+    jeu.nb_monstres = 0;
 
     while (getline(flux, ligne)) {
 
@@ -202,7 +207,7 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
 
             // items : a-z
             if (c >= 'a' && c <= 'z') {
-                for (int i = 0; i < jeu.nb_cfg_items; i++) {   // gpt : correction, avant tu utilisais cfg_monstres
+                for (int i = 0; i < jeu.nb_cfg_items; i++) {
                     if (jeu.cfg_items[i].symbole == c) {
 
                         Items &It = jeu.items[jeu.nb_items];
@@ -238,7 +243,7 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
         y++;
     }
 
-    jeu.carte.hauteur = y;         // gpt : ajout
+    jeu.carte.hauteur = y;
     jeu.carte.largeur = TAILLE_MAP_X;
 
     flux.close();
@@ -246,4 +251,4 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
 }
 
 #endif
-// NOTE : stoi c'est pour transformer string en int
+// NOTE : stoi c'est pour transformer string en int, .size() c'est pour la taille d'une liste
