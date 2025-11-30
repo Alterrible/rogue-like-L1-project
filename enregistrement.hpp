@@ -105,7 +105,6 @@ struct Carte {
     int hauteur;
     char cases[TAILLE_MAP_Y][TAILLE_MAP_X];
     bool visible[TAILLE_MAP_Y][TAILLE_MAP_X];
-    bool actif;
 };
 
 // --- Structure principale du jeu ---

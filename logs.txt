@@ -1,0 +1,1237 @@
+[DEBUG]
+CONFIG JOUEUR
+symbole : @
+nom : Aventurier
+description : Un_héros
+actif : 1
+spawn_x : 0
+spawn_y : 0
+stats[0] : 5
+stats[1] : 5
+stats[2] : 5
+stats[3] : 5
+stats[4] : 5
+stats[5] : 5
+Inventaire joueur (taille = 0)
+CONFIG ITEMS
+Item 0
+id : 1
+symbole : a
+nom : Anneau_de_force
+description : Augmente_la_force
+bonus[0] : 3
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 1
+id : 2
+symbole : b
+nom : Bottes_agiles
+description : Vitesse_amelioree
+bonus[0] : 0
+bonus[1] : 4
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 2
+id : 3
+symbole : c
+nom : Tome_ancien
+description : Savoir_interdit
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 3
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 3
+id : 4
+symbole : d
+nom : Potion_de_vie
+description : Restaure_la_vitalite
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 5
+bonus[4] : 0
+bonus[5] : 0
+Item 4
+id : 5
+symbole : e
+nom : Cape_d_ombre
+description : Camouflage_leger
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 3
+bonus[5] : 0
+Item 5
+id : 6
+symbole : f
+nom : Gants_de_precision
+description : Ameliore_l_adresse
+bonus[0] : 0
+bonus[1] : 2
+bonus[2] : 1
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 6
+id : 7
+symbole : g
+nom : Casque_runique
+description : Protege_des_attaques_magiques
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 2
+bonus[3] : 3
+bonus[4] : 0
+bonus[5] : 0
+Item 7
+id : 8
+symbole : h
+nom : Amulette_du_sage
+description : Stimule_l_esprit
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 4
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 8
+id : 9
+symbole : i
+nom : Bracelet_robuste
+description : Renforce_legerement
+bonus[0] : 1
+bonus[1] : 1
+bonus[2] : 0
+bonus[3] : 1
+bonus[4] : 0
+bonus[5] : 0
+Item 9
+id : 10
+symbole : j
+nom : Sandales_legeres
+description : Pas_silencieux
+bonus[0] : 0
+bonus[1] : 3
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 1
+bonus[5] : 0
+Item 10
+id : 11
+symbole : k
+nom : Potion_de_mana
+description : Restaure_l_energie_magique
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 3
+bonus[5] : 0
+Item 11
+id : 12
+symbole : l
+nom : Bouclier_en_bois
+description : Protection_basique
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 2
+bonus[4] : 0
+bonus[5] : 1
+Item 12
+id : 13
+symbole : m
+nom : Epee_courte
+description : Arme_simple_mais_fiable
+bonus[0] : 2
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 13
+id : 14
+symbole : n
+nom : Hache_lourde
+description : Inflige_de_lourds_degats
+bonus[0] : 4
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 14
+id : 15
+symbole : o
+nom : Grimoire_brule
+description : Accroit_les_sorts_de_feu
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 3
+bonus[3] : 0
+bonus[4] : 2
+bonus[5] : 0
+Item 15
+id : 16
+symbole : p
+nom : Collier_du_vent
+description : Accelere_les_mouvements
+bonus[0] : 0
+bonus[1] : 3
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 1
+Item 16
+id : 17
+symbole : q
+nom : Potion_d_endurance
+description : Ameliore_la_constitution
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 3
+bonus[4] : 0
+bonus[5] : 2
+Item 17
+id : 18
+symbole : r
+nom : Cuirasse_de_fer
+description : Protection_avancee
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 4
+bonus[4] : 0
+bonus[5] : 0
+Item 18
+id : 19
+symbole : s
+nom : Pique_aceree
+description : Augmente_les_degats_perforants
+bonus[0] : 3
+bonus[1] : 1
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 19
+id : 20
+symbole : t
+nom : Pierre_de_clairvoyance
+description : Ameliore_la_perception
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 2
+bonus[3] : 0
+bonus[4] : 3
+bonus[5] : 0
+Item 20
+id : 21
+symbole : u
+nom : Cape_flamboyante
+description : Boost_de_charisme
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 4
+Item 21
+id : 22
+symbole : v
+nom : Gourde_de_vigueur
+description : Rend_plus_resistant
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 0
+bonus[3] : 2
+bonus[4] : 2
+bonus[5] : 0
+Item 22
+id : 23
+symbole : w
+nom : Talisman_de_chance
+description : Ameliore_la_reussite
+bonus[0] : 0
+bonus[1] : 1
+bonus[2] : 1
+bonus[3] : 0
+bonus[4] : 1
+bonus[5] : 1
+Item 23
+id : 24
+symbole : x
+nom : Orbe_instable
+description : Puissance_magique_dangereuse
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 5
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 24
+id : 25
+symbole : y
+nom : Dague_furtive
+description : Arme_discrete
+bonus[0] : 1
+bonus[1] : 3
+bonus[2] : 0
+bonus[3] : 0
+bonus[4] : 0
+bonus[5] : 0
+Item 25
+id : 26
+symbole : z
+nom : Couronne_antique
+description : Relique_oubliee
+bonus[0] : 0
+bonus[1] : 0
+bonus[2] : 4
+bonus[3] : 1
+bonus[4] : 0
+bonus[5] : 2
+CONFIG MONSTRES
+Monstre 0
+id : 1
+symbole : g
+nom : Gobelin
+description : Petit_mais_agressif
+typeIA : 0
+id_item_contrainte : 0
+stats_base[0] : 3
+stats_base[1] : 2
+stats_base[2] : 1
+stats_base[3] : 1
+stats_base[4] : 1
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 1
+id : 2
+symbole : O
+nom : Ogre
+description : Lourd_et_puissant
+typeIA : 1
+id_item_contrainte : 1
+stats_base[0] : 8
+stats_base[1] : 3
+stats_base[2] : 1
+stats_base[3] : 3
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 5
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 2
+id : 3
+symbole : M
+nom : Mage_noir
+description : Magie_sombre
+typeIA : 2
+id_item_contrainte : 3
+stats_base[0] : 2
+stats_base[1] : 2
+stats_base[2] : 8
+stats_base[3] : 2
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 8
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 3
+id : 4
+symbole : H
+nom : Harpyie
+description : Rapide_et_imprevisible
+typeIA : 1
+id_item_contrainte : 2
+stats_base[0] : 1
+stats_base[1] : 7
+stats_base[2] : 3
+stats_base[3] : 1
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 7
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 4
+id : 5
+symbole : T
+nom : Troll
+description : Regeneration_lente_mais_continue
+typeIA : 1
+id_item_contrainte : 4
+stats_base[0] : 7
+stats_base[1] : 2
+stats_base[2] : 1
+stats_base[3] : 6
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 6
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 5
+id : 6
+symbole : S
+nom : Serpent_geant
+description : Venimeux_et_silencieux
+typeIA : 0
+id_item_contrainte : 5
+stats_base[0] : 2
+stats_base[1] : 6
+stats_base[2] : 2
+stats_base[3] : 1
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 6
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 6
+id : 7
+symbole : K
+nom : Kobold
+description : Fourbe_et_lache
+typeIA : 0
+id_item_contrainte : 10
+stats_base[0] : 2
+stats_base[1] : 3
+stats_base[2] : 1
+stats_base[3] : 1
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 3
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 7
+id : 8
+symbole : F
+nom : Fantome
+description : Insaisissable_et_glacial
+typeIA : 2
+id_item_contrainte : 24
+stats_base[0] : 1
+stats_base[1] : 1
+stats_base[2] : 5
+stats_base[3] : 0
+stats_base[4] : 5
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 5
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 8
+id : 9
+symbole : D
+nom : Dragonnet
+description : Petit_mais_cracheur_de_flammes
+typeIA : 1
+id_item_contrainte : 20
+stats_base[0] : 4
+stats_base[1] : 3
+stats_base[2] : 2
+stats_base[3] : 3
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 2
+contrainte_stats[3] : 0
+contrainte_stats[4] : 2
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 9
+id : 10
+symbole : R
+nom : Rat_mutant
+description : Tres_rapide
+typeIA : 0
+id_item_contrainte : 7
+stats_base[0] : 1
+stats_base[1] : 5
+stats_base[2] : 1
+stats_base[3] : 1
+stats_base[4] : 1
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 5
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 10
+id : 11
+symbole : A
+nom : Archer_squelettique
+description : Tire_avec_precision
+typeIA : 1
+id_item_contrainte : 6
+stats_base[0] : 2
+stats_base[1] : 4
+stats_base[2] : 2
+stats_base[3] : 1
+stats_base[4] : 1
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 4
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 11
+id : 12
+symbole : P
+nom : Pillard
+description : Humain_hostile
+typeIA : 0
+id_item_contrainte : 13
+stats_base[0] : 4
+stats_base[1] : 3
+stats_base[2] : 1
+stats_base[3] : 2
+stats_base[4] : 1
+stats_base[5] : 0
+contrainte_stats[0] : 2
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 12
+id : 13
+symbole : W
+nom : Warg
+description : Predateur_feroce
+typeIA : 1
+id_item_contrainte : 19
+stats_base[0] : 5
+stats_base[1] : 6
+stats_base[2] : 1
+stats_base[3] : 2
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 5
+contrainte_stats[1] : 6
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 13
+id : 14
+symbole : L
+nom : Liche
+description : Maitre_des_morts
+typeIA : 2
+id_item_contrainte : 15
+stats_base[0] : 1
+stats_base[1] : 1
+stats_base[2] : 9
+stats_base[3] : 3
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 9
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 14
+id : 15
+symbole : E
+nom : Elementaire_de_pierre
+description : Lent_mais_indestructible
+typeIA : 1
+id_item_contrainte : 18
+stats_base[0] : 7
+stats_base[1] : 1
+stats_base[2] : 0
+stats_base[3] : 8
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 7
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 8
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 15
+id : 16
+symbole : B
+nom : Banshee
+description : Hurlement_mortel
+typeIA : 2
+id_item_contrainte : 21
+stats_base[0] : 0
+stats_base[1] : 3
+stats_base[2] : 7
+stats_base[3] : 2
+stats_base[4] : 4
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 7
+contrainte_stats[3] : 0
+contrainte_stats[4] : 4
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 16
+id : 17
+symbole : C
+nom : Cyclope
+description : Oeil_unique_mais_redoutable
+typeIA : 1
+id_item_contrainte : 14
+stats_base[0] : 9
+stats_base[1] : 2
+stats_base[2] : 1
+stats_base[3] : 5
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 9
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 17
+id : 18
+symbole : Y
+nom : Yeti
+description : Fort_et_endurant
+typeIA : 1
+id_item_contrainte : 17
+stats_base[0] : 8
+stats_base[1] : 4
+stats_base[2] : 1
+stats_base[3] : 4
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 8
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 4
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 18
+id : 19
+symbole : Z
+nom : Zombie
+description : Lent_mais_resistant
+typeIA : 0
+id_item_contrainte : 22
+stats_base[0] : 3
+stats_base[1] : 1
+stats_base[2] : 0
+stats_base[3] : 6
+stats_base[4] : 1
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 6
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 19
+id : 20
+symbole : N
+nom : Necromancien
+description : Controle_des_morts
+typeIA : 2
+id_item_contrainte : 8
+stats_base[0] : 1
+stats_base[1] : 2
+stats_base[2] : 8
+stats_base[3] : 2
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 8
+contrainte_stats[3] : 0
+contrainte_stats[4] : 3
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 20
+id : 21
+symbole : Q
+nom : Quasit
+description : Demon_mineur
+typeIA : 1
+id_item_contrainte : 11
+stats_base[0] : 2
+stats_base[1] : 5
+stats_base[2] : 4
+stats_base[3] : 2
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 5
+contrainte_stats[2] : 4
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 21
+id : 22
+symbole : U
+nom : Ursa
+description : Ours_monstrueux
+typeIA : 1
+id_item_contrainte : 23
+stats_base[0] : 7
+stats_base[1] : 5
+stats_base[2] : 1
+stats_base[3] : 4
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 7
+contrainte_stats[1] : 5
+contrainte_stats[2] : 0
+contrainte_stats[3] : 4
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 22
+id : 23
+symbole : V
+nom : Vampire
+description : Rapide_puissant_et_charismatique
+typeIA : 2
+id_item_contrainte : 25
+stats_base[0] : 4
+stats_base[1] : 6
+stats_base[2] : 5
+stats_base[3] : 2
+stats_base[4] : 5
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 6
+contrainte_stats[2] : 5
+contrainte_stats[3] : 0
+contrainte_stats[4] : 5
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 23
+id : 24
+symbole : J
+nom : Jinn
+description : Puissance_magique_instable
+typeIA : 2
+id_item_contrainte : 26
+stats_base[0] : 1
+stats_base[1] : 3
+stats_base[2] : 9
+stats_base[3] : 1
+stats_base[4] : 4
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 9
+contrainte_stats[3] : 0
+contrainte_stats[4] : 4
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 24
+id : 25
+symbole : X
+nom : Xolotl
+description : Creature_inconnue
+typeIA : 1
+id_item_contrainte : 16
+stats_base[0] : 6
+stats_base[1] : 4
+stats_base[2] : 6
+stats_base[3] : 3
+stats_base[4] : 3
+stats_base[5] : 0
+contrainte_stats[0] : 6
+contrainte_stats[1] : 4
+contrainte_stats[2] : 6
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+Monstre 25
+id : 26
+symbole : R
+nom : Ruche_vivante
+description : Essaim_agressif_anime
+typeIA : 1
+id_item_contrainte : 12
+stats_base[0] : 2
+stats_base[1] : 8
+stats_base[2] : 1
+stats_base[3] : 3
+stats_base[4] : 2
+stats_base[5] : 0
+contrainte_stats[0] : 0
+contrainte_stats[1] : 8
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Inventaire monstre (taille = 0)
+CONFIG PORTES
+Porte 0
+id : 1
+symbole : 0
+id_item_contrainte : 1
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 1
+id : 2
+symbole : 1
+id_item_contrainte : 3
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 2
+id : 3
+symbole : 2
+id_item_contrainte : 2
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 3
+id : 4
+symbole : 3
+id_item_contrainte : 1
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 4
+id : 5
+symbole : 4
+id_item_contrainte : 3
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 5
+id : 6
+symbole : 5
+id_item_contrainte : 2
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 6
+id : 7
+symbole : 6
+id_item_contrainte : 1
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 7
+id : 8
+symbole : 7
+id_item_contrainte : 3
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 8
+id : 9
+symbole : 8
+id_item_contrainte : 2
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+Porte 9
+id : 10
+symbole : 9
+id_item_contrainte : 1
+contrainte_stats[0] : 0
+contrainte_stats[1] : 0
+contrainte_stats[2] : 0
+contrainte_stats[3] : 0
+contrainte_stats[4] : 0
+contrainte_stats[5] : 0
+CONDITIONS DE JEU
+nbContraintes : 3
+Contraintes
+Contrainte 0
+id : 1
+description : Force_minimale_pour_soulever_un_rocher
+stats_min[0] : 5
+stats_min[1] : 0
+stats_min[2] : 0
+stats_min[3] : 0
+stats_min[4] : 0
+stats_min[5] : 0
+---
+Contrainte 1
+id : 2
+description : Agilite_necessaire_pour_franchir_un_piege
+stats_min[0] : 0
+stats_min[1] : 7
+stats_min[2] : 0
+stats_min[3] : 0
+stats_min[4] : 0
+stats_min[5] : 0
+---
+Contrainte 2
+id : 3
+description : Intelligence_requise_pour_deverrouiller_une_porte
+stats_min[0] : 0
+stats_min[1] : 0
+stats_min[2] : 8
+stats_min[3] : 0
+stats_min[4] : 0
+stats_min[5] : 0
+---
+
+Conditions victoire (nb = 2)
+  ids[0] : 1
+  ids[1] : 3
+
+Conditions défaite (nb = 1)
+  ids[0] : 2
+ITEMS DANS LA CARTE
+nb_items : 29
+Item 0 : id=0 x=48 y=3 idConfig=11
+Item 1 : id=0 x=50 y=3 idConfig=15
+Item 2 : id=0 x=7 y=6 idConfig=7
+Item 3 : id=0 x=24 y=6 idConfig=1
+Item 4 : id=0 x=25 y=6 idConfig=13
+Item 5 : id=0 x=26 y=6 idConfig=14
+Item 6 : id=0 x=27 y=6 idConfig=2
+Item 7 : id=0 x=7 y=8 idConfig=7
+Item 8 : id=0 x=22 y=14 idConfig=3
+Item 9 : id=0 x=25 y=15 idConfig=1
+Item 10 : id=0 x=37 y=15 idConfig=5
+Item 11 : id=0 x=2 y=16 idConfig=18
+Item 12 : id=0 x=25 y=16 idConfig=2
+Item 13 : id=0 x=34 y=16 idConfig=4
+Item 14 : id=0 x=7 y=18 idConfig=1
+Item 15 : id=0 x=6 y=19 idConfig=19
+Item 16 : id=0 x=15 y=20 idConfig=1
+Item 17 : id=0 x=16 y=20 idConfig=2
+Item 18 : id=0 x=24 y=20 idConfig=25
+Item 19 : id=0 x=32 y=20 idConfig=22
+Item 20 : id=0 x=35 y=20 idConfig=1
+Item 21 : id=0 x=36 y=20 idConfig=1
+Item 22 : id=0 x=37 y=20 idConfig=2
+Item 23 : id=0 x=45 y=20 idConfig=21
+Item 24 : id=0 x=47 y=20 idConfig=23
+Item 25 : id=0 x=8 y=21 idConfig=24
+Item 26 : id=0 x=35 y=21 idConfig=1
+Item 27 : id=0 x=37 y=21 idConfig=2
+Item 28 : id=0 x=38 y=21 idConfig=2
+MONSTRES DANS LA CARTE
+nb_monstres : 25
+Monstre 0 : idConfig=12 x=28 y=1 actif=1
+  stats[0] : 4
+  stats[1] : 3
+  stats[2] : 1
+  stats[3] : 2
+  stats[4] : 1
+  stats[5] : 0
+Monstre 1 : idConfig=21 x=62 y=2 actif=1
+  stats[0] : 2
+  stats[1] : 5
+  stats[2] : 4
+  stats[3] : 2
+  stats[4] : 2
+  stats[5] : 0
+Monstre 2 : idConfig=18 x=17 y=4 actif=1
+  stats[0] : 8
+  stats[1] : 4
+  stats[2] : 1
+  stats[3] : 4
+  stats[4] : 3
+  stats[5] : 0
+Monstre 3 : idConfig=19 x=25 y=4 actif=1
+  stats[0] : 3
+  stats[1] : 1
+  stats[2] : 0
+  stats[3] : 6
+  stats[4] : 1
+  stats[5] : 0
+Monstre 4 : idConfig=11 x=42 y=4 actif=1
+  stats[0] : 2
+  stats[1] : 4
+  stats[2] : 2
+  stats[3] : 1
+  stats[4] : 1
+  stats[5] : 0
+Monstre 5 : idConfig=16 x=54 y=4 actif=1
+  stats[0] : 0
+  stats[1] : 3
+  stats[2] : 7
+  stats[3] : 2
+  stats[4] : 4
+  stats[5] : 0
+Monstre 6 : idConfig=2 x=15 y=6 actif=1
+  stats[0] : 8
+  stats[1] : 3
+  stats[2] : 1
+  stats[3] : 3
+  stats[4] : 3
+  stats[5] : 0
+Monstre 7 : idConfig=4 x=31 y=6 actif=1
+  stats[0] : 1
+  stats[1] : 7
+  stats[2] : 3
+  stats[3] : 1
+  stats[4] : 2
+  stats[5] : 0
+Monstre 8 : idConfig=10 x=62 y=6 actif=1
+  stats[0] : 1
+  stats[1] : 5
+  stats[2] : 1
+  stats[3] : 1
+  stats[4] : 1
+  stats[5] : 0
+Monstre 9 : idConfig=26 x=62 y=6 actif=1
+  stats[0] : 2
+  stats[1] : 8
+  stats[2] : 1
+  stats[3] : 3
+  stats[4] : 2
+  stats[5] : 0
+Monstre 10 : idConfig=20 x=5 y=8 actif=1
+  stats[0] : 1
+  stats[1] : 2
+  stats[2] : 8
+  stats[3] : 2
+  stats[4] : 3
+  stats[5] : 0
+Monstre 11 : idConfig=9 x=43 y=9 actif=1
+  stats[0] : 4
+  stats[1] : 3
+  stats[2] : 2
+  stats[3] : 3
+  stats[4] : 2
+  stats[5] : 0
+Monstre 12 : idConfig=17 x=52 y=9 actif=1
+  stats[0] : 9
+  stats[1] : 2
+  stats[2] : 1
+  stats[3] : 5
+  stats[4] : 2
+  stats[5] : 0
+Monstre 13 : idConfig=3 x=12 y=10 actif=1
+  stats[0] : 2
+  stats[1] : 2
+  stats[2] : 8
+  stats[3] : 2
+  stats[4] : 2
+  stats[5] : 0
+Monstre 14 : idConfig=13 x=2 y=13 actif=1
+  stats[0] : 5
+  stats[1] : 6
+  stats[2] : 1
+  stats[3] : 2
+  stats[4] : 3
+  stats[5] : 0
+Monstre 15 : idConfig=11 x=35 y=13 actif=1
+  stats[0] : 2
+  stats[1] : 4
+  stats[2] : 2
+  stats[3] : 1
+  stats[4] : 1
+  stats[5] : 0
+Monstre 16 : idConfig=15 x=45 y=15 actif=1
+  stats[0] : 7
+  stats[1] : 1
+  stats[2] : 0
+  stats[3] : 8
+  stats[4] : 2
+  stats[5] : 0
+Monstre 17 : idConfig=7 x=12 y=16 actif=1
+  stats[0] : 2
+  stats[1] : 3
+  stats[2] : 1
+  stats[3] : 1
+  stats[4] : 2
+  stats[5] : 0
+Monstre 18 : idConfig=8 x=54 y=16 actif=1
+  stats[0] : 1
+  stats[1] : 1
+  stats[2] : 5
+  stats[3] : 0
+  stats[4] : 5
+  stats[5] : 0
+Monstre 19 : idConfig=18 x=10 y=18 actif=1
+  stats[0] : 8
+  stats[1] : 4
+  stats[2] : 1
+  stats[3] : 4
+  stats[4] : 3
+  stats[5] : 0
+Monstre 20 : idConfig=25 x=24 y=18 actif=1
+  stats[0] : 6
+  stats[1] : 4
+  stats[2] : 6
+  stats[3] : 3
+  stats[4] : 3
+  stats[5] : 0
+Monstre 21 : idConfig=25 x=32 y=18 actif=1
+  stats[0] : 6
+  stats[1] : 4
+  stats[2] : 6
+  stats[3] : 3
+  stats[4] : 3
+  stats[5] : 0
+Monstre 22 : idConfig=24 x=20 y=19 actif=1
+  stats[0] : 1
+  stats[1] : 3
+  stats[2] : 9
+  stats[3] : 1
+  stats[4] : 4
+  stats[5] : 0
+Monstre 23 : idConfig=23 x=76 y=19 actif=1
+  stats[0] : 4
+  stats[1] : 6
+  stats[2] : 5
+  stats[3] : 2
+  stats[4] : 5
+  stats[5] : 0
+Monstre 24 : idConfig=14 x=4 y=21 actif=1
+  stats[0] : 1
+  stats[1] : 1
+  stats[2] : 9
+  stats[3] : 3
+  stats[4] : 3
+  stats[5] : 0
+CARTE
+largeur : 80
+hauteur : 23
+Cases
+################################################################################
+#...........................P...........................#......................#
+#............##########################################.#.....Q................#
+#............#...#.................#..........#.k.o.#...#......................#
+#...######...#...Y......#Z##.......#......A....##7##..B.#...####.....####......#
+#...#.#..#...#...#.....#....#......#....................#...#..#.....#..#......#
+#...#.#g.#...#.O.#.....#amnb#..H...#...###############1##...#.R#.....#.$#......#
+#...#.#..#...#...#......####.......#...#.......#........#...#11#.....#11#......#
+#...#N#g.#...#####.................#...#.......#........#......................#
+#...#.#..2.......#.................#...#...D...6....C...#......................#
+#...#3####..M....#...#############1#...#.......#........#......................#
+#................#..#..................#...##############...#...........#......#
+#................#.#...#####..####.....#................#....#.........#.......#
+##W################.I..#.........#.A...#............#...#.....#.......#........#
+#.........#.......8...c#.........#.....#............#...#......#######G........#
+#.........#.......######.a.......#...e.#.....E......#...#......................#
+#.r.......#.K.....#....#.b.......#d....#............#.F.#......................#
+#...#######.......#....#.........##################.#...#......................#
+#...#..a..Y.......#....#X#.....#X#..................#...#......................#
+#...#.s...#.......#.J..#.#.....#.#4#########################################V###
+#...#######....ab.9....#y#..@..#v#.aab#....#.u.w.#.............................#
+#...L...x.#.......#....#.#.....#.#.a#bb.#..5..#................................#
+################################################################################
+Visibilité
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111111111
+JOUEUR (DYNAMIQUE)
+x : 28
+y : 20
+nb_inventaire : 0
+stat[0] : 5
+stat[1] : 5
+stat[2] : 5
+stat[3] : 5
+stat[4] : 5
+stat[5] : 5
+ETAT DU JEU
+etat_termine : 0
+victoire : 0
+[FIN DEBUG]

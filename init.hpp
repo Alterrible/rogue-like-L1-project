@@ -5,28 +5,29 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "lib_projet_ncurses.hpp"
 #include "enregistrement.hpp"
 
 
-// découper lignes en nombre de mots
+// découper lignes en nombre de mots et en liste mots
 int decouper(const string& ligne, string mots[], int max_mots) {
     int nb = 0;
     string mot = "";
 
     for (int i = 0; i <= ligne.size(); i++) {
         if (i == ligne.size() || ligne[i] == ' ') {
-            if (mot != "" && nb < max_mots) {
+            if (mot != "" && (int)mot[0] != 13 && nb < max_mots) {
                 mots[nb] = mot;
                 nb++;
-                mot.clear();
+                mot = "";
             }
         } else {
             mot += ligne[i];
         }
     }
+
     return nb;
 }
-
 
 bool charger_configuration(const string& fichier, Jeu& jeu) {
     fstream flux;
@@ -62,6 +63,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
         string mots[20];
         int nb = decouper(ligne, mots, 20);
         if (nb == 0) skip = true;
+        if (mots[0][0] == '|') skip = true;
 
         // items
         if (!skip && section == 1) {
@@ -248,6 +250,32 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
 
     flux.close();
     return true;
+}
+
+void initialiser_jeu(Jeu &jeu) {
+    // initialisation des stats du joueur à partir de la configuration
+    for (int i = 0; i < NB_STATS; i++) {
+        jeu.joueur.stat[i] = jeu.cfg_joueur.stats[i];
+    }
+    // inventaire vide
+    jeu.joueur.nb_inventaire = 0;
+
+    // état du jeu
+    jeu.etat_termine = false;
+    jeu.victoire = false;
+
+    // brouillard (rendre toutes les cases visibles ou non)
+    for (int y = 0; y < TAILLE_MAP_Y; y++) {
+        for (int x = 0; x < TAILLE_MAP_X; x++) {
+            jeu.carte.visible[y][x] = true; // on affiche tout
+        }
+    }
+
+    // initialisation console
+    PaireCouleur couleurs[1];
+    couleurs[0].texte = COLOR_WHITE;
+    couleurs[0].fond  = COLOR_BLACK;
+    initialiser_console(couleurs, 1);
 }
 
 #endif

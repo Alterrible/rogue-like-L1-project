@@ -1,30 +1,50 @@
+// gpt : fichier des commandes du joueur et des actions basiques
+#ifndef TRAITER_COMMANDE_HPP
+#define TRAITER_COMMANDE_HPP
 
-traiter_commande
-
-
-include <iostream>
+#include "enregistrement.hpp"
+#include <iostream>
 using namespace std;
 
-void traiterCommande(char cmd, Jeu &jeu) {
+// Cette fonction traite une commande utilisateur simple
+// Les mouvements sont gérés avec z (haut), s (bas), q (gauche), d (droite).
+// D'autres commandes permettent d'afficher l'inventaire, la carte, de frapper un monstre,
+// de se soigner ou de manger un objet. La logique reste volontairement basique.
+void traiter_commande(char cmd, Jeu &jeu) {
+    // gpt : on prépare les nouvelles coordonnées
+    int nouveauX = jeu.joueur.x;
+    int nouveauY = jeu.joueur.y;
 
     if (cmd == 'z') {                 // Avancer (haut)
-        jeu.joueur.y -= 1;
+        nouveauY = jeu.joueur.y - 1;
     }
     else if (cmd == 's') {            // Reculer (bas)
-        jeu.joueur.y += 1;
+        nouveauY = jeu.joueur.y + 1;
     }
     else if (cmd == 'q') {            // Aller à gauche
-        jeu.joueur.x -= 1;
+        nouveauX = jeu.joueur.x - 1;
     }
     else if (cmd == 'd') {            // Aller à droite
-        jeu.joueur.x += 1;
+        nouveauX = jeu.joueur.x + 1;
     }
-    else if (cmd == 'i') {            // Inventaire
+    // Si la commande était un mouvement, on vérifie la validité de la case
+    if (cmd == 'z' || cmd == 's' || cmd == 'q' || cmd == 'd') {
+        // gpt : bornes de la carte et mur (#)
+        if (nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
+            nouveauY >= 0 && nouveauY < jeu.carte.hauteur &&
+            jeu.carte.cases[nouveauY][nouveauX] != '#') {
+            jeu.joueur.x = nouveauX;
+            jeu.joueur.y = nouveauY;
+        }
+        return;
+    }
+
+    if (cmd == 'i') {            // Inventaire
         cout << "Inventaire :" << endl;
-        if (jeu.joueur.nbinventaire == 0) {
+        if (jeu.joueur.nb_inventaire == 0) {
             cout << "  (vide)" << endl;
         } else {
-            for (int i = 0; i < jeu.joueur.nbinventaire; i++) {
+            for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
                 int idItem = jeu.joueur.inventaire[i];
                 cout << "  Slot " << i << " : item " << idItem << endl;
             }
@@ -44,7 +64,7 @@ void traiterCommande(char cmd, Jeu &jeu) {
         int cibleY = jeu.joueur.y - 1;
 
         bool touche = false;
-        for (int i = 0; i < jeu.nbmonstres; i++) {
+        for (int i = 0; i < jeu.nb_monstres; i++) {
             if (jeu.monstres[i].actif &&
                 jeu.monstres[i].x == cibleX &&
                 jeu.monstres[i].y == cibleY) {
@@ -87,11 +107,11 @@ void traiterCommande(char cmd, Jeu &jeu) {
     else if (cmd == 'e') {            // Manger
         cout << "Vous essayez de manger un objet." << endl;
 
-        if (jeu.joueur.nbinventaire == 0) {
+        if (jeu.joueur.nb_inventaire == 0) {
             cout << "Votre inventaire est vide." << endl;
         } else {
             // On consomme le dernier objet de l'inventaire
-            int idItem = jeu.joueur.inventaire[jeu.joueur.nbinventaire - 1];
+            int idItem = jeu.joueur.inventaire[jeu.joueur.nb_inventaire - 1];
             cout << "Vous mangez l'objet " << idItem << "." << endl;
 
             // Petit bonus : +1 PV
@@ -102,10 +122,12 @@ void traiterCommande(char cmd, Jeu &jeu) {
             }
 
             // Retirer l'objet du tableau
-            jeu.joueur.nbinventaire--;
+            jeu.joueur.nb_inventaire--;
         }
     }
     else {
         cout << "Commande inconnue." << endl;
     }
 }
+
+#endif // TRAITER_COMMANDE_HPP

@@ -2,266 +2,216 @@
 #define AFFICHAGE_HPP
 
 #include "enregistrement.hpp"
+#include "lib_projet_ncurses.hpp"
 #include <iostream>
 using namespace std;
 
+void afficher_jeu(const Jeu &jeu) {
+    effacer_console();
+
+    // traitement pour chaques cases de la carte
+    for (int y = 0; y < jeu.carte.hauteur; y++) {
+        for (int x = 0; x < jeu.carte.largeur; x++) {
+            if (jeu.carte.visible[y][x]) {
+                char c = jeu.carte.cases[y][x];
+                ecrire_char(x, y, c);
+            } else {
+                ecrire_char(x, y, ' ');
+            }
+        }
+    }
+    // joueur (pb : recouvre potentiellement la case)
+    ecrire_char(jeu.joueur.x, jeu.joueur.y, jeu.cfg_joueur.symbole);
+
+    // les monstres actifs
+    for (int i = 0; i < jeu.nb_monstres; i++) {
+        if (jeu.monstres[i].actif) {
+
+            char symbole = '?'; // symbole du monstre depuis configuration donc valeur par défaut = ?
+            for (int j = 0; j < jeu.nb_cfg_monstres; j++) {
+                if (jeu.cfg_monstres[j].id == jeu.monstres[i].idConfig) {
+                    symbole = jeu.cfg_monstres[j].symbole;
+                    break;
+                }
+            }
+            ecrire_char(jeu.monstres[i].x, jeu.monstres[i].y, symbole);
+        }
+    }
+
+    // --- hotbar ---
+    string hotbar = "Stats : ";
+    for (int i = 0; i < NB_STATS; i++) {
+        hotbar += " [" + to_string(jeu.joueur.stat[i]) + "]";
+    }
+    ecrire_string(hotbar, 0, jeu.carte.hauteur);
+}
+
+// écran de fin de jeu
+void afficher_game_over(const Jeu &jeu) {
+    effacer_console();
+
+    string msg;
+    if (jeu.victoire) {
+        msg = "gagné";
+    } else {
+        msg = "perdu";
+    }
+
+    ecrire_string(msg, 0, 0);
+}
+
+
+// ---- utilitaire pour affichage de debug ----
 void afficher_liste_id_contraintes(const Liste_id_contraintes& liste, const string& titre) {
-    cout << titre << " (nb = " << liste.nb << ")\n";
+    cout << titre << " (nb = " << liste.nb << ")" << endl;
     for (int i = 0; i < liste.nb; i++) {
-        cout << "  ids[" << i << "] : " << liste.ids[i] << "\n";
+        cout << "  ids[" << i << "] : " << liste.ids[i] << endl;
     }
 }
 
 void afficher_liste_equipements(const Liste_Id_Equipements& liste, const string& titre) {
-    cout << titre << " (taille = " << liste.taille << ")\n";
+    cout << titre << " (taille = " << liste.taille << ")" << endl;
     for (int i = 0; i < liste.taille; i++) {
-        cout << "  ids[" << i << "] : " << liste.ids[i] << "\n";
+        cout << "  ids[" << i << "] : " << liste.ids[i] << endl;
     }
 }
 
 void afficher_contrainte(const Contrainte& c) {
-    cout << "id : " << c.id << "\n";
-    cout << "description : " << c.description << "\n";
+    cout << "id : " << c.id << endl;
+    cout << "description : " << c.description << endl;
     for (int i = 0; i < NB_STATS; i++)
-        cout << "stats_min[" << i << "] : " << c.stats_min[i] << "\n";
+        cout << "stats_min[" << i << "] : " << c.stats_min[i] << endl;
 }
 
+// affichage de debugage
 void afficher_jeu_debug(const Jeu& jeu) {
 
-    cout << "[DEBUG]\n";
+    cout << "[DEBUG]" << endl;
 
-    // ------------------------------------------------------------
-    cout << "\n=== CONFIG JOUEUR ===\n";
-    cout << "symbole : " << jeu.cfg_joueur.symbole << "\n";
-    cout << "nom : " << jeu.cfg_joueur.nom << "\n";
-    cout << "description : " << jeu.cfg_joueur.description << "\n";
-    cout << "actif : " << jeu.cfg_joueur.actif << "\n";
-    cout << "spawn_x : " << jeu.cfg_joueur.spawn_x << "\n";
-    cout << "spawn_y : " << jeu.cfg_joueur.spawn_y << "\n";
+    cout << "CONFIG JOUEUR" << endl;
+    cout << "symbole : " << jeu.cfg_joueur.symbole << endl;
+    cout << "nom : " << jeu.cfg_joueur.nom << endl;
+    cout << "description : " << jeu.cfg_joueur.description << endl;
+    cout << "actif : " << jeu.cfg_joueur.actif << endl;
+    cout << "spawn_x : " << jeu.cfg_joueur.spawn_x << endl;
+    cout << "spawn_y : " << jeu.cfg_joueur.spawn_y << endl;
 
     for (int i = 0; i < NB_STATS; i++)
-        cout << "stats[" << i << "] : " << jeu.cfg_joueur.stats[i] << "\n";
+        cout << "stats[" << i << "] : " << jeu.cfg_joueur.stats[i] << endl;
 
     afficher_liste_equipements(jeu.cfg_joueur.inventaire_ids, "Inventaire joueur");
 
-    // ------------------------------------------------------------
-    cout << "\n=== CONFIG ITEMS ===\n";
+    cout << "CONFIG ITEMS" << endl;
     for (int i = 0; i < jeu.nb_cfg_items; i++) {
-        cout << "\n-- Item " << i << " --\n";
-        cout << "id : " << jeu.cfg_items[i].id << "\n";
-        cout << "symbole : " << jeu.cfg_items[i].symbole << "\n";
-        cout << "nom : " << jeu.cfg_items[i].nom << "\n";
-        cout << "description : " << jeu.cfg_items[i].description << "\n";
+        cout << "Item " << i << endl;
+        cout << "id : " << jeu.cfg_items[i].id << endl;
+        cout << "symbole : " << jeu.cfg_items[i].symbole << endl;
+        cout << "nom : " << jeu.cfg_items[i].nom << endl;
+        cout << "description : " << jeu.cfg_items[i].description << endl;
 
         for (int j = 0; j < NB_STATS; j++)
-            cout << "bonus[" << j << "] : " << jeu.cfg_items[i].bonus[j] << "\n";
+            cout << "bonus[" << j << "] : " << jeu.cfg_items[i].bonus[j] << endl;
     }
 
-    // ------------------------------------------------------------
-    cout << "\n=== CONFIG MONSTRES ===\n";
+    cout << "CONFIG MONSTRES" << endl;
     for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
         const auto& m = jeu.cfg_monstres[i];
-        cout << "\n-- Monstre " << i << " --\n";
-        cout << "id : " << m.id << "\n";
-        cout << "symbole : " << m.symbole << "\n";
-        cout << "nom : " << m.nom << "\n";
-        cout << "description : " << m.description << "\n";
-        cout << "typeIA : " << m.typeIA << "\n";
-        cout << "id_item_contrainte : " << m.id_item_contrainte << "\n";
+        cout << "Monstre " << i << endl;
+        cout << "id : " << m.id << endl;
+        cout << "symbole : " << m.symbole << endl;
+        cout << "nom : " << m.nom << endl;
+        cout << "description : " << m.description << endl;
+        cout << "typeIA : " << m.typeIA << endl;
+        cout << "id_item_contrainte : " << m.id_item_contrainte << endl;
 
         for (int j = 0; j < NB_STATS; j++)
-            cout << "stats_base[" << j << "] : " << m.stats_base[j] << "\n";
+            cout << "stats_base[" << j << "] : " << m.stats_base[j] << endl;
 
         for (int j = 0; j < NB_STATS; j++)
-            cout << "contrainte_stats[" << j << "] : " << m.contrainte_stats[j] << "\n";
+            cout << "contrainte_stats[" << j << "] : " << m.contrainte_stats[j] << endl;
 
         afficher_liste_equipements(m.inventaire_ids, "Inventaire monstre");
     }
 
-    // ------------------------------------------------------------
-    cout << "\n=== CONFIG PORTES ===\n";
+    cout << "CONFIG PORTES" << endl;
     for (int i = 0; i < jeu.nb_cfg_portes; i++) {
         const auto& p = jeu.cfg_portes[i];
-        cout << "\n-- Porte " << i << " --\n";
-        cout << "id : " << p.id << "\n";
-        cout << "symbole : " << p.symbole << "\n";
-        cout << "id_item_contrainte : " << p.id_item_contrainte << "\n";
+        cout << "Porte " << i << endl;
+        cout << "id : " << p.id << endl;
+        cout << "symbole : " << p.symbole << endl;
+        cout << "id_item_contrainte : " << p.id_item_contrainte << endl;
 
         for (int j = 0; j < NB_STATS; j++)
-            cout << "contrainte_stats[" << j << "] : " << p.contrainte_stats[j] << "\n";
+            cout << "contrainte_stats[" << j << "] : " << p.contrainte_stats[j] << endl;
     }
 
-    // ------------------------------------------------------------
-    cout << "\n=== CONDITIONS DE JEU ===\n";
-    cout << "nbContraintes : " << jeu.cfgConditions.nbContraintes << "\n";
+    cout << "CONDITIONS DE JEU" << endl;
+    cout << "nbContraintes : " << jeu.cfgConditions.nbContraintes << endl;
 
-    cout << "\n-- Contraintes --\n";
+    cout << "Contraintes" << endl;
     for (int i = 0; i < jeu.cfgConditions.nbContraintes; i++) {
-        cout << "Contrainte " << i << "\n";
+        cout << "Contrainte " << i << endl;
         afficher_contrainte(jeu.cfgConditions.contraintes[i]);
-        cout << "---\n";
+        cout << "---" << endl;
     }
 
     afficher_liste_id_contraintes(jeu.cfgConditions.victoire, "\nConditions victoire");
     afficher_liste_id_contraintes(jeu.cfgConditions.defaite, "\nConditions défaite");
 
-    // ------------------------------------------------------------
-    cout << "\n=== ITEMS DANS LA CARTE ===\n";
-    cout << "nb_items : " << jeu.nb_items << "\n";
+    cout << "ITEMS DANS LA CARTE" << endl;
+    cout << "nb_items : " << jeu.nb_items << endl;
     for (int i = 0; i < jeu.nb_items; i++) {
         const auto& it = jeu.items[i];
         cout << "Item " << i << " : id=" << it.id 
              << " x=" << it.x << " y=" << it.y 
-             << " idConfig=" << it.idConfig << "\n";
+             << " idConfig=" << it.idConfig << endl;
     }
 
-    // ------------------------------------------------------------
-    cout << "\n=== MONSTRES DANS LA CARTE ===\n";
-    cout << "nb_monstres : " << jeu.nb_monstres << "\n";
+    cout << "MONSTRES DANS LA CARTE" << endl;
+    cout << "nb_monstres : " << jeu.nb_monstres << endl;
     for (int i = 0; i < jeu.nb_monstres; i++) {
         const auto& mo = jeu.monstres[i];
         cout << "Monstre " << i << " : idConfig=" << mo.idConfig
              << " x=" << mo.x << " y=" << mo.y 
-             << " actif=" << mo.actif << "\n";
+             << " actif=" << mo.actif << endl;
         for (int j = 0; j < NB_STATS; j++)
-            cout << "  stats[" << j << "] : " << mo.stats[j] << "\n";
+            cout << "  stats[" << j << "] : " << mo.stats[j] << endl;
     }
 
-    // ------------------------------------------------------------
-    cout << "\n=== CARTE ===\n";
-    cout << "largeur : " << jeu.carte.largeur << "\n";
-    cout << "hauteur : " << jeu.carte.hauteur << "\n";
-    cout << "actif : " << jeu.carte.actif << "\n";
+    cout << "CARTE" << endl;
+    cout << "largeur : " << jeu.carte.largeur << endl;
+    cout << "hauteur : " << jeu.carte.hauteur << endl;
 
-    cout << "\n-- Cases --\n";
+    cout << "Cases" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++)
             cout << jeu.carte.cases[y][x];
-        cout << "\n";
+        cout << endl;
     }
 
-    cout << "\n-- Visibilité --\n";
+    cout << "Visibilité" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++)
             cout << (jeu.carte.visible[y][x] ? "1" : "0");
-        cout << "\n";
-    }
-
-    // ------------------------------------------------------------
-    cout << "\n=== JOUEUR (DYNAMIQUE) ===\n";
-    cout << "x : " << jeu.joueur.x << "\n";
-    cout << "y : " << jeu.joueur.y << "\n";
-    cout << "nb_inventaire : " << jeu.joueur.nb_inventaire << "\n";
-
-    for (int i = 0; i < jeu.joueur.nb_inventaire; i++)
-        cout << "inventaire[" << i << "] : " << jeu.joueur.inventaire[i] << "\n";
-
-    for (int i = 0; i < NB_STATS; i++)
-        cout << "stat[" << i << "] : " << jeu.joueur.stat[i] << "\n";
-
-    // ------------------------------------------------------------
-    cout << "\n=== ETAT DU JEU ===\n";
-    cout << "etat_termine : " << jeu.etat_termine << "\n";
-    cout << "victoire : " << jeu.victoire << "\n";
-
-    cout << "\n[FIN DEBUG]\n";
-}
-
-
-
-
-int trouver_item_case(const Jeu& jeu, int x, int y) {
-    for (int i = 0; i < jeu.nb_items; i++) {
-        if (jeu.items[i].x == x && jeu.items[i].y == y) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-int trouver_monstre_case(const Jeu& jeu, int x, int y) {
-    for (int i = 0; i < jeu.nb_monstres; i++) {
-        if (jeu.monstres[i].actif && jeu.monstres[i].x == x && jeu.monstres[i].y == y) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-void afficher_map(const Jeu& jeu) {
-    for (int y = 0; y < jeu.carte.hauteur; y++) {
-        for (int x = 0; x < jeu.carte.largeur; x++) {
-            cout << jeu.carte.cases[y][x];
-        }
         cout << endl;
     }
-}
 
-void inspecter_case(const Jeu& jeu) {
-    int x, y;
-    cout << "Entrez X : ";
-    cin >> x;
-    cout << "Entrez Y : ";
-    cin >> y;
+    cout << "JOUEUR (DYNAMIQUE)" << endl;
+    cout << "x : " << jeu.joueur.x << endl;
+    cout << "y : " << jeu.joueur.y << endl;
+    cout << "nb_inventaire : " << jeu.joueur.nb_inventaire << endl;
 
-    if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
-        cout << "Coordonnées hors de la carte.\n";
-        return;
-    }
+    for (int i = 0; i < jeu.joueur.nb_inventaire; i++)
+        cout << "inventaire[" << i << "] : " << jeu.joueur.inventaire[i] << endl;
 
-    char c = jeu.carte.cases[y][x];
-    cout << "Case (" << x << "," << y << ") : '" << c << "'\n";
+    for (int i = 0; i < NB_STATS; i++)
+        cout << "stat[" << i << "] : " << jeu.joueur.stat[i] << endl;
 
-    // Joueur ?
-    if (jeu.joueur.x == x && jeu.joueur.y == y) {
-        cout << "-> Joueur : " << jeu.cfg_joueur.nom << endl;
-        return;
-    }
+    cout << "ETAT DU JEU" << endl;
+    cout << "etat_termine : " << jeu.etat_termine << endl;
+    cout << "victoire : " << jeu.victoire << endl;
 
-    // Item ?
-    int idItem = trouver_item_case(jeu, x, y);
-    if (idItem != -1) {
-        int idConf = jeu.items[idItem].idConfig;
-
-        // Chercher dans la config item
-        for (int i = 0; i < jeu.nb_cfg_items; i++) {
-            if (jeu.cfg_items[i].id == idConf) {
-                cout << "-> Item : " << jeu.cfg_items[i].nom << endl;
-                cout << "   Description : " << jeu.cfg_items[i].description << endl;
-                cout << "   Bonus : ";
-                for (int k = 0; k < NB_STATS; k++) {
-                    cout << jeu.cfg_items[i].bonus[k] << " ";
-                }
-                cout << endl;
-                return;
-            }
-        }
-    }
-
-    // Monstre ?
-    int idMonstre = trouver_monstre_case(jeu, x, y);
-    if (idMonstre != -1) {
-        int idConf = jeu.monstres[idMonstre].idConfig;
-
-        // Chercher dans la config monstre
-        for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
-            if (jeu.cfg_monstres[i].id == idConf) {
-                cout << "-> Monstre : " << jeu.cfg_monstres[i].nom << endl;
-                cout << "   Description : " << jeu.cfg_monstres[i].description << endl;
-                cout << "   Stats : ";
-                for (int k = 0; k < NB_STATS; k++) {
-                    cout << jeu.cfg_monstres[i].stats_base[k] << " ";
-                }
-                cout << endl;
-                return;
-            }
-        }
-    }
-
-    // Sinon...
-    if (c == '#') cout << "-> Mur" << endl;
-    else if (c == '.') cout << "-> Sol vide" << endl;
-    else cout << "-> Aucun élément enregistré pour ce symbole." << endl;
+    cout << "[FIN DEBUG]" << endl;
 }
 
 #endif
