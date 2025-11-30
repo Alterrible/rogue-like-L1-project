@@ -1,4 +1,3 @@
-// gpt : fichier des commandes du joueur et des actions basiques
 #ifndef TRAITER_COMMANDE_HPP
 #define TRAITER_COMMANDE_HPP
 
@@ -6,12 +5,9 @@
 #include <iostream>
 using namespace std;
 
-// Cette fonction traite une commande utilisateur simple
-// Les mouvements sont gérés avec z (haut), s (bas), q (gauche), d (droite).
-// D'autres commandes permettent d'afficher l'inventaire, la carte, de frapper un monstre,
-// de se soigner ou de manger un objet. La logique reste volontairement basique.
+
 void traiter_commande(char cmd, Jeu &jeu) {
-    // gpt : on prépare les nouvelles coordonnées
+    // prépare les nouvelles coordonnées
     int nouveauX = jeu.joueur.x;
     int nouveauY = jeu.joueur.y;
 
@@ -29,7 +25,7 @@ void traiter_commande(char cmd, Jeu &jeu) {
     }
     // Si la commande était un mouvement, on vérifie la validité de la case
     if (cmd == 'z' || cmd == 's' || cmd == 'q' || cmd == 'd') {
-        // gpt : bornes de la carte et mur (#)
+        // bornes de la carte et mur (#)
         if (nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
             nouveauY >= 0 && nouveauY < jeu.carte.hauteur &&
             jeu.carte.cases[nouveauY][nouveauX] != '#') {
