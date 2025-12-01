@@ -4,8 +4,8 @@ using namespace std;
 #include "enregistrement.hpp"
 #include "init.hpp"
 #include "affichage.hpp"
-#include "maj.hpp"
-#include "traiter_commande.hpp"
+// #include "maj.hpp"
+// #include "traiter_commande.hpp"
 
 int main() {
     Jeu jeu;
@@ -28,20 +28,21 @@ int main() {
 
     afficher_jeu_debug(jeu);
 
-    // Boucle principale
-    while (!jeu.etat_termine) {
-        afficher_jeu(jeu);
-        cmd = saisie_bloquante();
+    // // Boucle principale
+    // while (!jeu.etat_termine) {
+    //     afficher_jeu(jeu);
+    //     cmd = saisie_bloquante();
 
-        traiter_commande(cmd, jeu);
-        mettre_a_jour_jeu(jeu);
-        verifier_conditions_victoire_defaite(jeu);
-    }
+    //     traiter_commande(cmd, jeu);
+    //     mettre_a_jour_jeu(jeu);
+    //     verifier_conditions_victoire_defaite(jeu);
+    // }
 
-    // Fin de jeu
-    afficher_game_over(jeu);
+    // // Fin de jeu
+    // afficher_game_over(jeu);
 
     return 0;
 }
 
 // g++ main.cpp -o main.exe -lncurses
+// g++ main.cpp -o main.exe -lncurses -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wnull-dereference -Wundef -Winline -O2 -g -fsanitize=address,undefined -fstack-protector-strong 

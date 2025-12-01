@@ -69,6 +69,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
         if (!skip && section == 1) {
             Config_item &it = jeu.cfg_items[jeu.nb_cfg_items];
 
+            cout << "section = 1, assigne = it.id, valeur = " << mots[0] << endl
             it.id = stoi(mots[0]);
             it.symbole = mots[1][0];
             it.nom = mots[2];
@@ -89,19 +90,15 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             m.symbole = mots[1][0];
             m.nom = mots[2];
             m.description = mots[3];
+            m.typeIA = stoi(mots[16]);
 
             for (int i = 0; i < NB_STATS; i++) {
                 m.stats_base[i] = stoi(mots[4 + i]);
             }
 
-            m.typeIA = stoi(mots[10]);
-            m.id_item_contrainte = stoi(mots[11]);
-
             for (int i = 0; i < NB_STATS; i++) {
-                m.contrainte_stats[i] = stoi(mots[12 + i]);
+                m.stats_afflige[i] = stoi(mots[10 + i]);
             }
-
-            m.inventaire_ids.taille = 0;
 
             jeu.nb_cfg_monstres++;
         }
@@ -112,22 +109,18 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
 
             p.id = stoi(mots[0]);
             p.symbole = mots[1][0];
-            p.id_item_contrainte = stoi(mots[2]);
-
-            for (int i = 0; i < NB_STATS; i++) {
-                if (!mots[3 + i].empty())
-                    p.contrainte_stats[i] = stoi(mots[3 + i]);
-                else
-                    p.contrainte_stats[i] = 0;   // par défaut
-            }
+            p.id_contrainte = stoi(mots[2]);
 
             jeu.nb_cfg_portes++;
         }
 
         // joueur
         else if (!skip && section == 4) {
+            if (mots[0] == "symbole") {
+                eu.cfg_joueur.symbole = mots[1][0];
+            }
 
-            if (mots[0] == "nom") {
+            else if (mots[0] == "nom") {
                 jeu.cfg_joueur.nom = mots[1];
             }
 
@@ -141,9 +134,17 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
                 }
             }
 
-            jeu.cfg_joueur.symbole = '@';
-            jeu.cfg_joueur.inventaire_ids.taille = 0;
-            jeu.cfg_joueur.actif = true;
+            else if (mots[0] == "inventaire") {
+                if (mots[1] != "_") {
+                    int t = 0;
+                    for (int i = 1; i < nb; i++)
+                        jeu.cfg_joueur.inventaire_ids.ids[t++] = stoi(mots[i]);
+                    jeu.cfg_joueur.inventaire_ids.taille = t;
+                } else {
+                    jeu.cfg_joueur.inventaire_ids.taille = 0;
+                }
+            }
+
         }
 
         // contraintes
@@ -151,25 +152,36 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             Contrainte &c = jeu.cfgConditions.contraintes[jeu.cfgConditions.nbContraintes];
 
             c.id = stoi(mots[0]);
-            c.description = mots[1];
+            for (int i = 0; i < NB_STATS; i++){
+                c.stats_min[i] = stoi(mots[1 + i]);
+            }
 
-            for (int i = 0; i < NB_STATS; i++) {
-                c.stats_min[i] = stoi(mots[2 + i]);
+            if (mots[NB_STATS + 1] == '_') {
+                c.nb_items_possede = 0;
+            } else {
+                for (int i = 0; i < nb - NB_STATS + 1; i++){
+                    c.nb_items_possede = i;
+                    c.items_possede[i] = stoi(mots[i + NB_STATS + 1]);
+                }
+            }
+
+            if ((8 + c.nb_items_possede) < nb && !mots[8 + c.nb_items_possede].empty()) {
+                c.symbole_atteint = mots[8 + c.nb_items_possede][0];
             }
 
             jeu.cfgConditions.nbContraintes++;
         }
 
         // condition de victoire
-        else if (!skip && section == 7) {
-            for (int i = 0; i < nb; i++) {
+        else if (!skip && section == 6) {
+            for (int i = 0; i < nb; i++){
                 jeu.cfgConditions.victoire.ids[jeu.cfgConditions.victoire.nb++] = stoi(mots[i]);
             }
         }
 
         // condition de défaite
-        else if (!skip && section == 8) {
-            for (int i = 0; i < nb; i++) {
+        else if (!skip && section == 7) {
+            for (int i = 0; i < nb; i++){
                 jeu.cfgConditions.defaite.ids[jeu.cfgConditions.defaite.nb++] = stoi(mots[i]);
             }
         }
@@ -202,7 +214,7 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
             jeu.carte.cases[y][x] = c;
 
             // joueur
-            if (c == '@') {
+            if (c == jeu.cfg_joueur.symbole) {
                 jeu.joueur.x = x;
                 jeu.joueur.y = y;
             }

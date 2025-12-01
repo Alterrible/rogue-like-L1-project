@@ -26,8 +26,10 @@ struct Liste_Id_Equipements {
 // --- Structure Contrainte ---
 struct Contrainte {
     int id;
-    string description;
+    int items_possede[TAILLE_MAX];
+    int nb_items_possede;
     int stats_min[NB_STATS];
+    char symbole_atteint;
 };
 
 // --- Structures de configuration ---
@@ -44,18 +46,15 @@ struct Config_monstre {
     char symbole;
     string nom;
     string description;
-    int stats_base[NB_STATS];
     int typeIA;
-    int id_item_contrainte;
-    int contrainte_stats[NB_STATS];
-    Liste_Id_Equipements inventaire_ids;  // Equipements du monstre
+    int stats_base[NB_STATS];
+    int stats_afflige[NB_STATS]; // représente les dégâts qui vont être affligé (nombre positif passé en négatif au traitement)
 };
 
 struct Config_porte {
     int id;
     char symbole;
-    int id_item_contrainte;
-    int contrainte_stats[NB_STATS];
+    int id_contrainte;
 };
 
 struct Config_joueur {
@@ -64,9 +63,6 @@ struct Config_joueur {
     string description;
     int stats[NB_STATS];
     Liste_Id_Equipements inventaire_ids;
-    bool actif;
-    int spawn_x;
-    int spawn_y;
 };
 
 struct Config_conditions_jeu {
