@@ -8,9 +8,9 @@ using namespace std;
 // #include "traiter_commande.hpp"
 
 int main() {
-    Jeu jeu;
+    static Jeu jeu;
     bool ok;
-    char cmd;
+    // char cmd;
 
     // Charger la configuration générale
     ok = charger_configuration("init.txt", jeu);
