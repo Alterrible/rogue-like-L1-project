@@ -4,13 +4,28 @@ using namespace std;
 #include "enregistrement.hpp"
 #include "init.hpp"
 #include "affichage.hpp"
-// #include "maj.hpp"
-// #include "traiter_commande.hpp"
+#include "maj.hpp"
+#include "traiter_commande.hpp"
+
+void mettre_a_jour_jeu(Jeu &jeu){
+    mettre_a_jour_monstres(jeu);
+    mettre_a_jour_visibilite(jeu);
+    verifier_conditions_victoire_defaite(jeu);
+
+    // mettre à jour les données de joueurs : 
+    // - recalcule de stats suivant les items possédés
+    // - prise en compte des contraintes de stats des monstres
+    mettre_a_jour_stats_joueur(jeu);
+
+    // calcule de l'état de la carte (mise à jour de carte.cases[y][x])
+    mettre_a_jour_carte(jeu);
+}
+
 
 int main() {
     static Jeu jeu;
     bool ok;
-    // char cmd;
+    char cmd;
 
     // Charger la configuration générale
     ok = charger_configuration("init.txt", jeu);
@@ -28,18 +43,18 @@ int main() {
 
     afficher_jeu_debug(jeu);
 
-    // // Boucle principale
-    // while (!jeu.etat_termine) {
-    //     afficher_jeu(jeu);
-    //     cmd = saisie_bloquante();
+    // Boucle principale
+    while (!jeu.etat_termine) {
+        afficher_jeu(jeu);
+        cmd = saisie_bloquante();
 
-    //     traiter_commande(cmd, jeu);
-    //     mettre_a_jour_jeu(jeu);
-    //     verifier_conditions_victoire_defaite(jeu);
-    // }
+        traiter_commande(cmd, jeu);
+        mettre_a_jour_jeu(jeu);
+        verifier_conditions_victoire_defaite(jeu);
+    }
 
-    // // Fin de jeu
-    // afficher_game_over(jeu);
+    // Fin de jeu
+    afficher_game_over(jeu);
 
     return 0;
 }

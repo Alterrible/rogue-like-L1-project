@@ -226,18 +226,4 @@ void mettre_a_jour_carte(Jeu &jeu) {
     }
 }
 
-void mettre_a_jour_jeu(Jeu &jeu){
-    mettre_a_jour_monstres(jeu);
-    mettre_a_jour_visibilite(jeu);
-    verifier_conditions_victoire_defaite(jeu);
-
-    // gpt : mettre à jour les données de joueurs : 
-    // gpt : - recalcule de stats suivant les items possédés
-    // gpt : - prise en compte des contraintes de stats des monstres
-    mettre_a_jour_stats_joueur(jeu);
-
-    // gpt : calcule de l'état de la carte (mise à jour de carte.cases[y][x])
-    mettre_a_jour_carte(jeu);
-}
-
 #endif
