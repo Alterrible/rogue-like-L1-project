@@ -48,7 +48,8 @@ struct Config_monstre {
     string description;
     int typeIA;
     int stats_base[NB_STATS];
-    int stats_afflige[NB_STATS]; // représente les dégâts qui vont être affligé (nombre positif passé en négatif au traitement)
+    int stats_afflige[NB_STATS];  // représente les dégâts qui vont être affligé (nombre positif passé en négatif au traitement)
+    bool stats_prit[NB_STATS];  // représente les stats qui joue sur lui
 };
 
 struct Config_porte {
@@ -94,6 +95,7 @@ struct Items {
     int x;
     int y;
     int idConfig;
+    bool actif;
 };
 
 struct Carte {

@@ -6,124 +6,251 @@
 using namespace std;
 
 
+int trouver_monstre(const Jeu& jeu, int x, int y) {
+    for (int i = 0; i < jeu.nb_monstres; i++) {
+        const Monstre& m = jeu.monstres[i];
+
+        if (m.actif && m.x == x && m.y == y) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int trouver_item(const Jeu& jeu, int x, int y) {
+    for (int i = 0; i < jeu.nb_items; i++) {
+        const Items& it = jeu.items[i];
+
+        if (it.actif && it.x == x && it.y == y) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+// -----------------------------------------------------------------------------
+// Vérifie si la stat i_stat du joueur est >= stat_requise
+// -----------------------------------------------------------------------------
+bool a_stat(Jeu& jeu, int i_stat, int stat_requise) {
+    return jeu.joueur.stat[i_stat] >= stat_requise;
+}
+
+// -----------------------------------------------------------------------------
+// Vérifie si le joueur possède NB items d'id donné
+// Exemple : a_items(jeu, idItem = 3, nbVoulu = 2)
+// -----------------------------------------------------------------------------
+bool a_items(Jeu& jeu, int id_item_requis, int nb_voulu) {
+    int nb_check = 0;
+
+    for (int inv = 0; inv < jeu.joueur.nb_inventaire; inv++) {
+        int idItem = jeu.joueur.inventaire[inv];
+
+        if (idItem == id_item_requis) {
+            nb_check++;
+
+            if (nb_check >= nb_voulu) {
+                return true;
+            }
+        }
+    }
+
+    return false; // pas assez d’items
+}
+
+// -----------------------------------------------------------------------------
+// Vérifie une contrainte (stat, items, etc.) selon cfgConditions
+// id_contrainte → index d’une condition dans cfgConditions.contraintes[]
+// -----------------------------------------------------------------------------
+bool check_contrainte(Jeu& jeu, int id_contrainte) {
+    int indexCtr = -1;
+
+    // Recherche de la contrainte par son ID
+    for (int c = 0; c < jeu.cfgConditions.nbContraintes; c++) {
+        if (jeu.cfgConditions.contraintes[c].id == id_contrainte) {
+            indexCtr = c;
+            break;
+        }
+    }
+
+    // Aucune contrainte trouvée
+    if (indexCtr == -1)
+        return false;
+
+    const Contrainte& ctr = jeu.cfgConditions.contraintes[indexCtr];
+
+    // -----------------------------------------
+    // Vérification des items requis
+    // -----------------------------------------
+    for (int i = 0; i < ctr.nb_items_possede; i++) {
+
+        int id_item_requis = ctr.items_possede[i];
+
+        // Chaque item listé doit être possédé au moins 1 fois
+        if (!a_items(jeu, id_item_requis, 1)) {
+            return false; // item manquant
+        }
+    }
+
+    // -----------------------------------------
+    // Vérification des stats minimales
+    // -----------------------------------------
+    for (int s = 0; s < NB_STATS; s++) {
+
+        int min_req = ctr.stats_min[s];
+
+        // 0 signifie "aucune contrainte"
+        if (min_req > 0) {
+            if (!a_stat(jeu, s, min_req)) {
+                return false; // stat insuffisante
+            }
+        }
+    }
+
+    // -----------------------------------------
+    // Toutes les conditions sont remplies
+    // -----------------------------------------
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// Vérifie si la porte (symbole = '0'..'9') peut être ouverte
+// -----------------------------------------------------------------------------
+bool porte_valide(Jeu& jeu, char c, int /*nouveauY*/, int /*nouveauX*/) {
+    // Si ce n'est pas une porte (0..9), pas de contrainte
+    if (!(c >= '0' && c <= '9')) return true;
+
+    // On cherche la porte correspondante dans la configuration
+    for (int p = 0; p < jeu.nb_cfg_portes; p++) {
+        const Config_porte& porte = jeu.cfg_portes[p];
+
+        if (porte.symbole == c) {
+            // Vérifie la contrainte associée
+            bool ok = check_contrainte(jeu, porte.id_contrainte);
+            return ok;
+        }
+    }
+
+    // Symbole de porte inconnu -> porte invalide
+    return false;
+}
+
+// ---------------------------------------------------------------------------
+//  TRAITEMENT PRINCIPAL
+// ---------------------------------------------------------------------------
 void traiter_commande(char cmd, Jeu &jeu) {
-    // prépare les nouvelles coordonnées
     int nouveauX = jeu.joueur.x;
     int nouveauY = jeu.joueur.y;
 
-    if (cmd == 'z') {                 // Avancer (haut)
-        nouveauY = jeu.joueur.y - 1;
-    }
-    else if (cmd == 's') {            // Reculer (bas)
-        nouveauY = jeu.joueur.y + 1;
-    }
-    else if (cmd == 'q') {            // Aller à gauche
-        nouveauX = jeu.joueur.x - 1;
-    }
-    else if (cmd == 'd') {            // Aller à droite
-        nouveauX = jeu.joueur.x + 1;
-    }
-    // Si la commande était un mouvement, on vérifie la validité de la case
-    if (cmd == 'z' || cmd == 's' || cmd == 'q' || cmd == 'd') {
-        // bornes de la carte et mur (#)
-        if (nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
-            nouveauY >= 0 && nouveauY < jeu.carte.hauteur &&
-            jeu.carte.cases[nouveauY][nouveauX] != '#') {
-            jeu.joueur.x = nouveauX;
-            jeu.joueur.y = nouveauY;
-        }
-        return;
-    }
+    bool commande_deplacement = false;
+    bool commande_interaction = false;
 
-    if (cmd == 'i') {            // Inventaire
-        cout << "Inventaire :" << endl;
-        if (jeu.joueur.nb_inventaire == 0) {
-            cout << "  (vide)" << endl;
-        } else {
-            for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
-                int idItem = jeu.joueur.inventaire[i];
-                cout << "  Slot " << i << " : item " << idItem << endl;
+    // -----------------------------------------------------------------------
+    // 1) RECONNAISSANCE DU TYPE DE COMMANDE
+    // -----------------------------------------------------------------------
+    if (cmd == 'z') { nouveauY--; commande_deplacement = true; } // haut
+    else if (cmd == 's') { nouveauY++; commande_deplacement = true; } // bas
+    else if (cmd == 'q') { nouveauX--; commande_deplacement = true; } // gauche
+    else if (cmd == 'd') { nouveauX++; commande_deplacement = true; } // droite
+
+    else if (cmd == 'i') { nouveauY--; commande_interaction = true; } // haut
+    else if (cmd == 'k') { nouveauY++; commande_interaction = true; } // bas
+    else if (cmd == 'j') { nouveauX--; commande_interaction = true; } // gauche
+    else if (cmd == 'l') { nouveauX++; commande_interaction = true; } // droite
+
+    // -----------------------------------------------------------------------
+    // 2) DÉPLACEMENT
+    // -----------------------------------------------------------------------
+    if (commande_deplacement) {
+
+        // Vérifie d'abord que la case est dans la carte
+        bool case_valide =
+            nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
+            nouveauY >= 0 && nouveauY < jeu.carte.hauteur;
+
+        if (case_valide) {
+            char c = jeu.carte.cases[nouveauY][nouveauX];
+            bool marchable = (c != '#' && !(c >= 'A' && c <= 'Z'));
+            bool est_porte_valide = porte_valide(jeu, c, nouveauY, nouveauX);
+
+            // On ne marche que sur les cases marchables ET dont la "porte" est valide
+            if (marchable && est_porte_valide) {
+                jeu.joueur.x = nouveauX;
+                jeu.joueur.y = nouveauY;
             }
         }
     }
-    else if (cmd == 'm') {            // Carte (info simple)
-        cout << "Position du joueur : (" 
-             << jeu.joueur.x << ", " << jeu.joueur.y << ")" << endl;
-        cout << "Taille carte : " 
-             << jeu.carte.largeur << " x " << jeu.carte.hauteur << endl;
-    }
-    else if (cmd == 'f') {            // Frapper l'adversaire (version basique)
-        cout << "Vous frappez devant vous !" << endl;
 
-        // Exemple très simple : on cherche un monstre sur la case juste au-dessus
-        int cibleX = jeu.joueur.x;
-        int cibleY = jeu.joueur.y - 1;
+    // -----------------------------------------------------------------------
+    // 3) INTERACTION : i k j l
+    // -----------------------------------------------------------------------
+    if (commande_interaction) {
 
-        bool touche = false;
-        for (int i = 0; i < jeu.nb_monstres; i++) {
-            if (jeu.monstres[i].actif &&
-                jeu.monstres[i].x == cibleX &&
-                jeu.monstres[i].y == cibleY) {
+        bool case_dans_carte =
+            nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
+            nouveauY >= 0 && nouveauY < jeu.carte.hauteur;
 
-                // On enlève 1 PV au monstre (stat[0])
-                jeu.monstres[i].stats[0] -= 1;
-                cout << "Vous touchez un monstre !" << endl;
+        bool interaction_possible = case_dans_carte;
 
-                // Si le monstre n'a plus de PV, on le désactive
-                if (jeu.monstres[i].stats[0] <= 0) {
-                    jeu.monstres[i].actif = false;
-                    cout << "Le monstre est vaincu." << endl;
+        // si hors carte, on ignore simplement l'interaction
+        if (interaction_possible) {
+
+            int id_monstre = trouver_monstre(jeu, nouveauX, nouveauY);
+            int id_item = trouver_item(jeu, nouveauX, nouveauY);
+
+            cout << to_string(id_monstre) << endl;
+            cout << to_string(id_item) << endl;
+
+            // -------------------------------------------------------------------
+            // → MONSTRE ?
+            // -------------------------------------------------------------------
+            if (id_monstre != -1) {
+
+                Monstre &m = jeu.monstres[id_monstre];
+                Config_monstre &cfg_m = jeu.cfg_monstres[m.idConfig];
+
+                for (int s = 0; s < NB_STATS; s++) {
+                    if (cfg_m.stats_prit[s]) {
+                        m.stats[s] -= jeu.joueur.stat[s];
+                        if (m.stats[s] < 0)
+                            m.stats[s] = 0;
+                    }
                 }
-                touche = true;
-                break;
-            }
-        }
-        if (!touche) {
-            cout << "Il n'y a aucun monstre à portée." << endl;
-        }
-    }
-    else if (cmd == 'h') {            // Se soigner
-        cout << "Vous essayez de vous soigner." << endl;
 
-        // Version simple : +2 PV, sans dépasser le max
-        int pvActuels = jeu.joueur.stat[0];
-        int pvMax     = jeu.joueur.stat[1];
+                bool mort = true;
+                for (int s = 0; s < NB_STATS; s++) {
+                    if (m.stats[s] > 0) {
+                        mort = false;
+                        break;
+                    }
+                }
 
-        if (pvActuels >= pvMax) {
-            cout << "Vous avez déjà tous vos PV." << endl;
-        } else {
-            jeu.joueur.stat[0] = pvActuels + 2;
-            if (jeu.joueur.stat[0] > pvMax) {
-                jeu.joueur.stat[0] = pvMax;
-            }
-            cout << "Vous regagnez des PV. PV = " 
-                 << jeu.joueur.stat[0] << "/" << pvMax << endl;
-        }
-    }
-    else if (cmd == 'e') {            // Manger
-        cout << "Vous essayez de manger un objet." << endl;
-
-        if (jeu.joueur.nb_inventaire == 0) {
-            cout << "Votre inventaire est vide." << endl;
-        } else {
-            // On consomme le dernier objet de l'inventaire
-            int idItem = jeu.joueur.inventaire[jeu.joueur.nb_inventaire - 1];
-            cout << "Vous mangez l'objet " << idItem << "." << endl;
-
-            // Petit bonus : +1 PV
-            int pvActuels = jeu.joueur.stat[0];
-            int pvMax     = jeu.joueur.stat[1];
-            if (pvActuels < pvMax) {
-                jeu.joueur.stat[0]++;
+                if (mort) {
+                    m.actif = false;
+                    jeu.carte.cases[nouveauY][nouveauX] = '.';
+                }
             }
 
-            // Retirer l'objet du tableau
-            jeu.joueur.nb_inventaire--;
+            // -------------------------------------------------------------------
+            // → ITEM ?
+            // -------------------------------------------------------------------
+            else if (id_item != -1) {
+
+                Items &it = jeu.items[id_item];
+
+                // On stocke un identifiant d'item (ici idConfig, mais adapte si besoin)
+                if (jeu.joueur.nb_inventaire < TAILLE_MAX) {
+                    jeu.joueur.inventaire[jeu.joueur.nb_inventaire] = it.idConfig;
+                    jeu.joueur.nb_inventaire++;
+                }
+
+                it.actif = false;
+                jeu.carte.cases[nouveauY][nouveauX] = '.';
+            }
         }
-    }
-    else {
-        cout << "Commande inconnue." << endl;
     }
 }
 
-#endif // TRAITER_COMMANDE_HPP
+#endif

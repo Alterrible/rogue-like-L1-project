@@ -3,225 +3,324 @@
 
 #include "enregistrement.hpp"
 #include <iostream>
-using namespace std;
 
-// gpt : applique les contraintes des monstres sur le joueur lorsqu'un monstre atteint la case du joueur
-void appliquer_contraintes_monstre_sur_joueur(Monstre &m, Joueur &joueur) {
-    for (int s = 0; s < NB_STATS; ++s) {
-        int delta = m.contrainte_stats[s];
-        if (delta >= 0) continue;
+// --- fonctions utilitaires ---
 
-        if (s == 0) {
-            // gpt : stat[0] = vie, on applique ça comme des dégâts
-            joueur.stat[0] += delta; // delta < 0
-            if (joueur.stat[0] < 0) joueur.stat[0] = 0;
-        } else {
-            joueur.stat[s] += delta;
-            if (joueur.stat[s] < 0) joueur.stat[s] = 0;
+int abs_int(int x){
+    return (x < 0) ? -x : x;
+}
+
+int distance_manhattan(int x1, int y1, int x2, int y2) {
+    return abs_int(x1 - x2) + abs_int(y1 - y2);
+}
+
+//recherche config item sans pointeur
+bool trouver_config_item_par_id(const Jeu& jeu, int idItem, Config_item& out) {
+    for (int i = 0; i < jeu.nb_cfg_items; ++i) {
+        if (jeu.cfg_items[i].id == idItem) {
+            out = jeu.cfg_items[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+//recherche config monstre sans pointeur
+bool trouver_config_monstre_par_id(const Jeu& jeu, int idMonstre, Config_monstre& out) {
+    for (int i = 0; i < jeu.nb_cfg_monstres; ++i) {
+        if (jeu.cfg_monstres[i].id == idMonstre) {
+            out = jeu.cfg_monstres[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+//applique les effets d'un monstre sur le joueur
+void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, Joueur& joueur) {
+    Config_monstre cfg;
+    bool ok = trouver_config_monstre_par_id(jeu, m.idConfig, cfg);
+
+    if (ok) {
+        for (int s = 0; s < NB_STATS; ++s) {
+            int delta = cfg.stats_afflige[s];
+            if (delta > 0) {
+                joueur.stat[s] -= delta;
+                if (joueur.stat[s] < 0) {
+                    joueur.stat[s] = 0;
+                }
+            }
         }
     }
 }
+// ---
 
-// système d'ia
-void mettre_a_jour_monstres(Jeu &jeu) {
-    // gpt : tous les monstres actifs se déplacent vers le joueur (si vivants)
-    for (int i = 0; i < jeu.nb_monstres; i++) {
+//stockage local des zones de base
+bool g_base_monstre_init[TAILLE_MAX] = { false };
+int  g_base_monstre_x[TAILLE_MAX]    = { 0 };
+int  g_base_monstre_y[TAILLE_MAX]    = { 0 };
 
-        if (!jeu.monstres[i].actif) {
-            continue;
+const int RAYON_ZONE_BASE = 6;
+
+//vérifie si une position est dans la zone de base
+bool position_dans_zone_base(int i, int x, int y) {
+    int bx = g_base_monstre_x[i];
+    int by = g_base_monstre_y[i];
+    return distance_manhattan(x, y, bx, by) <= RAYON_ZONE_BASE;
+}
+
+//vérifie si une case est praticable pour un monstre
+bool case_praticable_pour_monstre(const Jeu& jeu, int x, int y, int indexMonstre) {
+    if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
+        return false;
+    }
+
+    if (jeu.carte.cases[y][x] != '.') {
+        return false;
+    }
+
+    for (int j = 0; j < jeu.nb_monstres; ++j) {
+        bool autre_monstre = (j != indexMonstre);
+        bool actif = jeu.monstres[j].actif;
+        bool vivant = (jeu.monstres[j].stats[0] > 0);
+
+        if (autre_monstre && actif && vivant) {
+            if (jeu.monstres[j].x == x && jeu.monstres[j].y == y) {
+                return false;
+            }
         }
+    }
 
-        if (jeu.monstres[i].stats[0] <= 0) {
-            // gpt : monstre mort, on le rend inactif
-            jeu.monstres[i].actif = false;
-            continue;
+    return true;
+}
+
+//update des monstres
+void mettre_a_jour_monstres(Jeu& jeu) {
+    for (int i = 0; i < jeu.nb_monstres; ++i) {
+
+        Monstre& monstre = jeu.monstres[i];
+        bool actif = monstre.actif;
+        bool vivant = (monstre.stats[0] > 0);
+
+        if (actif && !vivant) {
+            monstre.actif = false;
         }
+        else if (actif && vivant) {
 
-        int mx = jeu.monstres[i].x;
-        int my = jeu.monstres[i].y;
+            if (!g_base_monstre_init[i]) {
+                g_base_monstre_x[i] = monstre.x;
+                g_base_monstre_y[i] = monstre.y;
+                g_base_monstre_init[i] = true;
+            }
 
-        // calcule direction vers le joueur si le monstre est à gauche → il va vers la droite et idem pour les autres directions
-        int dx = 0;
-        int dy = 0;
-    
-        if (mx < jeu.joueur.x) dx = 1;
-        else if (mx > jeu.joueur.x) dx = -1;
-        if (my < jeu.joueur.y) dy = 1;
-        else if (my > jeu.joueur.y) dy = -1;
+            int mx = monstre.x;
+            int my = monstre.y;
+            int jx = jeu.joueur.x;
+            int jy = jeu.joueur.y;
 
-        int nx = mx + dx;
-        int ny = my + dy;
+            bool joueur_dans_zone = position_dans_zone_base(i, jx, jy);
 
-        // gpt : vérification des bornes de la carte
-        if (nx >= 0 && nx < jeu.carte.largeur && ny >= 0 && ny < jeu.carte.hauteur) {
+            if (joueur_dans_zone) {
 
-            // gpt : on interdit le déplacement dans les murs (on garde la logique sur '#')
-            if (jeu.carte.cases[ny][nx] != '#') {
+                int dist = distance_manhattan(mx, my, jx, jy);
 
-                // gpt : éviter que deux monstres se marchent dessus
-                bool case_occupee_par_monstre = false;
-                for (int j = 0; j < jeu.nb_monstres; ++j) {
-                    if (j == i) continue;
-                    if (!jeu.monstres[j].actif) continue;
-                    if (jeu.monstres[j].x == nx && jeu.monstres[j].y == ny) {
-                        case_occupee_par_monstre = true;
-                        break;
+                if (dist == 1 || dist == 0) {
+                    appliquer_contraintes_monstre_sur_joueur(jeu, monstre, jeu.joueur);
+                }
+                else {
+                    int diffX = jx - mx;
+                    int diffY = jy - my;
+                    int dx = 0;
+                    int dy = 0;
+
+                    if (abs_int(diffX) >= abs_int(diffY)) {
+                        dx = (diffX > 0) ? 1 : -1;
                     }
-                }
+                    else {
+                        if (diffY != 0) {
+                            dy = (diffY > 0) ? 1 : -1;
+                        }
+                    }
 
-                if (case_occupee_par_monstre) {
-                    continue;
-                }
+                    int nx = mx + dx;
+                    int ny = my + dy;
 
-                // gpt : si la case ciblée est celle du joueur → on applique les contraintes du monstre
-                if (nx == jeu.joueur.x && ny == jeu.joueur.y) {
-                    appliquer_contraintes_monstre_sur_joueur(jeu.monstres[i], jeu.joueur);
-                    // gpt : le monstre ne prend pas la place du joueur, il reste où il est
-                } else {
-                    // gpt : déplacement normal
-                    jeu.monstres[i].x = nx;
-                    jeu.monstres[i].y = ny;
+                    bool peut_bouger = 
+                        position_dans_zone_base(i, nx, ny) &&
+                        case_praticable_pour_monstre(jeu, nx, ny, i) &&
+                        !(nx == jx && ny == jy);
+
+                    if (!peut_bouger) {
+
+                        dx = 0;
+                        dy = 0;
+
+                        if (abs_int(diffX) < abs_int(diffY)) {
+                            if (diffX != 0) {
+                                dx = (diffX > 0) ? 1 : -1;
+                            }
+                        }
+                        else {
+                            if (diffY != 0) {
+                                dy = (diffY > 0) ? 1 : -1;
+                            }
+                        }
+
+                        nx = mx + dx;
+                        ny = my + dy;
+
+                        peut_bouger =
+                            position_dans_zone_base(i, nx, ny) &&
+                            case_praticable_pour_monstre(jeu, nx, ny, i) &&
+                            !(nx == jx && ny == jy);
+                    }
+
+                    if (peut_bouger) {
+                        monstre.x = nx;
+                        monstre.y = ny;
+                    }
                 }
             }
         }
     }
 }
 
-void mettre_a_jour_visibilite(Jeu &jeu) {
-    // gpt : visibilité non implémentée ici (placeholder conservé)
+//update de la visibilité
+void mettre_a_jour_visibilite(Jeu& jeu) {
+    (void)jeu;
 }
 
-void verifier_conditions_victoire_defaite(Jeu &jeu) {
-    // cas de la mort
+//conditions de victoire ou défaite
+void verifier_conditions_victoire_defaite(Jeu& jeu) {
     if (jeu.joueur.stat[0] <= 0) {
         jeu.etat_termine = true;
         jeu.victoire = false;
-        return;
     }
 }
 
-// gpt : recalcule les stats du joueur à partir de la config + des items + des contraintes "statistiques" des monstres
-void mettre_a_jour_stats_joueur(Jeu &jeu) {
-    int s;
-
-    // gpt : on part des stats de base du joueur pour toutes les stats SAUF la vie (stat[0] déjà modifiée par les dégâts)
+//update des stats joueur
+void mettre_a_jour_stats_joueur(Jeu& jeu) {
     int stats_temp[NB_STATS];
-    for (s = 0; s < NB_STATS; ++s) {
+
+    for (int s = 0; s < NB_STATS; ++s) {
         stats_temp[s] = jeu.cfg_joueur.stats[s];
     }
 
-    // gpt : on ne touche pas à la vie dans ce recalcul
     stats_temp[0] = jeu.joueur.stat[0];
 
-    // gpt : ajout des bonus des items possédés par le joueur
     for (int i = 0; i < jeu.joueur.nb_inventaire; ++i) {
-        int idCfgItem = jeu.joueur.inventaire[i];
-        if (idCfgItem < 0 || idCfgItem >= jeu.nb_cfg_items) {
-            continue;
-        }
 
-        for (s = 0; s < NB_STATS; ++s) {
-            // gpt : on ajoute le bonus directement ; la vie (0) peut aussi être impactée si designé ainsi
-            stats_temp[s] += jeu.cfg_items[idCfgItem].bonus[s];
-        }
-    }
+        int idItem = jeu.joueur.inventaire[i];
+        Config_item cfg;
+        bool found = trouver_config_item_par_id(jeu, idItem, cfg);
 
-    // gpt : application des contraintes de stats des monstres à portée (ici même case que le joueur)
-    for (int i = 0; i < jeu.nb_monstres; ++i) {
-        if (!jeu.monstres[i].actif) continue;
-        if (jeu.monstres[i].stats[0] <= 0) continue;
-
-        // gpt : on ne considère que les monstres sur la même case que le joueur
-        if (jeu.monstres[i].x == jeu.joueur.x && jeu.monstres[i].y == jeu.joueur.y) {
-            for (s = 0; s < NB_STATS; ++s) {
-                int delta = jeu.monstres[i].contrainte_stats[s];
-                if (delta >= 0) continue;
-
-                stats_temp[s] += delta;
-                if (stats_temp[s] < 0) stats_temp[s] = 0;
+        if (found) {
+            for (int s = 0; s < NB_STATS; ++s) {
+                stats_temp[s] += cfg.bonus[s];
             }
         }
     }
 
-    // gpt : écriture finale dans les stats du joueur
-    for (s = 0; s < NB_STATS; ++s) {
+    for (int s = 0; s < NB_STATS; ++s) {
+        if (stats_temp[s] < 0) {
+            stats_temp[s] = 0;
+        }
         jeu.joueur.stat[s] = stats_temp[s];
     }
 }
 
-// gpt : met à jour la représentation de la carte (cases) pour le prochain rafraîchissement
-void mettre_a_jour_carte(Jeu &jeu) {
-    // gpt : 1) on efface les anciennes positions dynamiques (joueur, monstres, items)
+//update de la carte
+
+void mettre_a_jour_carte(Jeu& jeu) {
     for (int y = 0; y < jeu.carte.hauteur; ++y) {
         for (int x = 0; x < jeu.carte.largeur; ++x) {
+
             char c = jeu.carte.cases[y][x];
-
-            // gpt : effacer le joueur
-            if (c == jeu.cfg_joueur.symbole) {
-                jeu.carte.cases[y][x] = '.';
-                continue;
-            }
-
             bool efface = false;
 
-            // gpt : effacer les monstres
-            for (int i = 0; i < jeu.nb_cfg_monstres && !efface; ++i) {
-                if (c == jeu.cfg_monstres[i].symbole) {
-                    jeu.carte.cases[y][x] = '.';
-                    efface = true;
+            if (c == jeu.cfg_joueur.symbole) {
+                jeu.carte.cases[y][x] = '.';
+                efface = true;
+            }
+
+            if (!efface) {
+                for (int i = 0; i < jeu.nb_cfg_monstres && !efface; ++i) {
+                    if (c == jeu.cfg_monstres[i].symbole) {
+                        jeu.carte.cases[y][x] = '.';
+                        efface = true;
+                    }
                 }
             }
-            if (efface) continue;
 
-            // gpt : effacer les items
-            for (int i = 0; i < jeu.nb_cfg_items; ++i) {
-                if (c == jeu.cfg_items[i].symbole) {
-                    jeu.carte.cases[y][x] = '.';
-                    break;
+            if (!efface) {
+                for (int i = 0; i < jeu.nb_cfg_items; ++i) {
+                    if (c == jeu.cfg_items[i].symbole) {
+                        jeu.carte.cases[y][x] = '.';
+                        efface = true;
+                    }
                 }
             }
         }
     }
 
-    // gpt : 2) replacer tous les items
+    //replacer items
     for (int i = 0; i < jeu.nb_items; ++i) {
+
         int x = jeu.items[i].x;
         int y = jeu.items[i].y;
-        int idCfgItem = jeu.items[i].idConfig;
 
-        if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
-            continue;
-        }
-        if (idCfgItem < 0 || idCfgItem >= jeu.nb_cfg_items) {
-            continue;
-        }
+        bool dans_carte =
+            x >= 0 && x < jeu.carte.largeur &&
+            y >= 0 && y < jeu.carte.hauteur;
 
-        jeu.carte.cases[y][x] = jeu.cfg_items[idCfgItem].symbole;
+        if (dans_carte) {
+
+            Config_item cfg;
+            bool found = trouver_config_item_par_id(jeu, jeu.items[i].idConfig, cfg);
+
+            if (found) {
+                jeu.carte.cases[y][x] = cfg.symbole;
+            }
+        }
     }
 
-    // gpt : 3) replacer tous les monstres vivants et actifs
+    //replacer monstres
     for (int i = 0; i < jeu.nb_monstres; ++i) {
-        if (!jeu.monstres[i].actif) continue;
-        if (jeu.monstres[i].stats[0] <= 0) continue;
 
-        int x = jeu.monstres[i].x;
-        int y = jeu.monstres[i].y;
-        int idCfgMonstre = jeu.monstres[i].idConfig;
+        const Monstre& m = jeu.monstres[i];
+        bool actif = m.actif;
+        bool vivant = (m.stats[0] > 0);
 
-        if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
-            continue;
+        if (actif && vivant) {
+
+            int x = m.x;
+            int y = m.y;
+
+            bool dans_carte =
+                x >= 0 && x < jeu.carte.largeur &&
+                y >= 0 && y < jeu.carte.hauteur;
+
+            if (dans_carte) {
+
+                Config_monstre cfg;
+                bool found = trouver_config_monstre_par_id(jeu, m.idConfig, cfg);
+
+                if (found) {
+                    jeu.carte.cases[y][x] = cfg.symbole;
+                }
+            }
         }
-        if (idCfgMonstre < 0 || idCfgMonstre >= jeu.nb_cfg_monstres) {
-            continue;
-        }
-
-        jeu.carte.cases[y][x] = jeu.cfg_monstres[idCfgMonstre].symbole;
     }
 
-    // gpt : 4) placer le joueur en dernier (prioritaire pour l'affichage)
+    //placer joueur
     int px = jeu.joueur.x;
     int py = jeu.joueur.y;
-    if (px >= 0 && px < jeu.carte.largeur && py >= 0 && py < jeu.carte.hauteur) {
+
+    bool dans_carte =
+        px >= 0 && px < jeu.carte.largeur &&
+        py >= 0 && py < jeu.carte.hauteur;
+
+    if (dans_carte) {
         jeu.carte.cases[py][px] = jeu.cfg_joueur.symbole;
     }
 }

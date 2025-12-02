@@ -94,7 +94,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             m.description = mots[3];
 
             // cout << "section = 2, assigne = m.typeIA, valeur = " << mots[16] << endl;
-            m.typeIA = stoi(mots[16]);
+            m.typeIA = stoi(mots[22]);
 
             for (int i = 0; i < NB_STATS; i++) {
                 // cout << "section = 2, assigne = m.stats_base[" << i << "], valeur = " << mots[4 + i] << endl;
@@ -104,6 +104,13 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             for (int i = 0; i < NB_STATS; i++) {
                 // cout << "section = 2, assigne = m.stats_afflige[" << i << "], valeur = " << mots[10 + i] << endl;
                 m.stats_afflige[i] = stoi(mots[10 + i]);
+            }
+
+            for (int i = 0; i < NB_STATS; i++) {
+                // cout << "section = 2, assigne = m.stats_prit[" << i << "], valeur = " << mots[16 + i] << endl;
+                bool prend = false;
+                if(stoi(mots[16 + i]) > 0) prend = true;
+                m.stats_prit[i] = prend;
             }
 
             jeu.nb_cfg_monstres++;
@@ -228,44 +235,45 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
     while (getline(flux, ligne)) {
 
         for (int x = 0; x < ligne.size(); x++) {
-            char c = ligne[x];
-            jeu.carte.cases[y][x] = c;
+            char ca = ligne[x];
+            jeu.carte.cases[y][x] = ca;
 
             // joueur
-            if (c == jeu.cfg_joueur.symbole) {
+            if (ca == jeu.cfg_joueur.symbole) {
                 jeu.joueur.x = x;
                 jeu.joueur.y = y;
             }
 
             // items : a-z
-            if (c >= 'a' && c <= 'z') {
+            if (ca >= 'a' && ca <= 'z') {
                 for (int i = 0; i < jeu.nb_cfg_items; i++) {
-                    if (jeu.cfg_items[i].symbole == c) {
+                    if (jeu.cfg_items[i].symbole == ca) {
 
-                        Items &It = jeu.items[jeu.nb_items];
-                        It.x = x;
-                        It.y = y;
-                        It.idConfig = jeu.cfg_items[i].id;
-
+                        Items &it = jeu.items[jeu.nb_items];
+                        it.x = x;
+                        it.y = y;
+                        it.idConfig = jeu.cfg_items[i].id;
+                        it.actif = true;
+                        
                         jeu.nb_items++;
                     }
                 }
             }
 
             // monstres : A-Z
-            if (c >= 'A' && c <= 'Z') {
+            if (ca >= 'A' && ca <= 'Z') {
                 for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
-                    if (jeu.cfg_monstres[i].symbole == c) {
+                    if (jeu.cfg_monstres[i].symbole == ca) {
 
-                        Monstre &M = jeu.monstres[jeu.nb_monstres];
-                        M.x = x;
-                        M.y = y;
-                        M.idConfig = jeu.cfg_monstres[i].id;
+                        Monstre &m = jeu.monstres[jeu.nb_monstres];
+                        m.x = x;
+                        m.y = y;
+                        m.idConfig = jeu.cfg_monstres[i].id;
 
                         for (int k = 0; k < NB_STATS; k++)
-                            M.stats[k] = jeu.cfg_monstres[i].stats_base[k];
+                            m.stats[k] = jeu.cfg_monstres[i].stats_base[k];
 
-                        M.actif = true;
+                        m.actif = true;
 
                         jeu.nb_monstres++;
                     }
@@ -287,8 +295,6 @@ void initialiser_jeu(Jeu &jeu) {
     for (int i = 0; i < NB_STATS; i++) {
         jeu.joueur.stat[i] = jeu.cfg_joueur.stats[i];
     }
-    // inventaire vide
-    jeu.joueur.nb_inventaire = 0;
 
     // état du jeu
     jeu.etat_termine = false;

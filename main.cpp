@@ -8,7 +8,7 @@ using namespace std;
 #include "traiter_commande.hpp"
 
 void mettre_a_jour_jeu(Jeu &jeu){
-    mettre_a_jour_monstres(jeu);
+    // mettre_a_jour_monstres(jeu);
     mettre_a_jour_visibilite(jeu);
     verifier_conditions_victoire_defaite(jeu);
 
@@ -40,22 +40,25 @@ int main() {
     }
 
     initialiser_jeu(jeu);
-
-    afficher_jeu_debug(jeu);
+    // afficher_jeu_debug(jeu);
 
     // Boucle principale
     while (!jeu.etat_termine) {
         afficher_jeu(jeu);
         cmd = saisie_bloquante();
+        
+        if (cmd == 27) { // ESC
+            fermer_console();
+            cout << "Sortie par ESC.\n";
+            return 0;
+        }
 
         traiter_commande(cmd, jeu);
         mettre_a_jour_jeu(jeu);
-        verifier_conditions_victoire_defaite(jeu);
     }
 
     // Fin de jeu
     afficher_game_over(jeu);
-
     return 0;
 }
 

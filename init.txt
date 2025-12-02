@@ -29,33 +29,32 @@
 
 
 [MONSTRES]
-| id | symbole | nom | description | stats_base[6] | stats_afflige[6] | typeIA
-1 g Gobelin Petit_mais_agressif 3 2 1 1 1 0 0 0 0 0 0 1 1
-2 O Ogre Lourd_et_puissant 8 3 1 3 3 0 2 1 0 1 0 0 1
-3 M Mage_noir Magie_sombre 2 2 8 2 2 0 0 0 3 0 0 0 1
-4 H Harpyie Rapide_et_imprevisible 1 7 3 1 2 0 0 0 0 0 1 0 1
-5 T Troll Regeneration_lente_mais_continue 7 2 1 6 3 0 3 0 0 2 0 0 1
-6 S Serpent_geant Venimeux_et_silencieux 2 6 2 1 3 0 0 2 0 0 0 0 1
-7 K Kobold Fourbe_et_lache 2 3 1 1 2 0 1 0 0 0 0 0 1
-8 F Fantome Insaisissable_et_glacial 1 1 5 0 5 0 0 0 4 0 0 0 1
-9 D Dragonnet Petit_mais_cracheur_de_flammes 4 3 2 3 2 0 2 0 1 0 1 0 1
-10 R Rat_mutant Tres_rapide 1 5 1 1 1 0 0 2 0 0 0 0 1
-11 A Archer_squelettique Tire_avec_precision 2 4 2 1 1 0 1 0 1 0 0 0 1
-12 P Pillard Humain_hostile 4 3 1 2 1 0 0 1 0 0 0 0 1
-13 W Warg Predateur_feroce 5 6 1 2 3 0 2 1 0 0 0 0 1
-14 L Liche Maitre_des_morts 1 1 9 3 3 0 0 0 8 0 0 0 1
-15 E Elementaire_de_pierre Lent_mais_indestructible 7 1 0 8 2 0 3 0 0 4 0 0 1
-16 B Banshee Hurlement_mortel 0 3 7 2 4 0 0 0 6 0 2 0 1
-17 C Cyclope Oeil_unique_mais_redoutable 9 2 1 5 2 0 4 0 0 0 0 0 1
-18 Y Yeti Fort_et_endurant 8 4 1 4 3 0 3 1 0 0 0 0 1
-19 Z Zombie Lent_mais_resistant 3 1 0 6 1 0 0 0 0 2 0 0 1
-20 N Necromancien Controle_des_morts 1 2 8 2 3 0 0 0 7 0 1 0 1
-21 Q Quasit Demon_mineur 2 5 4 2 2 0 0 3 0 0 0 0 1
-22 U Ursa Ours_monstrueux 7 5 1 4 2 0 4 2 0 1 0 0 1
-23 V Vampire Rapide_puissant_et_charismatique 4 6 5 2 5 0 0 5 0 0 5 0 1
-24 J Jinn Puissance_magique_instable 1 3 9 1 4 0 0 0 9 0 2 0 1
-25 X Xolotl Creature_inconnue 6 4 6 3 3 0 3 2 3 0 0 0 1
-26 R Ruche_vivante Essaim_agressif_anime 2 8 1 3 2 0 0 6 0 0 0 0 1
+| id | symbole | nom | description | stats_base[6] | stats_afflige[6] | stats_prit[NB_STATS] | typeIA
+1 g Gobelin Petit_mais_agressif 3 2 1 1 1 0 0 0 0 0 0 1 0 0 0 0 1 0 1
+2 O Ogre Lourd_et_puissant 8 3 1 3 3 0 2 1 0 1 0 0 0 0 0 0 1 0 1
+3 M Mage_noir Magie_sombre 2 2 8 2 2 0 0 0 3 0 0 0 0 0 0 0 1 0 1
+4 H Harpyie Rapide_et_imprevisible 1 7 3 1 2 0 0 0 0 0 1 0 0 0 0 0 1 0 1
+5 T Troll Regeneration_lente_mais_continue 7 2 1 6 3 0 3 0 0 2 0 0 0 0 0 0 1 0 1
+6 S Serpent_geant Venimeux_et_silencieux 2 6 2 1 3 0 0 2 0 0 0 0 0 0 0 0 1 0 1
+7 K Kobold Fourbe_et_lache 2 3 1 1 2 0 1 0 0 0 0 0 0 0 0 0 1 0 1
+8 F Fantome Insaisissable_et_glacial 1 1 5 0 5 0 0 0 4 0 0 0 0 0 0 0 1 0 1
+9 D Dragonnet Petit_mais_cracheur_de_flammes 4 3 2 3 2 0 2 0 1 0 1 0 0 0 0 0 1 0 1
+10 R Rat_mutant Tres_rapide 1 5 1 1 1 0 0 2 0 0 0 0 0 0 0 0 1 0 1
+11 A Archer_squelettique Tire_avec_precision 2 4 2 1 1 0 1 0 1 0 0 0 0 0 0 0 1 0 1
+12 P Pillard Humain_hostile 4 3 1 2 1 0 0 1 0 0 0 0 0 0 0 0 1 0 1
+13 W Warg Predateur_feroce 5 6 1 2 3 0 2 1 0 0 0 0 0 0 0 0 1 0 1
+14 L Liche Maitre_des_morts 1 1 9 3 3 0 0 0 8 0 0 0 0 0 0 0 1 0 1
+15 E Elementaire_de_pierre Lent_mais_indestructible 7 1 0 8 2 0 3 0 0 4 0 0 0 0 0 0 1 0 1
+16 B Banshee Hurlement_mortel 0 3 7 2 4 0 0 0 6 0 2 0 0 0 0 0 1 0 1
+17 C Cyclope Oeil_unique_mais_redoutable 9 2 1 5 2 0 4 0 0 0 0 0 0 0 0 0 1 0 1
+18 Y Yeti Fort_et_endurant 8 4 1 4 3 0 3 1 0 0 0 0 0 0 0 0 1 0 1
+19 Z Zombie Lent_mais_resistant 3 1 0 6 1 0 0 0 0 2 0 0 0 0 0 0 1 0 1
+20 N Necromancien Controle_des_morts 1 2 8 2 3 0 0 0 7 0 1 0 0 0 0 0 1 0 1
+21 Q Quasit Demon_mineur 2 5 4 2 2 0 0 3 0 0 0 0 0 0 0 0 1 0 1
+22 U Ursa Ours_monstrueux 7 5 1 4 2 0 4 2 0 1 0 0 0 0 0 0 1 0 1
+23 V Vampire Rapide_puissant_et_charismatique 4 6 5 2 5 0 0 5 0 0 5 0 0 0 0 0 1 0 1
+24 J Jinn Puissance_magique_instable 1 3 9 1 4 0 0 0 9 0 2 0 0 0 0 0 1 0 1
+25 X Xolotl Creature_inconnue 6 4 6 3 3 0 3 2 3 0 0 0 0 0 0 0 1 0 1
 
 
 [PORTES]
@@ -83,7 +82,7 @@ inventaire _
 [CONTRAINTES]
 | id | stats_min[6] | items_possede | symbole
 1 5 0 0 0 0 0 _ 
-2 0 7 0 0 0 0 _ 
+2 0 5 0 0 0 0 _ 
 3 0 0 8 0 0 0 _ 
 4 0 0 0 0 0 0 _ $
 5 0 0 0 0 0 0 _
