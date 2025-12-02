@@ -178,19 +178,40 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
                 c.stats_min[i] = stoi(mots[1 + i]);
             }
 
-            if ((int)mots[NB_STATS + 1][0] == 95) {
-                c.nb_items_possede = 0;
-            } else {
-                for (int i = 0; i < nb - NB_STATS + 1; i++){
-                    c.nb_items_possede = i;
-                    // cout << "section = 5, assigne = c.items_possede[" << i << "], valeur = " << mots[i + NB_STATS + 1] << endl;
-                    c.items_possede[i] = stoi(mots[i + NB_STATS + 1]);
+            // Lecture des items possédés et du symbole de contrainte
+            // Après l'id et les 6 stats minimales, il peut y avoir un ou plusieurs
+            // identifiants d'items (chiffres). Un '_' indique qu'aucun item n'est requis.
+            // Ensuite un symbole optionnel peut suivre pour marquer une case particulière.
+            c.nb_items_possede = 0;
+            c.symbole_atteint = '\0';
+            int index = NB_STATS + 1;
+            // Vérifie qu'il reste des mots à lire
+            if (index < nb) {
+                // s'il y a un '_' à cette position alors aucun item requis
+                if (mots[index][0] == '_') {
+                    // on ignore ce marqueur
+                    index++;
+                } else {
+                    // tant que l'on trouve des chiffres, on les convertit en items
+                    while (index < nb && mots[index].size() > 0) {
+                        char ch = mots[index][0];
+                        // si le caractère est un chiffre, on considère que c'est un identifiant d'item
+                        if (ch >= '0' && ch <= '9') {
+                            c.items_possede[c.nb_items_possede] = stoi(mots[index]);
+                            c.nb_items_possede++;
+                            index++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                // après les items (ou directement après les stats si aucun item)
+                // s'il reste un mot, on lit le symbole associé
+                if (index < nb && mots[index].size() > 0) {
+                    c.symbole_atteint = mots[index][0];
                 }
             }
 
-            if ((8 + c.nb_items_possede) < nb && !mots[8 + c.nb_items_possede].empty()) {
-                c.symbole_atteint = mots[8 + c.nb_items_possede][0];
-            }
 
             jeu.cfgConditions.nbContraintes++;
         }
@@ -250,11 +271,13 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
                     if (jeu.cfg_items[i].symbole == ca) {
 
                         Items &it = jeu.items[jeu.nb_items];
+                        // l'identifiant de l'item dynamique correspond à celui de la configuration
+                        it.id = jeu.cfg_items[i].id;
                         it.x = x;
                         it.y = y;
                         it.idConfig = jeu.cfg_items[i].id;
                         it.actif = true;
-                        
+
                         jeu.nb_items++;
                     }
                 }
@@ -296,6 +319,13 @@ void initialiser_jeu(Jeu &jeu) {
         jeu.joueur.stat[i] = jeu.cfg_joueur.stats[i];
     }
 
+    // recopier l'inventaire configuré dans l'inventaire dynamique
+    // si aucun élément, nb_inventaire est mis à 0
+    jeu.joueur.nb_inventaire = jeu.cfg_joueur.inventaire_ids.taille;
+    for (int i = 0; i < jeu.cfg_joueur.inventaire_ids.taille; i++) {
+        jeu.joueur.inventaire[i] = jeu.cfg_joueur.inventaire_ids.ids[i];
+    }
+
     // état du jeu
     jeu.etat_termine = false;
     jeu.victoire = false;
@@ -303,7 +333,8 @@ void initialiser_jeu(Jeu &jeu) {
     // brouillard (rendre toutes les cases visibles ou non)
     for (int y = 0; y < TAILLE_MAP_Y; y++) {
         for (int x = 0; x < TAILLE_MAP_X; x++) {
-            jeu.carte.visible[y][x] = true; // on affiche tout
+            // toutes les cases sont visibles par défaut
+            jeu.carte.visible[y][x] = true;
         }
     }
 

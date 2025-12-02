@@ -14,7 +14,7 @@ int distance_manhattan(int x1, int y1, int x2, int y2) {
     return abs_int(x1 - x2) + abs_int(y1 - y2);
 }
 
-//recherche config item sans pointeur
+// recherche config item
 bool trouver_config_item_par_id(const Jeu& jeu, int idItem, Config_item& out) {
     for (int i = 0; i < jeu.nb_cfg_items; ++i) {
         if (jeu.cfg_items[i].id == idItem) {
@@ -25,7 +25,7 @@ bool trouver_config_item_par_id(const Jeu& jeu, int idItem, Config_item& out) {
     return false;
 }
 
-//recherche config monstre sans pointeur
+// recherche config monstre
 bool trouver_config_monstre_par_id(const Jeu& jeu, int idMonstre, Config_monstre& out) {
     for (int i = 0; i < jeu.nb_cfg_monstres; ++i) {
         if (jeu.cfg_monstres[i].id == idMonstre) {
@@ -36,7 +36,7 @@ bool trouver_config_monstre_par_id(const Jeu& jeu, int idMonstre, Config_monstre
     return false;
 }
 
-//applique les effets d'un monstre sur le joueur
+// applique les effets d'un monstre sur le joueur
 void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, Joueur& joueur) {
     Config_monstre cfg;
     bool ok = trouver_config_monstre_par_id(jeu, m.idConfig, cfg);
@@ -53,23 +53,23 @@ void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, 
         }
     }
 }
-// ---
+//  ---
 
-//stockage local des zones de base
+// stockage local des zones de base
 bool g_base_monstre_init[TAILLE_MAX] = { false };
 int  g_base_monstre_x[TAILLE_MAX]    = { 0 };
 int  g_base_monstre_y[TAILLE_MAX]    = { 0 };
 
 const int RAYON_ZONE_BASE = 6;
 
-//vérifie si une position est dans la zone de base
+// vérifie si une position est dans la zone de base
 bool position_dans_zone_base(int i, int x, int y) {
     int bx = g_base_monstre_x[i];
     int by = g_base_monstre_y[i];
     return distance_manhattan(x, y, bx, by) <= RAYON_ZONE_BASE;
 }
 
-//vérifie si une case est praticable pour un monstre
+// vérifie si une case est praticable pour un monstre
 bool case_praticable_pour_monstre(const Jeu& jeu, int x, int y, int indexMonstre) {
     if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
         return false;
@@ -94,7 +94,7 @@ bool case_praticable_pour_monstre(const Jeu& jeu, int x, int y, int indexMonstre
     return true;
 }
 
-//update des monstres
+// update des monstres
 void mettre_a_jour_monstres(Jeu& jeu) {
     for (int i = 0; i < jeu.nb_monstres; ++i) {
 
@@ -185,12 +185,12 @@ void mettre_a_jour_monstres(Jeu& jeu) {
     }
 }
 
-//update de la visibilité
+// update de la visibilité
 void mettre_a_jour_visibilite(Jeu& jeu) {
     (void)jeu;
 }
 
-//conditions de victoire ou défaite
+// conditions de victoire ou défaite
 void verifier_conditions_victoire_defaite(Jeu& jeu) {
     if (jeu.joueur.stat[0] <= 0) {
         jeu.etat_termine = true;
@@ -198,7 +198,8 @@ void verifier_conditions_victoire_defaite(Jeu& jeu) {
     }
 }
 
-//update des stats joueur
+
+// update des stats joueur
 void mettre_a_jour_stats_joueur(Jeu& jeu) {
     int stats_temp[NB_STATS];
 
@@ -229,8 +230,7 @@ void mettre_a_jour_stats_joueur(Jeu& jeu) {
     }
 }
 
-//update de la carte
-
+// update de la carte
 void mettre_a_jour_carte(Jeu& jeu) {
     for (int y = 0; y < jeu.carte.hauteur; ++y) {
         for (int x = 0; x < jeu.carte.largeur; ++x) {
@@ -263,7 +263,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
         }
     }
 
-    //replacer items
+    // replacer les items actifs
     for (int i = 0; i < jeu.nb_items; ++i) {
 
         int x = jeu.items[i].x;
@@ -273,7 +273,8 @@ void mettre_a_jour_carte(Jeu& jeu) {
             x >= 0 && x < jeu.carte.largeur &&
             y >= 0 && y < jeu.carte.hauteur;
 
-        if (dans_carte) {
+        // on ne place que les items encore actifs (non ramassés)
+        if (dans_carte && jeu.items[i].actif) {
 
             Config_item cfg;
             bool found = trouver_config_item_par_id(jeu, jeu.items[i].idConfig, cfg);
@@ -284,7 +285,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
         }
     }
 
-    //replacer monstres
+    // replacer monstres
     for (int i = 0; i < jeu.nb_monstres; ++i) {
 
         const Monstre& m = jeu.monstres[i];
@@ -312,7 +313,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
         }
     }
 
-    //placer joueur
+    // placer joueur
     int px = jeu.joueur.x;
     int py = jeu.joueur.y;
 

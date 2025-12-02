@@ -8,16 +8,10 @@ using namespace std;
 #include "traiter_commande.hpp"
 
 void mettre_a_jour_jeu(Jeu &jeu){
-    // mettre_a_jour_monstres(jeu);
+    mettre_a_jour_monstres(jeu);
     mettre_a_jour_visibilite(jeu);
     verifier_conditions_victoire_defaite(jeu);
-
-    // mettre à jour les données de joueurs : 
-    // - recalcule de stats suivant les items possédés
-    // - prise en compte des contraintes de stats des monstres
     mettre_a_jour_stats_joueur(jeu);
-
-    // calcule de l'état de la carte (mise à jour de carte.cases[y][x])
     mettre_a_jour_carte(jeu);
 }
 
