@@ -132,11 +132,28 @@ void attaque(Jeu& jeu, int id_monstre) {
 
 void ramasser(Jeu& jeu, int id_item) {
     Items &it = jeu.items[id_item];
+    Joueur &j = jeu.joueur;
 
-    // ajoute l’item à l’inventaire
-    if (jeu.joueur.nb_inventaire < TAILLE_MAX) {
-        jeu.joueur.inventaire[jeu.joueur.nb_inventaire] = it.idConfig;
-        jeu.joueur.nb_inventaire++;
+    // ajouter l’item à l’inventaire
+    if (j.nb_inventaire < TAILLE_MAX) {
+        j.inventaire[j.nb_inventaire] = it.idConfig;
+        j.nb_inventaire++;
+    }
+
+    // retrouver la configuration de l'item
+    int i_cfg = -1;
+    for (int i = 0; i < jeu.nb_cfg_items; i++) {
+        if (jeu.cfg_items[i].id == it.idConfig) {
+            i_cfg = i;
+            break;
+        }
+    }
+
+    if (i_cfg != -1) {
+        // appliquer bonus
+        for (int s = 0; s < NB_STATS; s++) {
+            j.stat[s] += jeu.cfg_items[i_cfg].bonus[s];
+        }
     }
 
     it.actif = false;
@@ -171,7 +188,7 @@ void traiter_commande(char cmd, Jeu &jeu) {
 
         if (case_valide) {
             char c = jeu.carte.cases[nouveauY][nouveauX];
-            bool marchable = true; //(c != '#' && !(c >= 'A' && c <= 'Z'));
+            bool marchable = (c != '#' && !(c >= 'A' && c <= 'Z'));
             bool est_porte_valide = porte_valide(jeu, c);
 
             if (marchable && est_porte_valide) {

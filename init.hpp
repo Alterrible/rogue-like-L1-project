@@ -237,6 +237,7 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
         for (int x = 0; x < ligne.size(); x++) {
             char ca = ligne[x];
             jeu.carte.cases[y][x] = ca;
+            jeu.carte.ex_cases[y][x] = ca;
 
             // joueur
             if (ca == jeu.cfg_joueur.symbole) {

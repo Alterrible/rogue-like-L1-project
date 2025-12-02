@@ -187,47 +187,10 @@ void mettre_a_jour_monstres(Jeu& jeu) {
 
 // update de la visibilité
 void mettre_a_jour_visibilite(Jeu& jeu) {
-    (void)jeu;
 }
 
 // conditions de victoire ou défaite
 void verifier_conditions_victoire_defaite(Jeu& jeu) {
-    if (jeu.joueur.stat[0] <= 0) {
-        jeu.etat_termine = true;
-        jeu.victoire = false;
-    }
-}
-
-
-// update des stats joueur
-void mettre_a_jour_stats_joueur(Jeu& jeu) {
-    int stats_temp[NB_STATS];
-
-    for (int s = 0; s < NB_STATS; ++s) {
-        stats_temp[s] = jeu.cfg_joueur.stats[s];
-    }
-
-    stats_temp[0] = jeu.joueur.stat[0];
-
-    for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
-
-        int idItem = jeu.joueur.inventaire[i];
-        Config_item cfg;
-        bool found = trouver_config_item_par_id(jeu, idItem, cfg);
-
-        if (found) {
-            for (int s = 0; s < NB_STATS; ++s) {
-                stats_temp[s] += cfg.bonus[s];
-            }
-        }
-    }
-
-    for (int s = 0; s < NB_STATS; ++s) {
-        if (stats_temp[s] < 0) {
-            stats_temp[s] = 0;
-        }
-        jeu.joueur.stat[s] = stats_temp[s];
-    }
 }
 
 // update de la carte
@@ -235,17 +198,17 @@ void mettre_a_jour_carte(Jeu& jeu) {
     for (int y = 0; y < jeu.carte.hauteur; ++y) {
         for (int x = 0; x < jeu.carte.largeur; ++x) {
 
-            char c = jeu.carte.cases[y][x];
+            char ca = jeu.carte.cases[y][x];
             bool efface = false;
 
-            if (c == jeu.cfg_joueur.symbole) {
+            if (ca == jeu.cfg_joueur.symbole) {
                 jeu.carte.cases[y][x] = '.';
                 efface = true;
             }
 
             if (!efface) {
                 for (int i = 0; i < jeu.nb_cfg_monstres && !efface; i++) {
-                    if (c == jeu.cfg_monstres[i].symbole) {
+                    if (ca == jeu.cfg_monstres[i].symbole) {
                         jeu.carte.cases[y][x] = '.';
                         efface = true;
                     }
@@ -254,7 +217,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
 
             if (!efface) {
                 for (int i = 0; i < jeu.nb_cfg_items; i++) {
-                    if (c == jeu.cfg_items[i].symbole) {
+                    if (ca == jeu.cfg_items[i].symbole) {
                         jeu.carte.cases[y][x] = '.';
                         efface = true;
                     }

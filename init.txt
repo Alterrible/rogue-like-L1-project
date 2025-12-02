@@ -30,7 +30,7 @@
 
 [MONSTRES]
 | id | symbole | nom | description | stats_base[6] | stats_afflige[6] | stats_prit[NB_STATS] | typeIA
-1 g Gobelin Petit_mais_agressif 3 2 1 1 1 0 0 0 0 0 0 1 0 0 0 0 1 0 1
+1 I Gobelin Petit_mais_agressif 3 2 1 1 1 0 0 0 0 0 0 1 0 0 0 0 1 0 1
 2 O Ogre Lourd_et_puissant 8 3 1 3 3 0 2 1 0 1 0 0 0 0 0 0 1 0 1
 3 M Mage_noir Magie_sombre 2 2 8 2 2 0 0 0 3 0 0 0 0 0 0 0 1 0 1
 4 H Harpyie Rapide_et_imprevisible 1 7 3 1 2 0 0 0 0 0 1 0 0 0 0 0 1 0 1
