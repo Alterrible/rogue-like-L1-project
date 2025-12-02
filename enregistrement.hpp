@@ -102,6 +102,7 @@ struct Carte {
     int largeur;
     int hauteur;
     char cases[TAILLE_MAP_Y][TAILLE_MAP_X];
+    char ex_cases[TAILLE_MAP_Y][TAILLE_MAP_X];
     bool visible[TAILLE_MAP_Y][TAILLE_MAP_X];
 };
 

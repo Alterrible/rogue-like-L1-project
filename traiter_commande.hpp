@@ -99,7 +99,7 @@ bool check_contrainte(Jeu& jeu, int id_contrainte) {
 }
 
 // vérifie si la porte 0..9 peut être ouverte
-bool porte_valide(Jeu& jeu, char c, int /*nouveauY*/, int /*nouveauX*/) {
+bool porte_valide(Jeu& jeu, char c) {
     if (!(c >= '0' && c <= '9')) return true;
 
     for (int p = 0; p < jeu.nb_cfg_portes; p++) {
@@ -113,6 +113,35 @@ bool porte_valide(Jeu& jeu, char c, int /*nouveauY*/, int /*nouveauX*/) {
     return false;
 }
 
+void attaque(Jeu& jeu, int id_monstre) {
+    Monstre &m = jeu.monstres[id_monstre];
+
+    for (int m_cfg_i = 0; m_cfg_i < TAILLE_MONSTRES; m_cfg_i++) {
+        Config_monstre &m_cfg = jeu.cfg_monstres[m_cfg_i];
+        
+        if (m_cfg.id == m.idConfig) {
+            for (int s = 0; s < NB_STATS; s++) {
+                if (m_cfg.stats_prit[s]) {
+                    m.stats[s] -= jeu.joueur.stat[s];
+                    if (m.stats[s] <= 0) m.actif = false;
+                }
+            }
+        }
+    }
+}
+
+void ramasser(Jeu& jeu, int id_item) {
+    Items &it = jeu.items[id_item];
+
+    // ajoute l’item à l’inventaire
+    if (jeu.joueur.nb_inventaire < TAILLE_MAX) {
+        jeu.joueur.inventaire[jeu.joueur.nb_inventaire] = it.idConfig;
+        jeu.joueur.nb_inventaire++;
+    }
+
+    it.actif = false;
+}
+
 // traitement principal
 void traiter_commande(char cmd, Jeu &jeu) {
     int nouveauX = jeu.joueur.x;
@@ -121,7 +150,7 @@ void traiter_commande(char cmd, Jeu &jeu) {
     bool commande_deplacement = false;
     bool commande_interaction = false;
 
-    // 1) détection du type de commande
+    // détection entrée
     if (cmd == 'z') { nouveauY--; commande_deplacement = true; }
     else if (cmd == 's') { nouveauY++; commande_deplacement = true; }
     else if (cmd == 'q') { nouveauX--; commande_deplacement = true; }
@@ -132,18 +161,18 @@ void traiter_commande(char cmd, Jeu &jeu) {
     else if (cmd == 'j') { nouveauX--; commande_interaction = true; }
     else if (cmd == 'l') { nouveauX++; commande_interaction = true; }
 
-    // 2) déplacement du joueur
+    // déplacement du joueur
     if (commande_deplacement) {
 
-        // vérifie si la case est dans la carte
+        // vérifie si la case est dans la carte et validité
         bool case_valide =
             nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
             nouveauY >= 0 && nouveauY < jeu.carte.hauteur;
 
         if (case_valide) {
             char c = jeu.carte.cases[nouveauY][nouveauX];
-            bool marchable = (c != '#' && !(c >= 'A' && c <= 'Z'));
-            bool est_porte_valide = porte_valide(jeu, c, nouveauY, nouveauX);
+            bool marchable = true; //(c != '#' && !(c >= 'A' && c <= 'Z'));
+            bool est_porte_valide = porte_valide(jeu, c);
 
             if (marchable && est_porte_valide) {
                 jeu.joueur.x = nouveauX;
@@ -152,7 +181,7 @@ void traiter_commande(char cmd, Jeu &jeu) {
         }
     }
 
-    // 3) interaction i k j l
+    // interaction i k j l
     if (commande_interaction) {
 
         bool case_dans_carte =
@@ -166,61 +195,9 @@ void traiter_commande(char cmd, Jeu &jeu) {
             int id_monstre = trouver_monstre(jeu, nouveauX, nouveauY);
             int id_item = trouver_item(jeu, nouveauX, nouveauY);
 
-            // → monstre ?
-            if (id_monstre != -1) {
-
-                Monstre &m = jeu.monstres[id_monstre];
-
-                Config_monstre cfg_m;
-                bool cfg_found = false;
-                for (int cfgIdx = 0; cfgIdx < jeu.nb_cfg_monstres; cfgIdx++) {
-                    if (jeu.cfg_monstres[cfgIdx].id == m.idConfig) {
-                        cfg_m = jeu.cfg_monstres[cfgIdx];
-                        cfg_found = true;
-                        break;
-                    }
-                }
-
-                if (cfg_found) {
-                    // applique les dégâts au monstre
-                    for (int s = 0; s < NB_STATS; s++) {
-                        if (cfg_m.stats_prit[s]) {
-                            m.stats[s] -= jeu.joueur.stat[s];
-                            if (m.stats[s] < 0)
-                                m.stats[s] = 0;
-                        }
-                    }
-
-                    // supprime le monstre s’il meurt
-                    bool mort = true;
-                    for (int s = 0; s < NB_STATS; s++) {
-                        if (m.stats[s] > 0) {
-                            mort = false;
-                            break;
-                        }
-                    }
-
-                    if (mort) {
-                        m.actif = false;
-                        jeu.carte.cases[nouveauY][nouveauX] = '.';
-                    }
-                }
-            }
-
-            // → item ?
-            else if (id_item != -1) {
-
-                Items &it = jeu.items[id_item];
-
-                // ajoute l’item à l’inventaire
-                if (jeu.joueur.nb_inventaire < TAILLE_MAX) {
-                    jeu.joueur.inventaire[jeu.joueur.nb_inventaire] = it.idConfig;
-                    jeu.joueur.nb_inventaire++;
-                }
-
-                it.actif = false;
-                jeu.carte.cases[nouveauY][nouveauX] = '.';
-            }
+            // → monstre ? || → item ?
+            if (id_monstre != -1) attaque(jeu, id_monstre);
+            else if (id_item != -1) ramasser(jeu, id_item);
         }
     }
 }

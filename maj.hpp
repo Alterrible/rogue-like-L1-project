@@ -16,7 +16,7 @@ int distance_manhattan(int x1, int y1, int x2, int y2) {
 
 // recherche config item
 bool trouver_config_item_par_id(const Jeu& jeu, int idItem, Config_item& out) {
-    for (int i = 0; i < jeu.nb_cfg_items; ++i) {
+    for (int i = 0; i < jeu.nb_cfg_items; i++) {
         if (jeu.cfg_items[i].id == idItem) {
             out = jeu.cfg_items[i];
             return true;
@@ -27,7 +27,7 @@ bool trouver_config_item_par_id(const Jeu& jeu, int idItem, Config_item& out) {
 
 // recherche config monstre
 bool trouver_config_monstre_par_id(const Jeu& jeu, int idMonstre, Config_monstre& out) {
-    for (int i = 0; i < jeu.nb_cfg_monstres; ++i) {
+    for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
         if (jeu.cfg_monstres[i].id == idMonstre) {
             out = jeu.cfg_monstres[i];
             return true;
@@ -96,7 +96,7 @@ bool case_praticable_pour_monstre(const Jeu& jeu, int x, int y, int indexMonstre
 
 // update des monstres
 void mettre_a_jour_monstres(Jeu& jeu) {
-    for (int i = 0; i < jeu.nb_monstres; ++i) {
+    for (int i = 0; i < jeu.nb_monstres; i++) {
 
         Monstre& monstre = jeu.monstres[i];
         bool actif = monstre.actif;
@@ -209,7 +209,7 @@ void mettre_a_jour_stats_joueur(Jeu& jeu) {
 
     stats_temp[0] = jeu.joueur.stat[0];
 
-    for (int i = 0; i < jeu.joueur.nb_inventaire; ++i) {
+    for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
 
         int idItem = jeu.joueur.inventaire[i];
         Config_item cfg;
@@ -244,7 +244,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
             }
 
             if (!efface) {
-                for (int i = 0; i < jeu.nb_cfg_monstres && !efface; ++i) {
+                for (int i = 0; i < jeu.nb_cfg_monstres && !efface; i++) {
                     if (c == jeu.cfg_monstres[i].symbole) {
                         jeu.carte.cases[y][x] = '.';
                         efface = true;
@@ -253,7 +253,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
             }
 
             if (!efface) {
-                for (int i = 0; i < jeu.nb_cfg_items; ++i) {
+                for (int i = 0; i < jeu.nb_cfg_items; i++) {
                     if (c == jeu.cfg_items[i].symbole) {
                         jeu.carte.cases[y][x] = '.';
                         efface = true;
@@ -264,7 +264,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
     }
 
     // replacer les items actifs
-    for (int i = 0; i < jeu.nb_items; ++i) {
+    for (int i = 0; i < jeu.nb_items; i++) {
 
         int x = jeu.items[i].x;
         int y = jeu.items[i].y;
@@ -286,7 +286,7 @@ void mettre_a_jour_carte(Jeu& jeu) {
     }
 
     // replacer monstres
-    for (int i = 0; i < jeu.nb_monstres; ++i) {
+    for (int i = 0; i < jeu.nb_monstres; i++) {
 
         const Monstre& m = jeu.monstres[i];
         bool actif = m.actif;
