@@ -10,8 +10,8 @@ using namespace std;
 void mettre_a_jour_jeu(Jeu &jeu){
     mettre_a_jour_monstres(jeu);
     mettre_a_jour_visibilite(jeu);
-    verifier_conditions_victoire_defaite(jeu);
     mettre_a_jour_carte(jeu);
+    verifier_conditions_victoire_defaite(jeu);
 }
 
 
@@ -51,6 +51,7 @@ int main() {
     }
 
     // Fin de jeu
+    afficher_jeu(jeu);
     afficher_game_over(jeu);
     return 0;
 }

@@ -2,96 +2,19 @@
 #define MAJ_HPP
 
 #include "enregistrement.hpp"
+#include "utils.hpp"
 #include <iostream>
-
-// --- fonctions utilitaires ---
-
-int abs_int(int x){
-    return (x < 0) ? -x : x;
-}
-
-int distance_manhattan(int x1, int y1, int x2, int y2) {
-    return abs_int(x1 - x2) + abs_int(y1 - y2);
-}
-
-// recherche config item
-bool trouver_config_item_par_id(const Jeu& jeu, int idItem, Config_item& out) {
-    for (int i = 0; i < jeu.nb_cfg_items; i++) {
-        if (jeu.cfg_items[i].id == idItem) {
-            out = jeu.cfg_items[i];
-            return true;
-        }
-    }
-    return false;
-}
-
-// recherche config monstre
-bool trouver_config_monstre_par_id(const Jeu& jeu, int idMonstre, Config_monstre& out) {
-    for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
-        if (jeu.cfg_monstres[i].id == idMonstre) {
-            out = jeu.cfg_monstres[i];
-            return true;
-        }
-    }
-    return false;
-}
-
-// applique les effets d'un monstre sur le joueur
-void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, Joueur& joueur) {
-    Config_monstre cfg;
-    bool ok = trouver_config_monstre_par_id(jeu, m.idConfig, cfg);
-
-    if (ok) {
-        for (int s = 0; s < NB_STATS; ++s) {
-            int delta = cfg.stats_afflige[s];
-            if (delta > 0) {
-                joueur.stat[s] -= delta;
-                if (joueur.stat[s] < 0) {
-                    joueur.stat[s] = 0;
-                }
-            }
-        }
-    }
-}
-//  ---
 
 // stockage local des zones de base
 bool g_base_monstre_init[TAILLE_MAX] = { false };
-int  g_base_monstre_x[TAILLE_MAX]    = { 0 };
-int  g_base_monstre_y[TAILLE_MAX]    = { 0 };
-
-const int RAYON_ZONE_BASE = 6;
+int  g_base_monstre_x[TAILLE_MAX] = { 0 };
+int  g_base_monstre_y[TAILLE_MAX] = { 0 };
 
 // vérifie si une position est dans la zone de base
 bool position_dans_zone_base(int i, int x, int y) {
     int bx = g_base_monstre_x[i];
     int by = g_base_monstre_y[i];
     return distance_manhattan(x, y, bx, by) <= RAYON_ZONE_BASE;
-}
-
-// vérifie si une case est praticable pour un monstre
-bool case_praticable_pour_monstre(const Jeu& jeu, int x, int y, int indexMonstre) {
-    if (x < 0 || x >= jeu.carte.largeur || y < 0 || y >= jeu.carte.hauteur) {
-        return false;
-    }
-
-    if (jeu.carte.cases[y][x] != '.') {
-        return false;
-    }
-
-    for (int j = 0; j < jeu.nb_monstres; ++j) {
-        bool autre_monstre = (j != indexMonstre);
-        bool actif = jeu.monstres[j].actif;
-        bool vivant = (jeu.monstres[j].stats[0] > 0);
-
-        if (autre_monstre && actif && vivant) {
-            if (jeu.monstres[j].x == x && jeu.monstres[j].y == y) {
-                return false;
-            }
-        }
-    }
-
-    return true;
 }
 
 // update des monstres
@@ -191,7 +114,32 @@ void mettre_a_jour_visibilite(Jeu& jeu) {
 
 // conditions de victoire ou défaite
 void verifier_conditions_victoire_defaite(Jeu& jeu) {
+    Liste_id_contraintes& v = jeu.cfgConditions.victoire;
+    Liste_id_contraintes& d = jeu.cfgConditions.defaite;
+
+    // vérifier défaite en premier
+    for (int ci = 0; ci < d.nb; ci++) {
+        int id_contrainte = d.ids[ci];
+
+        if (check_contrainte(jeu, id_contrainte, true)) {
+            jeu.etat_termine = true;
+            jeu.victoire = false;
+            return;
+        }
+    }
+
+    // vérifier victoire
+    for (int ci = 0; ci < v.nb; ci++) {
+        int id_contrainte = v.ids[ci];
+
+        if (check_contrainte(jeu, id_contrainte)) {
+            jeu.etat_termine = true;
+            jeu.victoire = true;
+            return;
+        }
+    }
 }
+
 
 // update de la carte
 void mettre_a_jour_carte(Jeu& jeu) {

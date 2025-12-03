@@ -26,6 +26,7 @@ void afficher_jeu(const Jeu &jeu) {
     for (int i = 0; i < NB_STATS; i++) {
         hotbar += " [" + to_string(jeu.joueur.stat[i]) + "]";
     }
+    hotbar += " " + to_string(jeu.etat_termine) + " " + to_string(jeu.victoire) + " " + jeu.info;
     ecrire_string(hotbar, 0, jeu.carte.hauteur);
 }
 
@@ -61,8 +62,16 @@ void afficher_liste_equipements(const Liste_Id_Equipements& liste, const string&
 
 void afficher_contrainte(const Contrainte& c) {
     cout << "id : " << c.id << endl;
+
+    for (int i = 0; i < c.nb_items_possede; i++)
+        cout << "items_possede[" << i << "] : " << c.items_possede[i] << endl;
+    cout << c.nb_items_possede << endl;
+
     for (int i = 0; i < NB_STATS; i++)
         cout << "stats_min[" << i << "] : " << c.stats_min[i] << endl;
+
+    cout << to_string(c.a_symbole) << endl;
+    cout << c.symbole_atteint << endl;
 }
 
 // affichage de debugage

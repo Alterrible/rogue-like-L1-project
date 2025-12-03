@@ -9,6 +9,7 @@ const int TAILLE_MAP_Y = 23;
 const int TAILLE_MAX = TAILLE_MAP_X*TAILLE_MAP_Y;
 const int TAILLE_ITEMS = 26;
 const int TAILLE_MONSTRES = 26;
+const int RAYON_ZONE_BASE = 6;
 const int TAILLE_PORTE = 26;
 const int NB_STATS = 6;
 
@@ -29,6 +30,7 @@ struct Contrainte {
     int items_possede[TAILLE_MAX];
     int nb_items_possede;
     int stats_min[NB_STATS];
+    bool a_symbole;
     char symbole_atteint;
 };
 
@@ -125,6 +127,7 @@ struct Jeu {
 
     bool etat_termine;
     bool victoire;
+    string info;
 
     // compteurs pour éviter débordement lors de l'initialisation
     int nb_cfg_items;

@@ -7,27 +7,7 @@ using namespace std;
 #include <string>
 #include "lib_projet_ncurses.hpp"
 #include "enregistrement.hpp"
-
-
-// découper lignes en nombre de mots et en liste mots
-int decouper(const string& ligne, string mots[], int max_mots) {
-    int nb = 0;
-    string mot = "";
-
-    for (int i = 0; i <= ligne.size(); i++) {
-        if (i == ligne.size() || ligne[i] == ' ') {
-            if (mot != "" && (int)mot[0] != 13 && nb < max_mots) {
-                mots[nb] = mot;
-                nb++;
-                mot = "";
-            }
-        } else {
-            mot += ligne[i];
-        }
-    }
-
-    return nb;
-}
+#include "utils.hpp"
 
 bool charger_configuration(const string& fichier, Jeu& jeu) {
     fstream flux;
@@ -190,6 +170,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
 
             if ((8 + c.nb_items_possede) < nb && !mots[8 + c.nb_items_possede].empty()) {
                 c.symbole_atteint = mots[8 + c.nb_items_possede][0];
+                c.a_symbole = true;
             }
 
             jeu.cfgConditions.nbContraintes++;
