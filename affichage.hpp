@@ -26,7 +26,7 @@ void afficher_jeu(const Jeu &jeu) {
     for (int i = 0; i < NB_STATS; i++) {
         hotbar += " [" + to_string(jeu.joueur.stat[i]) + "]";
     }
-    hotbar += " " + to_string(jeu.etat_termine) + " " + to_string(jeu.victoire) + " " + jeu.info;
+    hotbar += " " + jeu.info;
     ecrire_string(hotbar, 0, jeu.carte.hauteur);
 }
 

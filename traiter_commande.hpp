@@ -35,7 +35,7 @@ void traiter_commande(char cmd, Jeu &jeu) {
 
         if (case_valide) {
             char c = jeu.carte.cases[nouveauY][nouveauX];
-            bool marchable = true; // (c != '#' && !(c >= 'A' && c <= 'Z'));
+            bool marchable = (c != '#' && !(c >= 'A' && c <= 'Z'));
             bool est_porte_valide = porte_valide(jeu, c);
 
             if (marchable && est_porte_valide) {

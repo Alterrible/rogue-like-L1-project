@@ -187,7 +187,7 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, bool defaite = false) {
 
     const Contrainte& ctr = jeu.cfgConditions.contraintes[indexCtr];
 
-    // MODE VICTOIRE
+    // MODE VICTOIRE/defaut
     if (!defaite) {
         // items requis
         for (int i = 0; i < ctr.nb_items_possede; i++){
@@ -216,10 +216,10 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, bool defaite = false) {
         if (a_items(jeu, ctr.items_possede[i], 1)) return true;
     }
 
-    // stats trop basses (testées UNIQUEMENT si la contrainte en définit)
+    // stats trop basses
     int nb_stat_valide = 0;
     for (int s = 0; s < NB_STATS; s++) {
-        if (ctr.stats_min[s] == jeu.joueur.stat[s]) nb_stat_valide++;
+        if (ctr.stats_min[s] >= jeu.joueur.stat[s]) nb_stat_valide++;
     }
     if (nb_stat_valide == NB_STATS) return true;
 
