@@ -7,6 +7,7 @@ using namespace std;
 #include <string>
 #include "lib_projet_ncurses.hpp"
 #include "enregistrement.hpp"
+#include "maj.hpp"
 #include "utils.hpp"
 
 bool charger_configuration(const string& fichier, Jeu& jeu) {
@@ -125,9 +126,9 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             }
 
             else if (mots[0] == "stats") {
-                for (int i = 0; i < NB_STATS; i++) {
+                for (int s = 0; s < NB_STATS; s++) {
                     // cout << "section = 4, assigne = joueur.stats[" << i << "], valeur = " << mots[1 + i] << endl;
-                    jeu.cfg_joueur.stats[i] = stoi(mots[1 + i]);
+                    jeu.cfg_joueur.stats[s] = stoi(mots[1 + s]);
                 }
             }
 
@@ -144,6 +145,15 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
                 }
             }
 
+            else if (mots[0] == "index_stat_vision") {
+                jeu.index_stat_vision = stoi(mots[1]) - 1;
+            }
+
+            else if (mots[0] == "nom_stats") {
+                for (int s = 0; s < NB_STATS; s++) {
+                    jeu.nom_stats[s] = mots[1 + s];
+                }
+            }
         }
 
         // contraintes
@@ -291,13 +301,7 @@ void initialiser_jeu(Jeu &jeu) {
     jeu.etat_termine = false;
     jeu.victoire = false;
 
-    // brouillard (rendre toutes les cases visibles ou non)
-    for (int y = 0; y < TAILLE_MAP_Y; y++) {
-        for (int x = 0; x < TAILLE_MAP_X; x++) {
-            // toutes les cases sont visibles par défaut
-            jeu.carte.visible[y][x] = true;
-        }
-    }
+    mettre_a_jour_visibilite(jeu);
 
     // initialisation console
     PaireCouleur couleurs[1];

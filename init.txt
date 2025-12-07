@@ -71,13 +71,14 @@
 10 9 1
 
 
-[JOUEUR]
+[JOUEUR et jeu]
 symbole @
 nom Aventurier
 description Un_héros
 stats 5 5 5 5 5 5
 inventaire _
-
+index_stat_vision 4
+nom_stats pv armure force vision margie_feu magie_glace
 
 [CONTRAINTES]
 | id | stats_min[6] | items_possede | symbole

@@ -125,6 +125,8 @@ struct Jeu {
     Monstre monstres[TAILLE_MAX];
     int nb_monstres;
 
+    string nom_stats[NB_STATS];
+    int index_stat_vision;
     bool etat_termine;
     bool victoire;
     string info;

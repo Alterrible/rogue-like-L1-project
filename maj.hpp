@@ -3,114 +3,151 @@
 
 #include "enregistrement.hpp"
 #include "utils.hpp"
+#include <cmath>
 #include <iostream>
 
-// stockage local des zones de base
-bool g_base_monstre_init[TAILLE_MAX] = { false };
-int  g_base_monstre_x[TAILLE_MAX] = { 0 };
-int  g_base_monstre_y[TAILLE_MAX] = { 0 };
-
-// vérifie si une position est dans la zone de base
-bool position_dans_zone_base(int i, int x, int y) {
-    int bx = g_base_monstre_x[i];
-    int by = g_base_monstre_y[i];
-    return distance_manhattan(x, y, bx, by) <= RAYON_ZONE_BASE;
-}
-
-// update des monstres
 void mettre_a_jour_monstres(Jeu& jeu) {
     for (int i = 0; i < jeu.nb_monstres; i++) {
 
-        Monstre& monstre = jeu.monstres[i];
-        bool actif = monstre.actif;
-        bool vivant = (monstre.stats[0] > 0);
+        Monstre& m = jeu.monstres[i];
 
-        if (actif && !vivant) {
-            monstre.actif = false;
+        // mort → désactivation
+        if (!m.actif || m.stats[0] <= 0) {
+            m.actif = false;
+            continue;
         }
-        else if (actif && vivant) {
 
-            if (!g_base_monstre_init[i]) {
-                g_base_monstre_x[i] = monstre.x;
-                g_base_monstre_y[i] = monstre.y;
-                g_base_monstre_init[i] = true;
+        int mx = m.x, my = m.y;
+        int jx = jeu.joueur.x;
+        int jy = jeu.joueur.y;
+
+        int dist_joueur = distance_manhattan(mx, my, jx, jy);
+
+        // ======================================================
+        // 1) Mode AGGRO — le joueur est dans le rayon Y
+        // ======================================================
+        if (dist_joueur <= 6) {
+
+            // attaque si adjacent
+            if (dist_joueur <= 1) {
+                appliquer_contraintes_monstre_sur_joueur(jeu, m, jeu.joueur);
+                continue;
             }
 
-            int mx = monstre.x;
-            int my = monstre.y;
-            int jx = jeu.joueur.x;
-            int jy = jeu.joueur.y;
+            // déplacement vers le joueur
+            int diffX = jx - mx;
+            int diffY = jy - my;
+            int dx = 0, dy = 0;
 
-            bool joueur_dans_zone = position_dans_zone_base(i, jx, jy);
+            // direction prioritaire = l’axe le plus long
+            if (abs_int(diffX) >= abs_int(diffY))
+                dx = (diffX > 0) ? 1 : -1;
+            else
+                dy = (diffY > 0) ? 1 : -1;
 
-            if (joueur_dans_zone) {
+            int nx = mx + dx;
+            int ny = my + dy;
 
-                int dist = distance_manhattan(mx, my, jx, jy);
+            bool peut_bouger =
+                case_praticable_pour_monstre(jeu, nx, ny, i) &&
+                !(nx == jx && ny == jy);
 
-                if (dist == 1 || dist == 0) {
-                    appliquer_contraintes_monstre_sur_joueur(jeu, monstre, jeu.joueur);
-                }
-                else {
-                    int diffX = jx - mx;
-                    int diffY = jy - my;
-                    int dx = 0;
-                    int dy = 0;
+            // si bloqué, essayer l’autre axe
+            if (!peut_bouger) {
+                dx = 0; dy = 0;
+                if (abs_int(diffX) < abs_int(diffY))
+                    dx = (diffX > 0) ? 1 : -1;
+                else
+                    dy = (diffY > 0) ? 1 : -1;
 
-                    if (abs_int(diffX) >= abs_int(diffY)) {
-                        dx = (diffX > 0) ? 1 : -1;
-                    }
-                    else {
-                        if (diffY != 0) {
-                            dy = (diffY > 0) ? 1 : -1;
-                        }
-                    }
+                nx = mx + dx;
+                ny = my + dy;
 
-                    int nx = mx + dx;
-                    int ny = my + dy;
-
-                    bool peut_bouger = 
-                        position_dans_zone_base(i, nx, ny) &&
-                        case_praticable_pour_monstre(jeu, nx, ny, i) &&
-                        !(nx == jx && ny == jy);
-
-                    if (!peut_bouger) {
-
-                        dx = 0;
-                        dy = 0;
-
-                        if (abs_int(diffX) < abs_int(diffY)) {
-                            if (diffX != 0) {
-                                dx = (diffX > 0) ? 1 : -1;
-                            }
-                        }
-                        else {
-                            if (diffY != 0) {
-                                dy = (diffY > 0) ? 1 : -1;
-                            }
-                        }
-
-                        nx = mx + dx;
-                        ny = my + dy;
-
-                        peut_bouger =
-                            position_dans_zone_base(i, nx, ny) &&
-                            case_praticable_pour_monstre(jeu, nx, ny, i) &&
-                            !(nx == jx && ny == jy);
-                    }
-
-                    if (peut_bouger) {
-                        monstre.x = nx;
-                        monstre.y = ny;
-                    }
-                }
+                peut_bouger =
+                    case_praticable_pour_monstre(jeu, nx, ny, i);
             }
+
+            if (peut_bouger) {
+                m.x = nx;
+                m.y = ny;
+            }
+
+            continue;
+        }
+
+        // ======================================================
+        // 2) Mode ERRANCE — joueur éloigné
+        // ======================================================
+
+        // 30% de chance de ne pas bouger
+        if (rand() % 100 < 30) continue;
+
+        int dx = 0, dy = 0;
+        switch (rand() % 5) { // 0 = immobile, 1-4 = directions
+            case 1: dx = 1; break;
+            case 2: dx = -1; break;
+            case 3: dy = 1; break;
+            case 4: dy = -1; break;
+        }
+
+        int nx = mx + dx;
+        int ny = my + dy;
+
+        if (case_praticable_pour_monstre(jeu, nx, ny, i)) {
+            m.x = nx;
+            m.y = ny;
         }
     }
 }
 
 // update de la visibilité
 void mettre_a_jour_visibilite(Jeu& jeu) {
+    int rayon = jeu.joueur.stat[jeu.index_stat_vision];
+    int px = jeu.joueur.x;
+    int py = jeu.joueur.y;
+
+    // Reset
+    for (int y = 0; y < jeu.carte.hauteur; y++) {
+        for (int x = 0; x < jeu.carte.largeur; x++) {
+            jeu.carte.visible[y][x] = false;
+        }
+    }    
+
+    // Nombre de branches
+    int nb_branches = 360;
+
+    for (int i = 0; i < nb_branches; i++) {
+        float angle = (2.0f * M_PI * i) / nb_branches;
+
+        float dx = cosf(angle);
+        float dy = sinf(angle);
+
+        float cx = px + 0.5f;
+        float cy = py + 0.5f;
+
+        for (int r = 0; r <= rayon; r++) {
+            int ix = (int)floor(cx);
+            int iy = (int)floor(cy);
+
+            // limites
+            if (ix < 0 || ix >= jeu.carte.largeur) break;
+            if (iy < 0 || iy >= jeu.carte.hauteur) break;
+
+            jeu.carte.visible[iy][ix] = true;
+
+            // mur ou porte → fin de la branche
+            if (jeu.carte.cases[iy][ix] == '#' || jeu.carte.cases[iy][ix] >= '0' && jeu.carte.cases[iy][ix] <= '9') break;
+
+            // on avance dans la branche
+            cx += dx;
+            cy += dy;
+        }
+    }
+
+    // case du joueur toujours visible
+    jeu.carte.visible[py][px] = true;
 }
+
 
 // conditions de victoire ou défaite
 void verifier_conditions_victoire_defaite(Jeu& jeu) {
