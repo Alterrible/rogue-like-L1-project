@@ -7,7 +7,7 @@
 using namespace std;
 
 // traitement principal
-void traiter_commande(char cmd, Jeu &jeu) {
+bool traiter_commande(char cmd, Jeu &jeu) {
     int nouveauX = jeu.joueur.x;
     int nouveauY = jeu.joueur.y;
 
@@ -64,6 +64,9 @@ void traiter_commande(char cmd, Jeu &jeu) {
             else if (id_item != -1) ramasser(jeu, id_item);
         }
     }
+
+    if (commande_deplacement || commande_interaction) return true;
+    else return false;
 }
 
 #endif

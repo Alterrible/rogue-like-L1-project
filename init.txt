@@ -1,6 +1,6 @@
 [ITEMS]
 | id | symbole | nom | description | stats_bonus[6]
-1 a Anneau_de_force Augmente_la_force 3 0 0 0 0 0
+1 a Anneau_de_force Augmente_la_force 30 30 30 30 30 30
 2 b Bottes_agiles Vitesse_amelioree 0 4 0 0 0 0
 3 c Tome_ancien Savoir_interdit 0 0 3 0 0 0
 4 d Potion_de_vie Restaure_la_vitalite 0 0 0 5 0 0
@@ -40,7 +40,7 @@
 8 F Fantome Insaisissable_et_glacial 1 1 5 0 5 0 0 0 4 0 0 0 0 0 0 0 1 0 1
 9 D Dragonnet Petit_mais_cracheur_de_flammes 4 3 2 3 2 0 2 0 1 0 1 0 0 0 0 0 1 0 1
 10 R Rat_mutant Tres_rapide 1 5 1 1 1 0 0 2 0 0 0 0 0 0 0 0 1 0 1
-11 A Archer_squelettique Tire_avec_precision 2 4 2 1 1 0 1 0 1 0 0 0 0 0 0 0 1 0 1
+11 A Archer_squelettique Tire_avec_precision 2 4 2 1 1 0 1 1 1 1 1 1 0 0 0 0 1 0 1
 12 P Pillard Humain_hostile 4 3 1 2 1 0 0 1 0 0 0 0 0 0 0 0 1 0 1
 13 W Warg Predateur_feroce 5 6 1 2 3 0 2 1 0 0 0 0 0 0 0 0 1 0 1
 14 L Liche Maitre_des_morts 1 1 9 3 3 0 0 0 8 0 0 0 0 0 0 0 1 0 1
@@ -78,7 +78,7 @@ description Un_héros
 stats 5 5 5 5 5 5
 inventaire _
 index_stat_vision 4
-nom_stats pv armure force vision margie_feu magie_glace
+nom_stats pv armure force vision feu glace
 
 [CONTRAINTES]
 | id | stats_min[6] | items_possede | symbole

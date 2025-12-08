@@ -23,9 +23,8 @@ void mettre_a_jour_monstres(Jeu& jeu) {
 
         int dist_joueur = distance_manhattan(mx, my, jx, jy);
 
-        // ======================================================
-        // 1) Mode AGGRO — le joueur est dans le rayon Y
-        // ======================================================
+
+        // Mode AGGRO — le joueur est dans le rayon Y
         if (dist_joueur <= 6) {
 
             // attaque si adjacent
@@ -63,8 +62,7 @@ void mettre_a_jour_monstres(Jeu& jeu) {
                 nx = mx + dx;
                 ny = my + dy;
 
-                peut_bouger =
-                    case_praticable_pour_monstre(jeu, nx, ny, i);
+                peut_bouger = case_praticable_pour_monstre(jeu, nx, ny, i);
             }
 
             if (peut_bouger) {
@@ -75,10 +73,7 @@ void mettre_a_jour_monstres(Jeu& jeu) {
             continue;
         }
 
-        // ======================================================
-        // 2) Mode ERRANCE — joueur éloigné
-        // ======================================================
-
+        // MODE BALADE
         // 30% de chance de ne pas bouger
         if (rand() % 100 < 30) continue;
 
@@ -125,20 +120,30 @@ void mettre_a_jour_visibilite(Jeu& jeu) {
         float cx = px + 0.5f;
         float cy = py + 0.5f;
 
+        int prev_ix = (int)floor(cx);
+        int prev_iy = (int)floor(cy);
+
         for (int r = 0; r <= rayon; r++) {
+
             int ix = (int)floor(cx);
             int iy = (int)floor(cy);
 
-            // limites
+            // limites et diag
             if (ix < 0 || ix >= jeu.carte.largeur) break;
             if (iy < 0 || iy >= jeu.carte.hauteur) break;
+            if (bloque_par_coin(jeu, prev_ix, prev_iy, ix, iy)) break;
 
             jeu.carte.visible[iy][ix] = true;
 
-            // mur ou porte → fin de la branche
-            if (jeu.carte.cases[iy][ix] == '#' || jeu.carte.cases[iy][ix] >= '0' && jeu.carte.cases[iy][ix] <= '9') break;
+            // cas pour lesquels on ne laisse pas passer "la vue"
+            bool bloque = false;
+            if (jeu.carte.cases[iy][ix] == '#') bloque = true; // mur = toujours bloquant            
+            if ((jeu.carte.cases[iy][ix] >= '0' && jeu.carte.cases[iy][ix] <= '9') && !(ix == jeu.joueur.x && iy == jeu.joueur.y)) bloque = true; // porte = bloquante sauf si c'est celle du joueur
+            if (bloque) break;
 
-            // on avance dans la branche
+            prev_ix = ix;
+            prev_iy = iy;
+
             cx += dx;
             cy += dy;
         }

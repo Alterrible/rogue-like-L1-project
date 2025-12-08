@@ -6,6 +6,19 @@
 
 // ---- FONCTIONS UTILES ----
 
+// permet d'avoir un string avec des espaces
+
+string underscore_espace(const string& input) {
+    string result = input;
+    for (char& c : result) {
+        if (c == '_') {
+            c = ' ';
+        }
+    }
+    return result;
+}
+
+
 // découpe une ligne en mots
 int decouper(const string& ligne, string mots[], int max_mots) {
     int nb = 0;
@@ -33,6 +46,20 @@ int distance_manhattan(int x1, int y1, int x2, int y2) {
     return abs_int(x1 - x2) + abs_int(y1 - y2);
 }
 
+bool bloque_par_coin(const Jeu& jeu, int x0, int y0, int x1, int y1) {
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+
+    // diagonale ?
+    if (abs(dx) == 1 && abs(dy) == 1) {
+        // mur en horizontal ou vertical qui bloque la diagonale ?
+        bool mur1 = (jeu.carte.cases[y0][x1] == '#');
+        bool mur2 = (jeu.carte.cases[y1][x0] == '#');
+
+        if (mur1 && mur2) return true;
+    }
+    return false;
+}
 
 
 // ---- ITEMS ----

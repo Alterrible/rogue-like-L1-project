@@ -36,23 +36,24 @@ int main() {
     // afficher_jeu_debug(jeu);
 
     // Boucle principale
-    while (!jeu.etat_termine) {
-        afficher_jeu(jeu);
+    while (true) {
+        if (!jeu.etat_termine) {
+            afficher_jeu(jeu);
+        } else {
+            afficher_game_over(jeu);
+        }
         cmd = saisie_bloquante();
-        
+
         if (cmd == 27) { // ESC
             fermer_console();
-            cout << "Sortie par ESC.\n";
+            cout << "Jeu fermé correctement." << endl;
             return 0;
         }
 
-        traiter_commande(cmd, jeu);
-        mettre_a_jour_jeu(jeu);
+        bool traitement = traiter_commande(cmd, jeu);
+        if (traitement) mettre_a_jour_jeu(jeu);
     }
 
-    // Fin de jeu
-    afficher_jeu(jeu);
-    afficher_game_over(jeu);
     return 0;
 }
 

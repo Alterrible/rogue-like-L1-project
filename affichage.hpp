@@ -22,11 +22,11 @@ void afficher_jeu(const Jeu &jeu) {
     }
 
     // --- hotbar ---
-    string hotbar = "Stats : ";
+    string hotbar;
     for (int i = 0; i < NB_STATS; i++) {
-        hotbar += " [" + to_string(jeu.joueur.stat[i]) + "]";
+        hotbar += jeu.nom_stats[i] + "[" + to_string(jeu.joueur.stat[i]) + "] ";
     }
-    hotbar += " " + jeu.info;
+    hotbar += jeu.info;
     ecrire_string(hotbar, 0, jeu.carte.hauteur);
 }
 
