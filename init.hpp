@@ -171,7 +171,7 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             if ((int)mots[NB_STATS + 1][0] == 95) {
                 c.nb_items_possede = 0;
             } else {
-                for (int i = 0; i < nb - NB_STATS + 1; i++){
+                for (int i = 0; i < nb - NB_STATS - 1; i++){
                     c.nb_items_possede = i;
                     // cout << "section = 5, assigne = c.items_possede[" << i << "], valeur = " << mots[i + NB_STATS + 1] << endl;
                     c.items_possede[i] = stoi(mots[i + NB_STATS + 1]);

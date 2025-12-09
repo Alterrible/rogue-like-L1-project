@@ -37,8 +37,10 @@ int main() {
 
     // Boucle principale
     while (true) {
-        if (!jeu.etat_termine) {
+        if (!jeu.etat_termine && !jeu.modal_active) {
             afficher_jeu(jeu);
+        } else if (jeu.modal_active) {
+            afficher_modal(jeu);
         } else {
             afficher_game_over(jeu);
         }

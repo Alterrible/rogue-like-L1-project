@@ -3,6 +3,7 @@
 
 #include "enregistrement.hpp"
 #include "utils.hpp"
+#include "affichage.hpp"
 #include <cmath>
 #include <iostream>
 
@@ -156,6 +157,7 @@ void mettre_a_jour_visibilite(Jeu& jeu) {
 
 // conditions de victoire ou défaite
 void verifier_conditions_victoire_defaite(Jeu& jeu) {
+    string context;
     Liste_id_contraintes& v = jeu.cfgConditions.victoire;
     Liste_id_contraintes& d = jeu.cfgConditions.defaite;
 
@@ -163,7 +165,7 @@ void verifier_conditions_victoire_defaite(Jeu& jeu) {
     for (int ci = 0; ci < d.nb; ci++) {
         int id_contrainte = d.ids[ci];
 
-        if (check_contrainte(jeu, id_contrainte, true)) {
+        if (check_contrainte(jeu, id_contrainte, context, true)) {
             jeu.etat_termine = true;
             jeu.victoire = false;
             return;
@@ -174,7 +176,7 @@ void verifier_conditions_victoire_defaite(Jeu& jeu) {
     for (int ci = 0; ci < v.nb; ci++) {
         int id_contrainte = v.ids[ci];
 
-        if (check_contrainte(jeu, id_contrainte)) {
+        if (check_contrainte(jeu, id_contrainte, context)) {
             jeu.etat_termine = true;
             jeu.victoire = true;
             return;
@@ -230,9 +232,9 @@ void mettre_a_jour_carte(Jeu& jeu) {
         if (dans_carte && jeu.items[i].actif) {
 
             Config_item cfg;
-            bool found = trouver_config_item_par_id(jeu, jeu.items[i].idConfig, cfg);
+            bool trouve = trouver_config_item_par_id(jeu, jeu.items[i].idConfig, cfg);
 
-            if (found) {
+            if (trouve) {
                 jeu.carte.cases[y][x] = cfg.symbole;
             }
         }

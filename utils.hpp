@@ -2,6 +2,7 @@
 #define UTILS_HPP
 
 #include "enregistrement.hpp"
+#include "affichage.hpp"
 #include <iostream>
 
 // ---- FONCTIONS UTILES ----
@@ -52,7 +53,7 @@ bool bloque_par_coin(const Jeu& jeu, int x0, int y0, int x1, int y1) {
 
     // diagonale ?
     if (abs(dx) == 1 && abs(dy) == 1) {
-        // mur en horizontal ou vertical qui bloque la diagonale ?
+        // mur en horizontal ou vertical qui bloque la diagonale
         bool mur1 = (jeu.carte.cases[y0][x1] == '#');
         bool mur2 = (jeu.carte.cases[y1][x0] == '#');
 
@@ -172,7 +173,7 @@ void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, 
         for (int s = 0; s < NB_STATS; ++s) {
             int delta = cfg.stats_afflige[s];
             if (delta > 0) {
-                joueur.stat[s] = std::max(0, joueur.stat[s] - delta);
+                joueur.stat[s] = max(0, joueur.stat[s] - delta);
             }
         }
     }
@@ -201,16 +202,18 @@ void attaque(Jeu& jeu, int id_monstre) {
 // ---- CONTRAINTES & PORTES ----
 
 // vérifier une contrainte (items + stats)
-bool check_contrainte(Jeu& jeu, int id_contrainte, bool defaite = false) {
+bool check_contrainte(Jeu& jeu, int id_contrainte, string& context, bool defaite = false) {
     int indexCtr = -1;
 
     // rechercher la contrainte
     for (int c = 0; c < jeu.cfgConditions.nbContraintes; c++) {
-        if (jeu.cfgConditions.contraintes[c].id == id_contrainte)
-            indexCtr = c;
+        if (jeu.cfgConditions.contraintes[c].id == id_contrainte) indexCtr = c;
     }
 
-    if (indexCtr == -1) return false;
+    if (indexCtr == -1) {
+        context = "Contrainte inexistante.";
+        return false;
+    }
 
     const Contrainte& ctr = jeu.cfgConditions.contraintes[indexCtr];
 
@@ -218,12 +221,28 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, bool defaite = false) {
     if (!defaite) {
         // items requis
         for (int i = 0; i < ctr.nb_items_possede; i++){
-            if (!a_items(jeu, ctr.items_possede[i], 1)) return false;
+            int idItem = ctr.items_possede[i];
+
+            if (!a_items(jeu, idItem, 1)) {
+
+                // trouver config pour nom, si existante
+                Config_item cfg;
+                if (trouver_config_item_par_id(jeu, idItem, cfg)) {
+                    context = "Il manque l'item requis : " + cfg.nom;
+                } else {
+                    context = "Item requis manquant (ID=" + to_string(idItem) + ").";
+                }
+
+                return false;
+            }
         }
 
         // stats minimales
         for (int s = 0; s < NB_STATS; s++){
-            if (ctr.stats_min[s] > 0 && !a_stat(jeu, s, ctr.stats_min[s])) return false;
+            if (ctr.stats_min[s] > 0 && !a_stat(jeu, s, ctr.stats_min[s])) {
+                context = "Statistique insuffisante : '" + jeu.nom_stats[s] +"' doit être au moins " + to_string(ctr.stats_min[s]) + ".";
+                return false;
+            }
         }
 
         // symbole
@@ -231,26 +250,28 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, bool defaite = false) {
             int x = jeu.joueur.x;
             int y = jeu.joueur.y;
 
-            if (jeu.carte.ex_cases[y][x] != ctr.symbole_atteint) return false;
+            if (jeu.carte.ex_cases[y][x] != ctr.symbole_atteint) {
+                context = string("Vous devez atteindre une case marquée '") + ctr.symbole_atteint + "'.";
+                return false;
+            }
         }
 
         return true;
     }
 
     // MODE DÉFAITE
-    // items interdits
+    // (pas de context ici — tu ne l'utilisais pas)
+
     for (int i = 0; i < ctr.nb_items_possede; i++) {
         if (a_items(jeu, ctr.items_possede[i], 1)) return true;
     }
 
-    // stats trop basses
     int nb_stat_valide = 0;
     for (int s = 0; s < NB_STATS; s++) {
         if (ctr.stats_min[s] >= jeu.joueur.stat[s]) nb_stat_valide++;
     }
     if (nb_stat_valide == NB_STATS) return true;
 
-    // symbole interdit
     if (ctr.a_symbole) {
         int x = jeu.joueur.x;
         int y = jeu.joueur.y;
@@ -264,12 +285,20 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, bool defaite = false) {
 
 // vérifier si une porte peut être ouverte
 bool porte_valide(Jeu& jeu, char c) {
+    string& context = jeu.modal_txt;
     if (!(c >= '0' && c <= '9')) return true;
 
     for (int p = 0; p < jeu.nb_cfg_portes; p++) {
         const Config_porte& porte = jeu.cfg_portes[p];
-        if (porte.symbole == c) return check_contrainte(jeu, porte.id_contrainte);
+        if (porte.symbole == c) {
+            bool check = check_contrainte(jeu, porte.id_contrainte, context);
+            if (check == false) jeu.modal_active = true;
+            return check;
+        }
     }
+
+    context = "Porte inconnue.";
+    jeu.modal_active = true;
     return false;
 }
 

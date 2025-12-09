@@ -26,12 +26,65 @@ void afficher_jeu(const Jeu &jeu) {
     for (int i = 0; i < NB_STATS; i++) {
         hotbar += jeu.nom_stats[i] + "[" + to_string(jeu.joueur.stat[i]) + "] ";
     }
-    hotbar += jeu.info;
     ecrire_string(hotbar, 0, jeu.carte.hauteur);
 }
 
+// écran d'affichage contrainte
+void afficher_modal (Jeu& jeu) {
+    effacer_console();
+
+    string& msg = jeu.modal_txt;
+
+    // traitement pour chaques cases de la carte
+    for (int y = 0; y < jeu.carte.hauteur; y++) {
+        for (int x = 0; x < jeu.carte.largeur; x++) {
+            if (jeu.carte.visible[y][x]) {
+                char c = jeu.carte.cases[y][x];
+                ecrire_char(x, y, c);
+            } else {
+                ecrire_char(x, y, ' ');
+            }
+        }
+    }
+
+    int msg_len = msg.size();
+    int cadre_largeur = msg_len + 4;
+    int cadre_hauteur = 3;
+
+    // position du coin supérieur gauche pour centrer
+    int x = (jeu.carte.largeur - cadre_largeur) / 2;
+    int y = (jeu.carte.hauteur - cadre_hauteur) / 2;
+
+    // ligne supérieure
+    for (int i = 0; i < cadre_largeur; i++) {
+        ecrire_char(x + i, y, '-');
+        ecrire_char(x + i, y-1, ' ');
+    }
+
+    // ligne centrale
+    ecrire_char(x, y + 1, '|');
+    for (int i = 0; i < msg_len; i++){
+        ecrire_char(x + 2 + i, y + 1, msg[i]);
+    }
+    ecrire_char(x + cadre_largeur - 1, y + 1, '|');
+
+    // remplir les espaces internes et autour
+    ecrire_char(x + 1, y + 1, ' ');
+    ecrire_char(x + cadre_largeur - 2, y + 1, ' ');
+    ecrire_char(x + cadre_largeur + 2, y, ' ');
+    ecrire_char(x + cadre_largeur + 2, y, ' ');
+
+    // ligne inférieure
+    for (int i = 0; i < cadre_largeur; i++) {
+        ecrire_char(x + i, y + 2, '-');
+        ecrire_char(x + i, y + 3, ' ');
+    }
+}
+
+
+
 // écran de fin de jeu
-void afficher_game_over(const Jeu &jeu) {
+void afficher_game_over(Jeu &jeu) {
     effacer_console();
 
     string msg;

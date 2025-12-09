@@ -130,6 +130,8 @@ struct Jeu {
     bool etat_termine;
     bool victoire;
     string info;
+    string modal_txt;
+    bool modal_active;
 
     // compteurs pour éviter débordement lors de l'initialisation
     int nb_cfg_items;

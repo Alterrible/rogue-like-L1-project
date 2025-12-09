@@ -25,6 +25,15 @@ bool traiter_commande(char cmd, Jeu &jeu) {
     else if (cmd == 'j') { nouveauX--; commande_interaction = true; }
     else if (cmd == 'l') { nouveauX++; commande_interaction = true; }
 
+    // fermeture du modal et empêche de jouer tant qu'il est ouvert
+    if (jeu.modal_active) {
+        if (cmd == ' ') {
+            jeu.modal_active = false;
+            jeu.modal_txt = "";
+        }
+        return false;
+    }
+
     // déplacement du joueur
     if (commande_deplacement) {
 

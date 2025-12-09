@@ -81,8 +81,8 @@ index_stat_vision 4
 nom_stats pv armure force vision feu glace
 
 [CONTRAINTES]
-| id | stats_min[6] | items_possede | symbole
-1 5 0 0 0 0 0 _ 
+| id | stats_min[6] | id_items_possede | symbole
+1 0 0 0 0 0 0 2
 2 0 5 0 0 0 0 _ 
 3 0 0 8 0 0 0 _ 
 4 0 0 0 0 0 0 _ $
