@@ -20,24 +20,15 @@ void afficher_jeu(const Jeu &jeu) {
                 ecrire_char(x, y, c);
             }
             else {
-                // case vue avantt (mémoire)
+                // case vue avant (mémoire)
                 bool deja_vu = (jeu.carte.ex_visible[y][x] != '\0');
 
                 if (deja_vu) {
-                    // récupère la dernière info connue
                     char c = jeu.carte.ex_visible[y][x];
-
-                    // version atténuée pour montrer le fog de guerre
-                    // (si pas de couleur possible, on met le caractère en minuscule)
-                    if (c >= 'A' && c <= 'Z') {
-                        c = (char)(c - 'A' + 'a');
-                    }
-
                     ecrire_char(x, y, c);
                 }
                 else {
-                    // jamais vu : noir
-                    ecrire_char(x, y, ' ');
+                    ecrire_char(x, y, ' ');   // jamais vu
                 }
             }
         }
@@ -61,11 +52,23 @@ void afficher_modal (Jeu& jeu) {
     // traitement pour chaques cases de la carte
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++) {
+
+            // case visible ce tour
             if (jeu.carte.visible[y][x]) {
                 char c = jeu.carte.cases[y][x];
                 ecrire_char(x, y, c);
-            } else {
-                ecrire_char(x, y, ' ');
+            }
+            else {
+                // case vue avant (mémoire)
+                bool deja_vu = (jeu.carte.ex_visible[y][x] != '\0');
+
+                if (deja_vu) {
+                    char c = jeu.carte.ex_visible[y][x];
+                    ecrire_char(x, y, c);
+                }
+                else {
+                    ecrire_char(x, y, ' ');   // jamais vu
+                }
             }
         }
     }
@@ -126,6 +129,7 @@ const string infos_bienvenue[] = {
     "Utilisez Z Q S D pour vous deplacer.",
     "Utilisez I J K L pour interagir.",
     "Appuyez sur ESPACE pour fermer les ecrans d'information.",
+    "Vous pouvez fermer le jeu a tout moment avec ECHAP.",
     "",
     "Appuyez sur ESPACE pour commencer la partie."
 };
