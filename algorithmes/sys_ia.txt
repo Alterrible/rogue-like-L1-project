@@ -1,0 +1,29 @@
+1. le monstre "regarde" le joueur (manhtan)
+→ il calcule où il est (droite/gauche/haut/bas)
+    si le joueur est à droite → diffX > 0
+    si le joueur est à gauche → diffX < 0
+    si le joueur est en bas → diffY > 0
+    si le joueur est en haut → diffY < 0
+2. il choisit l’axe où la distance est la plus grande
+→ horizontal ou vertical
+3. il tente un mouvement d’un seul pas sur cet axe
+    ensuite il fait :
+        dx = +1 ou -1
+        dy = 0
+    ou l’inverse, puis :
+        nx = mx + dx;
+        ny = my + dy;
+4. si cet axe est bloqué
+    if (!peut_bouger) {
+    // annule le move
+    dx = 0; dy = 0;
+
+    // tente l’autre axe
+    if (abs(diffX) < abs(diffY))
+        dx = ...
+    else
+        dy = ...
+    }
+→ il tente l’autre axe
+5. si encore bloqué
+→ il ne bouge pas
