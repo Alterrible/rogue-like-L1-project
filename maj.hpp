@@ -8,93 +8,136 @@
 #include <iostream>
 
 void mettre_a_jour_monstres(Jeu& jeu) {
-    for (int i = 0; i < jeu.nb_monstres; i++) {
+    int i = 0;
+
+    // boucle sur les monstres
+    while (i < jeu.nb_monstres) {
 
         Monstre& m = jeu.monstres[i];
+
+        // flag de saut vers le monstre suivant
+        bool fin_monstre = false;
 
         // mort → désactivation
         if (!m.actif || m.stats[0] <= 0) {
             m.actif = false;
-            continue;
+            fin_monstre = true;
         }
 
-        int mx = m.x, my = m.y;
-        int jx = jeu.joueur.x;
-        int jy = jeu.joueur.y;
+        // traitement si le monstre est encore actif
+        if (!fin_monstre) {
 
-        int dist_joueur = distance_manhattan(mx, my, jx, jy);
+            int mx = m.x;
+            int my = m.y;
+            int jx = jeu.joueur.x;
+            int jy = jeu.joueur.y;
 
+            int dist_joueur = distance_manhattan(mx, my, jx, jy);
 
-        // Mode AGGRO — le joueur est dans le rayon Y
-        if (dist_joueur <= 6) {
+            // mode aggro
+            if (dist_joueur <= 6) {
 
-            // attaque si adjacent
-            if (dist_joueur <= 1) {
-                appliquer_contraintes_monstre_sur_joueur(jeu, m, jeu.joueur);
-                continue;
+                // attaque si adjacent
+                if (dist_joueur <= 1) {
+                    appliquer_contraintes_monstre_sur_joueur(jeu, m, jeu.joueur);
+                    fin_monstre = true;
+                }
+
+                // déplacement si pas d'attaque
+                if (!fin_monstre) {
+                    int diffX = jx - mx;
+                    int diffY = jy - my;
+
+                    int dx = 0;
+                    int dy = 0;
+
+                    // axe prioritaire
+                    if (abs_int(diffX) >= abs_int(diffY)) {
+                        dx = (diffX > 0) ? 1 : -1;
+                    }
+                    else {
+                        dy = (diffY > 0) ? 1 : -1;
+                    }
+
+                    int nx = mx + dx;
+                    int ny = my + dy;
+
+                    bool peut_bouger = false;
+
+                    // vérifie déplacement principal
+                    if (case_praticable_pour_monstre(jeu, nx, ny, i) && !(nx == jx && ny == jy)) {
+                        peut_bouger = true;
+                    }
+
+                    // si bloqué → essaye l’autre axe
+                    if (!peut_bouger) {
+                        dx = 0;
+                        dy = 0;
+
+                        if (abs_int(diffX) < abs_int(diffY)) {
+                            dx = (diffX > 0) ? 1 : -1;
+                        }
+                        else {
+                            dy = (diffY > 0) ? 1 : -1;
+                        }
+
+                        nx = mx + dx;
+                        ny = my + dy;
+
+                        if (case_praticable_pour_monstre(jeu, nx, ny, i)) {
+                            peut_bouger = true;
+                        }
+                    }
+
+                    // applique déplacement
+                    if (peut_bouger) {
+                        m.x = nx;
+                        m.y = ny;
+                    }
+
+                    fin_monstre = true;
+                }
             }
 
-            // déplacement vers le joueur
-            int diffX = jx - mx;
-            int diffY = jy - my;
-            int dx = 0, dy = 0;
+            // mode balade
+            if (!fin_monstre) {
+                bool bouge = false;
 
-            // direction prioritaire = l’axe le plus long
-            if (abs_int(diffX) >= abs_int(diffY))
-                dx = (diffX > 0) ? 1 : -1;
-            else
-                dy = (diffY > 0) ? 1 : -1;
+                // 30% de ne pas bouger
+                int tirage = rand() % 100;
+                if (tirage >= 30) {
+                    bouge = true;
+                }
 
-            int nx = mx + dx;
-            int ny = my + dy;
+                if (bouge) {
+                    int dx = 0;
+                    int dy = 0;
 
-            bool peut_bouger =
-                case_praticable_pour_monstre(jeu, nx, ny, i) &&
-                !(nx == jx && ny == jy);
+                    int dir = rand() % 5;
 
-            // si bloqué, essayer l’autre axe
-            if (!peut_bouger) {
-                dx = 0; dy = 0;
-                if (abs_int(diffX) < abs_int(diffY))
-                    dx = (diffX > 0) ? 1 : -1;
-                else
-                    dy = (diffY > 0) ? 1 : -1;
+                    // directions aléatoires
+                    if (dir == 1) dx = 1;
+                    if (dir == 2) dx = -1;
+                    if (dir == 3) dy = 1;
+                    if (dir == 4) dy = -1;
 
-                nx = mx + dx;
-                ny = my + dy;
+                    int nx = mx + dx;
+                    int ny = my + dy;
 
-                peut_bouger = case_praticable_pour_monstre(jeu, nx, ny, i);
+                    // applique déplacement si praticable
+                    if (case_praticable_pour_monstre(jeu, nx, ny, i)) {
+                        m.x = nx;
+                        m.y = ny;
+                    }
+                }
             }
-
-            if (peut_bouger) {
-                m.x = nx;
-                m.y = ny;
-            }
-
-            continue;
         }
 
-        // MODE BALADE
-        // 30% de chance de ne pas bouger
-        if (rand() % 100 < 30) continue;
-
-        int dx = 0, dy = 0;
-        switch (rand() % 5) { // 0 = immobile, 1-4 = directions
-            case 1: dx = 1; break;
-            case 2: dx = -1; break;
-            case 3: dy = 1; break;
-            case 4: dy = -1; break;
-        }
-
-        int nx = mx + dx;
-        int ny = my + dy;
-
-        if (case_praticable_pour_monstre(jeu, nx, ny, i)) {
-            m.x = nx;
-            m.y = ny;
-        }
+        // passe au monstre suivant
+        i = i + 1;
     }
 }
+
 
 // update de la visibilité
 void mettre_a_jour_visibilite(Jeu& jeu) {

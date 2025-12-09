@@ -130,7 +130,6 @@ struct Jeu {
     int index_stat_vision;
     bool etat_termine;
     bool victoire;
-    string info;
     string modal_txt;
     bool modal_active;
 

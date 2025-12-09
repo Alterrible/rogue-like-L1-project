@@ -34,7 +34,6 @@ int main() {
     }
 
     initialiser_jeu(jeu);
-    // afficher_jeu_debug(jeu);
 
     // Boucle principale
     while (true) {
@@ -50,7 +49,7 @@ int main() {
         }
         cmd = saisie_bloquante();
 
-        if (cmd == 27) { // ESC
+        if (cmd == 27) { // échap
             fermer_console();
             cout << "Jeu fermé correctement." << endl;
             return 0;

@@ -78,7 +78,7 @@ description Un_héros
 stats 5 5 5 5 5 5
 inventaire _
 index_stat_vision 4
-nom_stats pv armure force vision feu glace
+nom_stats pv pa force vision feu glace
 
 [CONTRAINTES]
 | id | stats_min[6] | id_items_possede | symbole
