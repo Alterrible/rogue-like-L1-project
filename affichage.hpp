@@ -6,11 +6,9 @@
 #include <iostream>
 using namespace std;
 
-void afficher_jeu(const Jeu &jeu) {
-    // efface l'écran
-    effacer_console();
-
-    // affiche la carte
+// affiche la carte selon visible / ex_visible
+void afficher_carte(const Jeu &jeu) {
+    // boucle sur les cases
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++) {
 
@@ -20,7 +18,7 @@ void afficher_jeu(const Jeu &jeu) {
                 ecrire_char(x, y, c);
             }
             else {
-                // case vue avant (mémoire)
+                // case déjà vue
                 bool deja_vu = (jeu.carte.ex_visible[y][x] != '\0');
 
                 if (deja_vu) {
@@ -28,11 +26,18 @@ void afficher_jeu(const Jeu &jeu) {
                     ecrire_char(x, y, c);
                 }
                 else {
-                    ecrire_char(x, y, ' ');   // jamais vu
+                    // jamais vue
+                    ecrire_char(x, y, ' ');
                 }
             }
         }
     }
+}
+
+
+void afficher_jeu(const Jeu &jeu) {
+    effacer_console();
+    afficher_carte(jeu);
 
     // affiche la hotbar
     string hotbar;
@@ -46,33 +51,9 @@ void afficher_jeu(const Jeu &jeu) {
 // écran d'affichage contrainte
 void afficher_modal (Jeu& jeu) {
     effacer_console();
+    afficher_carte(jeu);
 
     string& msg = jeu.modal_txt;
-
-    // traitement pour chaques cases de la carte
-    for (int y = 0; y < jeu.carte.hauteur; y++) {
-        for (int x = 0; x < jeu.carte.largeur; x++) {
-
-            // case visible ce tour
-            if (jeu.carte.visible[y][x]) {
-                char c = jeu.carte.cases[y][x];
-                ecrire_char(x, y, c);
-            }
-            else {
-                // case vue avant (mémoire)
-                bool deja_vu = (jeu.carte.ex_visible[y][x] != '\0');
-
-                if (deja_vu) {
-                    char c = jeu.carte.ex_visible[y][x];
-                    ecrire_char(x, y, c);
-                }
-                else {
-                    ecrire_char(x, y, ' ');   // jamais vu
-                }
-            }
-        }
-    }
-
     int msg_len = msg.size();
     int cadre_largeur = msg_len + 4;
     int cadre_hauteur = 3;
@@ -84,7 +65,6 @@ void afficher_modal (Jeu& jeu) {
     // ligne supérieure
     for (int i = 0; i < cadre_largeur; i++) {
         ecrire_char(x + i, y, '-');
-        ecrire_char(x + i, y-1, ' ');
     }
 
     // ligne centrale
