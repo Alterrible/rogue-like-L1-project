@@ -214,7 +214,7 @@ void afficher_contrainte(const Contrainte& c) {
 
     for (int i = 0; i < c.nb_items_possede; i++)
         cout << "items_possede[" << i << "] : " << c.items_possede[i] << endl;
-    cout << c.nb_items_possede << endl;
+    cout << "nb_items_possede = " << c.nb_items_possede << endl;
 
     for (int i = 0; i < NB_STATS; i++)
         cout << "stats_min[" << i << "] : " << c.stats_min[i] << endl;

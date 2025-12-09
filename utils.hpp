@@ -91,11 +91,10 @@ bool a_stat(Jeu& jeu, int i_stat, int stat_requise) {
 }
 
 // vérifier si joueur possède nb items d’un id donné
-bool a_items(Jeu& jeu, int id_item_requis, int nb_voulu) {
-    int nb_check = 0;
+bool a_items(Jeu& jeu, int id_item_requis) {
     for (int inv = 0; inv < jeu.joueur.nb_inventaire; inv++) {
         if (jeu.joueur.inventaire[inv] == id_item_requis) {
-            if (++nb_check >= nb_voulu) return true;
+            return true;
         }
     }
     return false;
@@ -223,12 +222,11 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, string& context, bool defaite
         for (int i = 0; i < ctr.nb_items_possede; i++) {
             int idItem = ctr.items_possede[i];
 
-            if (!a_items(jeu, idItem, 1)) {
-
+            if (!a_items(jeu, idItem)) {
                 // trouver config pour nom, si existante
                 Config_item cfg;
                 if (trouver_config_item_par_id(jeu, idItem, cfg)) {
-                    context = "Il manque l'item requis : " + cfg.nom;
+                    context = "Il manque l'item requis : " + cfg.nom + " [" + cfg.symbole + "]";
                 } else {
                     context = "Item requis manquant (ID=" + to_string(idItem) + ").";
                 }
@@ -263,7 +261,7 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, string& context, bool defaite
     // (pas de context ici — tu ne l'utilisais pas)
 
     for (int i = 0; i < ctr.nb_items_possede; i++) {
-        if (a_items(jeu, ctr.items_possede[i], 1)) return true;
+        if (a_items(jeu, ctr.items_possede[i])) return true;
     }
 
     int nb_stat_valide = 0;
