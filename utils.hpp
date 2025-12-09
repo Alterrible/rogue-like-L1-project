@@ -25,11 +25,11 @@ int decouper(const string& ligne, string mots[], int max_mots) {
     int nb = 0;
     string mot = "";
 
-    for (int i = 0; i <= ligne.size(); i++) {
+    for (size_t i = 0; i <= ligne.size(); i++) {
         if (i == ligne.size() || ligne[i] == ' ') {
-            if (mot != "" && (int)mot[0] != 13 && nb < max_mots) {
+            if (!mot.empty() && mot[0] != 13 && nb < max_mots) {
                 mots[nb++] = mot;
-                mot = "";
+                mot.clear();
             }
         } else {
             mot += ligne[i];

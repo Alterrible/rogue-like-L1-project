@@ -16,7 +16,7 @@ void mettre_a_jour_jeu(Jeu &jeu){
 
 
 int main() {
-    static Jeu jeu;
+    static Jeu jeu {};
     bool ok;
     char cmd;
     bool bvn = true;
@@ -47,7 +47,8 @@ int main() {
         } else {
             afficher_game_over(jeu);
         }
-        cmd = saisie_bloquante();
+        int c = saisie_bloquante();
+        cmd = static_cast<char>(c);
 
         if (cmd == 27) { // échap
             fermer_console();

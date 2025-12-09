@@ -54,11 +54,10 @@ void afficher_modal (Jeu& jeu) {
     afficher_carte(jeu);
 
     string& msg = jeu.modal_txt;
-    int msg_len = msg.size();
-    int cadre_largeur = msg_len + 4;
+    size_t msg_len = msg.size();
+    int cadre_largeur = static_cast<int>(msg_len) + 4;
     int cadre_hauteur = 3;
 
-    // position du coin supérieur gauche pour centrer
     int x = (jeu.carte.largeur - cadre_largeur) / 2;
     int y = (jeu.carte.hauteur - cadre_hauteur) / 2;
 
@@ -69,20 +68,19 @@ void afficher_modal (Jeu& jeu) {
 
     // ligne centrale
     ecrire_char(x, y + 1, '|');
-    for (int i = 0; i < msg_len; i++){
-        ecrire_char(x + 2 + i, y + 1, msg[i]);
-    }
-    ecrire_char(x + cadre_largeur - 1, y + 1, '|');
 
-    // remplir les espaces internes et autour
-    ecrire_char(x + 1, y + 1, ' ');
-    ecrire_char(x + cadre_largeur - 2, y + 1, ' ');
+    for (size_t i = 0; i < msg_len; i++) {
+        ecrire_char(x + 2 + static_cast<int>(i), y + 1, msg[i]);
+    }
+
+    ecrire_char(x + cadre_largeur - 1, y + 1, '|');
 
     // ligne inférieure
     for (int i = 0; i < cadre_largeur; i++) {
         ecrire_char(x + i, y + 2, '-');
     }
 }
+
 
 const string ASCII_GAGNE[] = {
 "  __  __   __ __  _ ___ ",
@@ -127,13 +125,13 @@ void afficher_ecran_bienvenue(Jeu &jeu) {
     // calcul de la largeur max
     int largeur = 0;
 
-    for (int i = 0; i < ascii_hauteur; i++)
-        if ((int)ascii[i].size() > largeur)
-            largeur = ascii[i].size();
+    for (int i = 0; i < ascii_hauteur; i++) {
+        largeur = max(largeur, static_cast<int>(ascii[i].size()));
+    }
 
-    for (int i = 0; i < infos_hauteur; i++)
-        if ((int)infos[i].size() > largeur)
-            largeur = infos[i].size();
+    for (int i = 0; i < infos_hauteur; i++) {
+        largeur = max(largeur, static_cast<int>(infos[i].size()));
+    }
 
     // placement centré
     int total_hauteur = ascii_hauteur + 2 + infos_hauteur;
@@ -143,16 +141,16 @@ void afficher_ecran_bienvenue(Jeu &jeu) {
 
     // affichage ASCII art
     for (int j = 0; j < ascii_hauteur; j++) {
-        for (int col = 0; col < ascii[j].size(); col++) {
-            ecrire_char(x + col, y + j, ascii[j][col]);
+        for (size_t col = 0; col < ascii[j].size(); col++) {
+            ecrire_char(x + static_cast<int>(col), y + j, ascii[j][col]);
         }
     }
 
     // affichage du texte mouvement/interactions: zqsd, ijkl, espace
     int base = y + ascii_hauteur + 2;
     for (int j = 0; j < infos_hauteur; j++) {
-        for (int col = 0; col < infos[j].size(); col++) {
-            ecrire_char(x + col, base + j, infos[j][col]);
+        for (size_t col = 0; col < infos[j].size(); col++) {
+            ecrire_char(x + static_cast<int>(col), base + j, infos[j][col]);
         }
     }
 }
@@ -174,9 +172,7 @@ void afficher_game_over(Jeu &jeu) {
 
     int largeur = 0;
     for (int i = 0; i < hauteur; i++) {
-        if ((int)ascii[i].size() > largeur) {
-            largeur = ascii[i].size();
-        }
+        largeur = max(largeur, static_cast<int>(ascii[i].size()));
     }
 
     int x = (jeu.carte.largeur - largeur) / 2;
@@ -184,12 +180,11 @@ void afficher_game_over(Jeu &jeu) {
 
     // afficher ASCII art
     for (int j = 0; j < hauteur; j++) {
-        for (int col = 0; col < ascii[j].size(); col++) {
-            ecrire_char(x + col, y + j, ascii[j][col]);
+        for (size_t col = 0; col < ascii[j].size(); col++) {
+            ecrire_char(x + static_cast<int>(col), y + j, ascii[j][col]);
         }
     }
 
-    // message pour sortir
     ecrire_string("Appuyer sur [ESC] pour sortir", x, y + hauteur + 1);
 }
 

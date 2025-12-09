@@ -157,13 +157,13 @@ void mettre_a_jour_visibilite(Jeu& jeu) {
 
     for (int i = 0; i < nb_branches; i++) {
         // calcul du vecteur direction du rayon
-        float angle = (2.0f * M_PI * i) / nb_branches;
+        float angle = (2.0f * static_cast<float>(M_PI) * static_cast<float>(i)) / static_cast<float>(nb_branches);
         float dx = cosf(angle);
         float dy = sinf(angle);
 
         // position initiale du rayon centrée sur la case
-        float cx = px + 0.5f;
-        float cy = py + 0.5f;
+        float cx = static_cast<float>(px) + 0.5f;
+        float cy = static_cast<float>(py) + 0.5f;
 
         int prev_ix = (int)floor(cx);
         int prev_iy = (int)floor(cy);
