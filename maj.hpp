@@ -102,57 +102,93 @@ void mettre_a_jour_visibilite(Jeu& jeu) {
     int px = jeu.joueur.x;
     int py = jeu.joueur.y;
 
-    // Reset
+    // reset la visibilité du tour
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++) {
             jeu.carte.visible[y][x] = false;
         }
-    }    
+    }
 
-    // Nombre de branches
+    // nombre de rayons projetés
     int nb_branches = 360;
 
     for (int i = 0; i < nb_branches; i++) {
+        // calcul du vecteur direction du rayon
         float angle = (2.0f * M_PI * i) / nb_branches;
-
         float dx = cosf(angle);
         float dy = sinf(angle);
 
+        // position initiale du rayon centrée sur la case
         float cx = px + 0.5f;
         float cy = py + 0.5f;
 
         int prev_ix = (int)floor(cx);
         int prev_iy = (int)floor(cy);
 
-        for (int r = 0; r <= rayon; r++) {
+        // flag d'arrêt du rayon
+        bool arret_rayon = false;
 
+        for (int r = 0; r <= rayon && !arret_rayon; r++) {
+            // conversion en coordonnées de grille
             int ix = (int)floor(cx);
             int iy = (int)floor(cy);
 
-            // limites et diag
-            if (ix < 0 || ix >= jeu.carte.largeur) break;
-            if (iy < 0 || iy >= jeu.carte.hauteur) break;
-            if (bloque_par_coin(jeu, prev_ix, prev_iy, ix, iy)) break;
+            // vérifie les limites de la carte
+            bool hors_limite = (ix < 0 || ix >= jeu.carte.largeur || iy < 0 || iy >= jeu.carte.hauteur);
+            if (hors_limite) {
+                arret_rayon = true;
+            }
 
-            jeu.carte.visible[iy][ix] = true;
+            // vérifie le blocage diagonal
+            if (!arret_rayon) {
+                if (bloque_par_coin(jeu, prev_ix, prev_iy, ix, iy)) {
+                    arret_rayon = true;
+                }
+            }
 
-            // cas pour lesquels on ne laisse pas passer "la vue"
-            bool bloque = false;
-            if (jeu.carte.cases[iy][ix] == '#') bloque = true; // mur = toujours bloquant            
-            if ((jeu.carte.cases[iy][ix] >= '0' && jeu.carte.cases[iy][ix] <= '9') && !(ix == jeu.joueur.x && iy == jeu.joueur.y)) bloque = true; // porte = bloquante sauf si c'est celle du joueur
-            if (bloque) break;
+            // mise à jour de la visibilité et de la mémoire si non arrêté
+            if (!arret_rayon) {
+                jeu.carte.visible[iy][ix] = true;
+                jeu.carte.ex_visible[iy][ix] = jeu.carte.cases[iy][ix];
+            }
 
-            prev_ix = ix;
-            prev_iy = iy;
+            // vérifie si cette case bloque le champ de vision
+            if (!arret_rayon) {
+                bool bloque = false;
 
-            cx += dx;
-            cy += dy;
+                // mur bloquant
+                if (jeu.carte.cases[iy][ix] == '#') {
+                    bloque = true;
+                }
+
+                // porte bloquante sauf celle du joueur
+                if (jeu.carte.cases[iy][ix] >= '0' && jeu.carte.cases[iy][ix] <= '9') {
+                    if (!(ix == px && iy == py)) {
+                        bloque = true;
+                    }
+                }
+
+                if (bloque) {
+                    arret_rayon = true;
+                }
+            }
+
+            // mise à jour des coordonnées précédentes
+            if (!arret_rayon) {
+                prev_ix = ix;
+                prev_iy = iy;
+
+                cx += dx;
+                cy += dy;
+            }
         }
     }
 
-    // case du joueur toujours visible
+    // la case du joueur est toujours visible et mémorisée
     jeu.carte.visible[py][px] = true;
+    jeu.carte.ex_visible[py][px] = jeu.carte.cases[py][px];
 }
+
 
 
 // conditions de victoire ou défaite

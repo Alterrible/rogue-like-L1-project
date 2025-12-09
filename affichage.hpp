@@ -7,27 +7,50 @@
 using namespace std;
 
 void afficher_jeu(const Jeu &jeu) {
+    // efface l'écran
     effacer_console();
 
-    // traitement pour chaques cases de la carte
+    // affiche la carte
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++) {
+
+            // case visible ce tour
             if (jeu.carte.visible[y][x]) {
                 char c = jeu.carte.cases[y][x];
                 ecrire_char(x, y, c);
-            } else {
-                ecrire_char(x, y, ' ');
+            }
+            else {
+                // case vue avantt (mémoire)
+                bool deja_vu = (jeu.carte.ex_visible[y][x] != '\0');
+
+                if (deja_vu) {
+                    // récupère la dernière info connue
+                    char c = jeu.carte.ex_visible[y][x];
+
+                    // version atténuée pour montrer le fog de guerre
+                    // (si pas de couleur possible, on met le caractère en minuscule)
+                    if (c >= 'A' && c <= 'Z') {
+                        c = (char)(c - 'A' + 'a');
+                    }
+
+                    ecrire_char(x, y, c);
+                }
+                else {
+                    // jamais vu : noir
+                    ecrire_char(x, y, ' ');
+                }
             }
         }
     }
 
-    // --- hotbar ---
+    // affiche la hotbar
     string hotbar;
     for (int i = 0; i < NB_STATS; i++) {
         hotbar += jeu.nom_stats[i] + "[" + to_string(jeu.joueur.stat[i]) + "] ";
     }
     ecrire_string(hotbar, 0, jeu.carte.hauteur);
 }
+
 
 // écran d'affichage contrainte
 void afficher_modal (Jeu& jeu) {
