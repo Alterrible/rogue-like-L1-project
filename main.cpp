@@ -19,6 +19,7 @@ int main() {
     static Jeu jeu;
     bool ok;
     char cmd;
+    bool bvn = true;
 
     // Charger la configuration générale
     ok = charger_configuration("init.txt", jeu);
@@ -37,7 +38,10 @@ int main() {
 
     // Boucle principale
     while (true) {
-        if (!jeu.etat_termine && !jeu.modal_active) {
+        if (bvn) {
+            afficher_ecran_bienvenue(jeu);
+        }
+        else if (!jeu.etat_termine && !jeu.modal_active) {
             afficher_jeu(jeu);
         } else if (jeu.modal_active) {
             afficher_modal(jeu);
@@ -52,7 +56,7 @@ int main() {
             return 0;
         }
 
-        bool traitement = traiter_commande(cmd, jeu);
+        bool traitement = traiter_commande(cmd, jeu, bvn);
         if (traitement) mettre_a_jour_jeu(jeu);
     }
 

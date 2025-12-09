@@ -220,7 +220,7 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, string& context, bool defaite
     // MODE VICTOIRE/defaut
     if (!defaite) {
         // items requis
-        for (int i = 0; i < ctr.nb_items_possede; i++){
+        for (int i = 0; i < ctr.nb_items_possede; i++) {
             int idItem = ctr.items_possede[i];
 
             if (!a_items(jeu, idItem, 1)) {
@@ -238,7 +238,7 @@ bool check_contrainte(Jeu& jeu, int id_contrainte, string& context, bool defaite
         }
 
         // stats minimales
-        for (int s = 0; s < NB_STATS; s++){
+        for (int s = 0; s < NB_STATS; s++) {
             if (ctr.stats_min[s] > 0 && !a_stat(jeu, s, ctr.stats_min[s])) {
                 context = "Statistique insuffisante : '" + jeu.nom_stats[s] +"' doit être au moins " + to_string(ctr.stats_min[s]) + ".";
                 return false;

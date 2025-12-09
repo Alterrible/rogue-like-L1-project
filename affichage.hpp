@@ -71,30 +71,119 @@ void afficher_modal (Jeu& jeu) {
     // remplir les espaces internes et autour
     ecrire_char(x + 1, y + 1, ' ');
     ecrire_char(x + cadre_largeur - 2, y + 1, ' ');
-    ecrire_char(x + cadre_largeur + 2, y, ' ');
-    ecrire_char(x + cadre_largeur + 2, y, ' ');
 
     // ligne inférieure
     for (int i = 0; i < cadre_largeur; i++) {
         ecrire_char(x + i, y + 2, '-');
-        ecrire_char(x + i, y + 3, ' ');
+    }
+}
+
+const string ASCII_GAGNE[] = {
+"  __  __   __ __  _ ___ ",
+" / _]/  \\ / _]  \\| | __|",
+"| [/\\ /\\ | [/\\ | ' | _| ",
+" \\__/_||_|\\__/_|\\__|___|"
+};
+
+const string ASCII_PERDU[] = {
+" ___ ___ ___ __  _  _ ",
+"| _,\\ __| _ \\ _\\| || |", 
+"| v_/ _|| v / v | \\/ |", 
+"|_| |___|_|_\\__/ \\__/ "
+};
+
+const string ascii_bienvenue[] = {
+" __ _ ___ __  _  _   _  ___ __  _ _  _ ___ ",
+"|  \\ | __|  \\| || \\ / || __|  \\| | || | __|",
+"| -< | _|| | ' |`\\ V /'| _|| | ' | \\/ | _| ",
+"|__/_|___|_|\\__|  \\_/  |___|_|\\__|\\__/|___|",
+};
+
+const string infos_bienvenue[] = {
+    "Utilisez Z Q S D pour vous deplacer.",
+    "Utilisez I J K L pour interagir.",
+    "Appuyez sur ESPACE pour fermer les ecrans d'information.",
+    "",
+    "Appuyez sur ESPACE pour commencer la partie."
+};
+
+void afficher_ecran_bienvenue(Jeu &jeu) {
+    effacer_console();
+
+    // sélection de l'ASCII
+    const string* ascii = ascii_bienvenue;
+    int ascii_hauteur = sizeof(ascii_bienvenue) / sizeof(string);
+
+    const string* infos = infos_bienvenue;
+    int infos_hauteur = sizeof(infos_bienvenue) / sizeof(string);
+
+    // calcul de la largeur max
+    int largeur = 0;
+
+    for (int i = 0; i < ascii_hauteur; i++)
+        if ((int)ascii[i].size() > largeur)
+            largeur = ascii[i].size();
+
+    for (int i = 0; i < infos_hauteur; i++)
+        if ((int)infos[i].size() > largeur)
+            largeur = infos[i].size();
+
+    // placement centré
+    int total_hauteur = ascii_hauteur + 2 + infos_hauteur;
+
+    int x = (jeu.carte.largeur  - largeur) / 2;
+    int y = (jeu.carte.hauteur - total_hauteur) / 2;
+
+    // affichage ASCII art
+    for (int j = 0; j < ascii_hauteur; j++) {
+        for (int col = 0; col < ascii[j].size(); col++) {
+            ecrire_char(x + col, y + j, ascii[j][col]);
+        }
+    }
+
+    // affichage du texte mouvement/interactions: zqsd, ijkl, espace
+    int base = y + ascii_hauteur + 2;
+    for (int j = 0; j < infos_hauteur; j++) {
+        for (int col = 0; col < infos[j].size(); col++) {
+            ecrire_char(x + col, base + j, infos[j][col]);
+        }
     }
 }
 
 
-
-// écran de fin de jeu
 void afficher_game_over(Jeu &jeu) {
     effacer_console();
 
-    string msg;
+    const string* ascii;
+    int hauteur;
+
     if (jeu.victoire) {
-        msg = "gagné";
+        ascii = ASCII_GAGNE;
+        hauteur = sizeof(ASCII_GAGNE) / sizeof(string);
     } else {
-        msg = "perdu";
+        ascii = ASCII_PERDU;
+        hauteur = sizeof(ASCII_PERDU) / sizeof(string);
     }
 
-    ecrire_string(msg, 0, 0);
+    int largeur = 0;
+    for (int i = 0; i < hauteur; i++) {
+        if ((int)ascii[i].size() > largeur) {
+            largeur = ascii[i].size();
+        }
+    }
+
+    int x = (jeu.carte.largeur - largeur) / 2;
+    int y = (jeu.carte.hauteur - hauteur) / 2;
+
+    // afficher ASCII art
+    for (int j = 0; j < hauteur; j++) {
+        for (int col = 0; col < ascii[j].size(); col++) {
+            ecrire_char(x + col, y + j, ascii[j][col]);
+        }
+    }
+
+    // message pour sortir
+    ecrire_string("Appuyer sur [ESC] pour sortir", x, y + hauteur + 1);
 }
 
 
@@ -146,9 +235,9 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONFIG ITEMS
-    cout << "\nCONFIG ITEMS" << endl;
+    cout << "\\nCONFIG ITEMS" << endl;
     for (int i = 0; i < jeu.nb_cfg_items; i++) {
-        cout << "\nItem " << i << endl;
+        cout << "\\nItem " << i << endl;
         cout << "id : " << jeu.cfg_items[i].id << endl;
         cout << "symbole : " << jeu.cfg_items[i].symbole << endl;
         cout << "nom : " << jeu.cfg_items[i].nom << endl;
@@ -160,10 +249,10 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONFIG MONSTRES
-    cout << "\nCONFIG MONSTRES" << endl;
+    cout << "\\nCONFIG MONSTRES" << endl;
     for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
         const auto& m = jeu.cfg_monstres[i];
-        cout << "\nMonstre " << i << endl;
+        cout << "\\nMonstre " << i << endl;
 
         cout << "id : " << m.id << endl;
         cout << "symbole : " << m.symbole << endl;
@@ -180,11 +269,11 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONFIG PORTES
-    cout << "\nCONFIG PORTES" << endl;
+    cout << "\\nCONFIG PORTES" << endl;
     for (int i = 0; i < jeu.nb_cfg_portes; i++) {
         const auto& p = jeu.cfg_portes[i];
 
-        cout << "\nPorte " << i << endl;
+        cout << "\\nPorte " << i << endl;
         cout << "id : " << p.id << endl;
         cout << "symbole : " << p.symbole << endl;
         cout << "id_contrainte : " << p.id_contrainte << endl;
@@ -192,22 +281,22 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONDITIONS
-    cout << "\nCONDITIONS DE JEU" << endl;
+    cout << "\\nCONDITIONS DE JEU" << endl;
     cout << "nbContraintes : " << jeu.cfgConditions.nbContraintes << endl;
 
-    cout << "\nContraintes" << endl;
+    cout << "\\nContraintes" << endl;
     for (int i = 0; i < jeu.cfgConditions.nbContraintes; i++) {
-        cout << "\nContrainte " << i << endl;
+        cout << "\\nContrainte " << i << endl;
         afficher_contrainte(jeu.cfgConditions.contraintes[i]);
         cout << "---" << endl;
     }
 
-    afficher_liste_id_contraintes(jeu.cfgConditions.victoire, "\nConditions victoire");
-    afficher_liste_id_contraintes(jeu.cfgConditions.defaite, "\nConditions défaite");
+    afficher_liste_id_contraintes(jeu.cfgConditions.victoire, "\\nConditions victoire");
+    afficher_liste_id_contraintes(jeu.cfgConditions.defaite, "\\nConditions défaite");
 
  
     // ITEMS SUR LA CARTE
-    cout << "\nITEMS DANS LA CARTE" << endl;
+    cout << "\\nITEMS DANS LA CARTE" << endl;
     cout << "nb_items : " << jeu.nb_items << endl;
 
     for (int i = 0; i < jeu.nb_items; i++) {
@@ -219,13 +308,13 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // MONSTRES SUR LA CARTE
-    cout << "\nMONSTRES DANS LA CARTE" << endl;
+    cout << "\\nMONSTRES DANS LA CARTE" << endl;
     cout << "nb_monstres : " << jeu.nb_monstres << endl;
 
     for (int i = 0; i < jeu.nb_monstres; i++) {
         const auto& mo = jeu.monstres[i];
 
-        cout << "\nMonstre " << i
+        cout << "\\nMonstre " << i
              << " : idConfig=" << mo.idConfig
              << " x=" << mo.x << " y=" << mo.y
              << " actif=" << mo.actif << endl;
@@ -236,18 +325,18 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CARTE
-    cout << "\nCARTE" << endl;
+    cout << "\\nCARTE" << endl;
     cout << "largeur : " << jeu.carte.largeur << endl;
     cout << "hauteur : " << jeu.carte.hauteur << endl;
 
-    cout << "\nCases :" << endl;
+    cout << "\\nCases :" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++)
             cout << jeu.carte.cases[y][x];
         cout << endl;
     }
 
-    cout << "\nVisibilité :" << endl;
+    cout << "\\nVisibilité :" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++)
             cout << (jeu.carte.visible[y][x] ? "1" : "0");
@@ -257,25 +346,26 @@ void afficher_jeu_debug(const Jeu& jeu) {
  
     // JOUEUR DYNAMIQUE
 
-    cout << "\nJOUEUR (DYNAMIQUE)" << endl;
+    cout << "\\nJOUEUR (DYNAMIQUE)" << endl;
     cout << "x : " << jeu.joueur.x << endl;
     cout << "y : " << jeu.joueur.y << endl;
     cout << "nb_inventaire : " << jeu.joueur.nb_inventaire << endl;
 
-    for (int i = 0; i < jeu.joueur.nb_inventaire; i++)
+    for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
         cout << "inventaire[" << i << "] : " << jeu.joueur.inventaire[i] << endl;
+    }
 
-    for (int i = 0; i < NB_STATS; i++)
+    for (int i = 0; i < NB_STATS; i++) {
         cout << "stat[" << i << "] : " << jeu.joueur.stat[i] << endl;
-
+    }
  
     // ETAT DU JEU
 
-    cout << "\nETAT DU JEU" << endl;
+    cout << "\\nETAT DU JEU" << endl;
     cout << "etat_termine : " << jeu.etat_termine << endl;
     cout << "victoire : " << jeu.victoire << endl;
 
-    cout << "\n[FIN DEBUG]" << endl;
+    cout << "\\n[FIN DEBUG]" << endl;
 }
 
 #endif

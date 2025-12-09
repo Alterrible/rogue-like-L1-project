@@ -7,7 +7,7 @@
 using namespace std;
 
 // traitement principal
-bool traiter_commande(char cmd, Jeu &jeu) {
+bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
     int nouveauX = jeu.joueur.x;
     int nouveauY = jeu.joueur.y;
 
@@ -26,10 +26,14 @@ bool traiter_commande(char cmd, Jeu &jeu) {
     else if (cmd == 'l') { nouveauX++; commande_interaction = true; }
 
     // fermeture du modal et empêche de jouer tant qu'il est ouvert
-    if (jeu.modal_active) {
+    if (jeu.modal_active || bvn) {
         if (cmd == ' ') {
-            jeu.modal_active = false;
-            jeu.modal_txt = "";
+            if (bvn) {
+                bvn = false;
+            } else {
+                jeu.modal_active = false;
+                jeu.modal_txt = "";
+            }
         }
         return false;
     }
