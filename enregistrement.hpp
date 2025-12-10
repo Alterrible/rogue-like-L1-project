@@ -133,7 +133,7 @@ struct Jeu {
     string modal_txt;
     bool modal_active;
 
-    // compteurs pour éviter débordement lors de l'initialisation
+    // compteurs pour éviter débordement lors de l'initialisation également lors ce que l'on a besoin de connaître le nombres d'éléments
     int nb_cfg_items;
     int nb_cfg_monstres;
     int nb_cfg_portes;
