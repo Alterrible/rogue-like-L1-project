@@ -52,8 +52,9 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             it.nom = mots[2];
             it.description = mots[3];
 
-            for (int i = 0; i < NB_STATS; i++) 
+            for (int i = 0; i < NB_STATS; i++) {
                 it.bonus[i] = stoi(mots[4 + i]);
+            }
 
             jeu.nb_cfg_items++;
         }
@@ -66,17 +67,19 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             m.symbole = mots[1][0];
             m.nom = mots[2];
             m.description = mots[3];
-
             m.typeIA = stoi(mots[22]);
 
-            for (int i = 0; i < NB_STATS; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 m.stats_base[i] = stoi(mots[4 + i]);
+            }
 
-            for (int i = 0; i < NB_STATS; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 m.stats_afflige[i] = stoi(mots[10 + i]);
+            }
 
-            for (int i = 0; i < NB_STATS; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 m.stats_prit[i] = (stoi(mots[16 + i]) > 0);
+            }
 
             jeu.nb_cfg_monstres++;
         }
@@ -97,39 +100,30 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
 
             if (mots[0] == "symbole") {
                 jeu.cfg_joueur.symbole = mots[1][0];
-            }
-
-            else if (mots[0] == "nom") {
+            } else if (mots[0] == "nom") {
                 jeu.cfg_joueur.nom = mots[1];
-            }
-
-            else if (mots[0] == "description") {
+            } else if (mots[0] == "description") {
                 jeu.cfg_joueur.description = mots[1];
-            }
-
-            else if (mots[0] == "stats") {
-                for (int s = 0; s < NB_STATS; s++)
+            } else if (mots[0] == "stats") {
+                for (int s = 0; s < NB_STATS; s++) {
                     jeu.cfg_joueur.stats[s] = stoi(mots[1 + s]);
-            }
-
-            else if (mots[0] == "inventaire") {
+                }
+            } else if (mots[0] == "inventaire") {
                 if (mots[1][0] != '_') {
                     int t = 0;
-                    for (int i = 1; i < nb; i++)
+                    for (int i = 1; i < nb; i++) {
                         jeu.cfg_joueur.inventaire_ids.ids[t++] = stoi(mots[i]);
+                    }
                     jeu.cfg_joueur.inventaire_ids.taille = t;
                 } else {
                     jeu.cfg_joueur.inventaire_ids.taille = 0;
                 }
-            }
-
-            else if (mots[0] == "index_stat_vision") {
+            } else if (mots[0] == "index_stat_vision") {
                 jeu.index_stat_vision = stoi(mots[1]) - 1;
-            }
-
-            else if (mots[0] == "nom_stats") {
-                for (int s = 0; s < NB_STATS; s++)
+            } else if (mots[0] == "nom_stats") {
+                for (int s = 0; s < NB_STATS; s++) {
                     jeu.nom_stats[s] = mots[1 + s];
+                }
             }
         }
 
@@ -139,14 +133,16 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
 
             c.id = stoi(mots[0]);
 
-            for (int i = 0; i < NB_STATS; i++)
+            for (int i = 0; i < NB_STATS; i++) {
                 c.stats_min[i] = stoi(mots[1 + i]);
+            }
 
             if (mots[NB_STATS + 1][0] == '_') {
                 c.nb_items_possede = 0;
             } else {
-                for (int i = 0; i < nb - NB_STATS - 1; i++)
+                for (int i = 0; i < nb - NB_STATS - 1; i++) {
                     c.items_possede[i] = stoi(mots[NB_STATS + 1 + i]);
+                }
                 c.nb_items_possede = nb - NB_STATS - 1;
             }
 
@@ -160,14 +156,16 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
 
         // VICTOIRE
         else if (!skip && section == 6) {
-            for (int i = 0; i < nb; i++)
+            for (int i = 0; i < nb; i++) {
                 jeu.cfgConditions.victoire.ids[jeu.cfgConditions.victoire.nb++] = stoi(mots[i]);
+            }
         }
 
         // DEFAITE
         else if (!skip && section == 7) {
-            for (int i = 0; i < nb; i++)
+            for (int i = 0; i < nb; i++) {
                 jeu.cfgConditions.defaite.ids[jeu.cfgConditions.defaite.nb++] = stoi(mots[i]);
+            }
         }
     }
 
@@ -175,9 +173,9 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
     return true;
 }
 
-
 bool charger_carte(const string& fichier, Jeu& jeu) {
     fstream flux(fichier, ios::in);
+
     if (!flux.is_open()) {
         cout << "Erreur : impossible d'ouvrir " << fichier << endl;
         return false;
@@ -232,8 +230,9 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
                         m.y = y;
                         m.idConfig = jeu.cfg_monstres[i].id;
 
-                        for (int k = 0; k < NB_STATS; k++)
+                        for (int k = 0; k < NB_STATS; k++) {
                             m.stats[k] = jeu.cfg_monstres[i].stats_base[k];
+                        }
 
                         m.actif = true;
 
@@ -252,16 +251,17 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
     return true;
 }
 
-
 void initialiser_jeu(Jeu &jeu) {
 
-    for (int i = 0; i < NB_STATS; i++)
+    for (int i = 0; i < NB_STATS; i++) {
         jeu.joueur.stat[i] = jeu.cfg_joueur.stats[i];
+    }
 
     jeu.joueur.nb_inventaire = jeu.cfg_joueur.inventaire_ids.taille;
 
-    for (int i = 0; i < jeu.cfg_joueur.inventaire_ids.taille; i++)
+    for (int i = 0; i < jeu.cfg_joueur.inventaire_ids.taille; i++) {
         jeu.joueur.inventaire[i] = jeu.cfg_joueur.inventaire_ids.ids[i];
+    }
 
     jeu.etat_termine = false;
     jeu.victoire = false;

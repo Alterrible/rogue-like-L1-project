@@ -185,7 +185,7 @@ void afficher_game_over(Jeu &jeu) {
         }
     }
 
-    ecrire_string("Appuyer sur [ESC] pour sortir", x, y + hauteur + 1);
+    ecrire_string("Appuyer sur [ECHAP] pour sortir", x, y + hauteur + 1);
 }
 
 
