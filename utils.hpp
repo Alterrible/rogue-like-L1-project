@@ -4,11 +4,11 @@
 #include "enregistrement.hpp"
 #include "affichage.hpp"
 #include <iostream>
+#include <cmath>
 
 // ---- FONCTIONS UTILES ----
 
 // permet d'avoir un string avec des espaces
-
 string underscore_espace(const string& input) {
     string result = input;
     for (char& c : result) {
@@ -38,13 +38,9 @@ int decouper(const string& ligne, string mots[], int max_mots) {
     return nb;
 }
 
-int abs_int(int x) {
-    return (x < 0) ? -x : x;
-}
-
 // def : la somme des différences absolues de leurs coordonnées cartésiennes (méthode pour avoir "la distance en diag suivant les carrées")
 int distance_manhattan(int x1, int y1, int x2, int y2) {
-    return abs_int(x1 - x2) + abs_int(y1 - y2);
+    return abs(x1 - x2) + abs(y1 - y2);
 }
 
 bool bloque_par_coin(const Jeu& jeu, int x0, int y0, int x1, int y1) {
@@ -85,11 +81,6 @@ int trouver_item(const Jeu& jeu, int x, int y) {
     return -1;
 }
 
-// vérifier si joueur a une stat suffisante
-bool a_stat(Jeu& jeu, int i_stat, int stat_requise) {
-    return jeu.joueur.stat[i_stat] >= stat_requise;
-}
-
 // vérifier si joueur possède nb items d’un id donné
 bool a_items(Jeu& jeu, int id_item_requis) {
     for (int inv = 0; inv < jeu.joueur.nb_inventaire; inv++) {
@@ -112,18 +103,27 @@ void ramasser(Jeu& jeu, int id_item) {
 
     // trouver config
     int i_cfg = -1;
-    for (int i = 0; i < jeu.nb_cfg_items; i++)
+    for (int i = 0; i < jeu.nb_cfg_items; i++) {
         if (jeu.cfg_items[i].id == it.idConfig) i_cfg = i;
+    }
 
     // appliquer bonus
     if (i_cfg != -1) {
-        for (int s = 0; s < NB_STATS; s++)
+        for (int s = 0; s < NB_STATS; s++) {
             j.stat[s] += jeu.cfg_items[i_cfg].bonus[s];
+        }
     }
 
     it.actif = false;
 }
 
+
+// ---- STATS ----
+
+// vérifier si joueur a une stat suffisante
+bool a_stat(Jeu& jeu, int i_stat, int stat_requise) {
+    return jeu.joueur.stat[i_stat] >= stat_requise;
+}
 
 
 // ---- MONSTRES ----

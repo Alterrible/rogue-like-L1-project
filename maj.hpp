@@ -52,7 +52,7 @@ void mettre_a_jour_monstres(Jeu& jeu) {
                     int dy = 0;
 
                     // axe prioritaire
-                    if (abs_int(diffX) >= abs_int(diffY)) {
+                    if (abs(diffX) >= abs(diffY)) {
                         dx = (diffX > 0) ? 1 : -1;
                     }
                     else {
@@ -74,7 +74,7 @@ void mettre_a_jour_monstres(Jeu& jeu) {
                         dx = 0;
                         dy = 0;
 
-                        if (abs_int(diffX) < abs_int(diffY)) {
+                        if (abs(diffX) < abs(diffY)) {
                             dx = (diffX > 0) ? 1 : -1;
                         }
                         else {
