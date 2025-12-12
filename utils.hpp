@@ -9,15 +9,15 @@
 // ---- FONCTIONS UTILES ----
 
 // permet d'avoir un string avec des espaces
-// string underscore_espace(const string& input) {
-//     string result = input;
-//     for (char& c : result) {
-//         if (c == '_') {
-//             c = ' ';
-//         }
-//     }
-//     return result;
-// }
+inline string underscore_espace(const string& input) {
+    string result = input;
+    for (char& c : result) {
+        if (c == '_') {
+            c = ' ';
+        }
+    }
+    return result;
+}
 
 
 // découpe une ligne en mots
@@ -92,6 +92,7 @@ bool a_items(Jeu& jeu, int id_item_requis) {
 }
 
 // ramasser un item
+#include "inv.hpp"
 void ramasser(Jeu& jeu, int id_item) {
     Items &it = jeu.items[id_item];
     Joueur &j = jeu.joueur;
@@ -99,6 +100,7 @@ void ramasser(Jeu& jeu, int id_item) {
     // ajouter à l’inventaire
     if (j.nb_inventaire < TAILLE_MAX) {
         j.inventaire[j.nb_inventaire++] = it.idConfig;
+        maj_inv(jeu, it.idConfig);
     }
 
     it.actif = false;
@@ -106,54 +108,43 @@ void ramasser(Jeu& jeu, int id_item) {
 
 // consomme un item et applique les bonus
 void utiliser_item(Jeu& jeu, int id_config_item) {
-    Joueur &joueur = jeu.joueur;
-
-    int index_inventaire = -1;
-    int index_instance = -1;
+    // recuperation de la configuration de l'item
     Config_item cfg;
+    bool config_trouvee = trouver_config_item_par_id(jeu, id_config_item, cfg);
 
-    int i = 0;
-
-    // trouver un exemplaire (instance) de l'item dans l'inventaire
-    while (i < joueur.nb_inventaire && index_inventaire == -1) {
-        if (joueur.inventaire[i] == id_config_item) {
-            index_inventaire = i;
+    // recherche de l'item dans l'inventaire
+    int idx = -1;
+    if (config_trouvee) {
+        for (int i = 0; i < jeu.nb_inventaire_items; i++) {
+            if (jeu.inventaire_items[i].id_config == id_config_item && idx == -1) {
+                idx = i;
+            }
         }
-        i++;
     }
 
-    // si pas trouvé → rien à faire
-    if (index_inventaire == -1) {
-        return;
+    // verification de la presence de l'item
+    bool item_trouve = (idx != -1);
+
+    // verification des quantites restantes
+    bool item_utilisable = false;
+    if (item_trouve) {
+        item_utilisable = (jeu.inventaire_items[idx].restants > 0);
     }
 
-    // trouver sa configuration
-    bool cfg_trouve = trouver_config_item_par_id(jeu, id_config_item, cfg);
-
-    if (!cfg_trouve) {
-        return;
-    }
-
-    // trouver un exemplaire de l'item non utilisée dans l'inventaire
-    i = 0;
-    while (i < jeu.nb_items && index_instance == -1) {
-        if (jeu.items[i].idConfig == id_config_item && jeu.items[i].actif == false && jeu.items[i].utilise == false) {
-            index_instance = i;
+    // application des bonus sur le joueur
+    if (config_trouvee && item_trouve && item_utilisable) {
+        for (int s = 0; s < NB_STATS; s++) {
+            jeu.joueur.stat[s] += cfg.bonus[s];
         }
-        i++;
     }
 
-    if (index_instance == -1) {
-        return;
+    // mise a jour des donnees d'inventaire
+    if (config_trouvee && item_trouve && item_utilisable) {
+        Inventaire_item& inv = jeu.inventaire_items[idx];
+        inv.utilises++;
+        inv.restants--;
     }
-
-    // appliquer bonus
-    for (int s = 0; s < NB_STATS; s++) {
-        jeu.joueur.stat[s] += cfg.bonus[s];
-    }
-    jeu.items[index_instance].utilise = true;
 }
-
 
 // ---- STATS ----
 

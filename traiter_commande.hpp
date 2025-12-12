@@ -40,58 +40,48 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
 
     // ouvrir / fermer inventaire
     if (cmd == 't') {
-        if (!jeu.inventaire_actif) {
-            jeu.inventaire_actif = true;
+        jeu.inventaire_actif = !jeu.inventaire_actif;
+
+        if (jeu.inventaire_actif) {
             jeu.inv_selection_index = 0;
             jeu.inv_scroll_haut = 0;
-        } else {
-            jeu.inventaire_actif = false;
         }
-        return false; 
+
+        return false; // stop propagation
     }
 
-    // si inventaire ouvert → intercepter toutes les touches
+    // ===============================
+    // INVENTAIRE ACTIF
+    // ===============================
     if (jeu.inventaire_actif) {
 
-        // comme on veut afficher le nombre et pas l'inventaire alors on regroupe tout les items par id config
-        int ids[TAILLE_ITEMS];
-        int quantites[TAILLE_ITEMS];
-        int nb_types = 0;
+        int nb = jeu.nb_inventaire_items;
 
-        for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
-            int idConf = jeu.joueur.inventaire[i];
-            int idx = -1;
-
-            for (int t = 0; t < nb_types; t++)
-                if (ids[t] == idConf) { idx = t; break; }
-
-            if (idx == -1) {
-                ids[nb_types] = idConf;
-                quantites[nb_types] = 1;
-                nb_types++;
-            } else {
-                quantites[idx]++;
-            }
-        }
-
-        // sélection dans la liste
-        if (cmd == 'z' && jeu.inv_selection_index > 0) {
+        // navigation
+        if (cmd == 'z') {
             jeu.inv_selection_index--;
         }
-
-        else if (cmd == 's' && jeu.inv_selection_index < nb_types - 1) {
+        else if (cmd == 's') {
             jeu.inv_selection_index++;
         }
 
+        // clamp sélection (centralisé)
+        if (jeu.inv_selection_index < 0)
+            jeu.inv_selection_index = 0;
+
+        if (jeu.inv_selection_index >= nb && nb > 0)
+            jeu.inv_selection_index = nb - 1;
+
         // utiliser l'item sélectionné
-        else if (cmd == ' ') {
-            if (nb_types > 0) {
-                int idConf_sel = ids[jeu.inv_selection_index];
-                utiliser_item(jeu, idConf_sel);
+        if (cmd == ' ' && nb > 0) {
+            Inventaire_item& inv = jeu.inventaire_items[jeu.inv_selection_index];
+
+            if (inv.restants > 0) {
+                utiliser_item(jeu, inv.id_config);
             }
         }
 
-        return false;
+        return false; // l'inventaire consomme toutes les touches
     }
 
 

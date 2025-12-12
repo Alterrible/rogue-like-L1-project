@@ -102,6 +102,13 @@ struct Items {
     bool utilise;
 };
 
+struct Inventaire_item {
+    int id_config;
+    int total;
+    int utilises;
+    int restants;
+};
+
 struct Carte {
     int largeur;
     int hauteur;
@@ -142,6 +149,8 @@ struct Jeu {
     bool modal_active;
 
     // état de l'inventaire
+    Inventaire_item inventaire_items[TAILLE_ITEMS];
+    int nb_inventaire_items;
     bool inventaire_actif;
     int inv_selection_index;
     int inv_scroll_haut;
