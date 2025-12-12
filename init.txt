@@ -1,22 +1,22 @@
 [ITEMS]
 | id | symbole | nom | description | stats_bonus[6]
-1 a Amulette_d_audace Amulette_courageuse 1 1 1 1 1 1
-2 b Bottes_legeres Bottes_agiles 0 3 0 0 0 0
-3 c Cle_de_bronze Une_cle_en_bronze 0 0 0 0 0 0
-4 d Cle_d_argent Une_cle_en_argent 0 0 0 0 0 0
-5 e Essence_de_guerison Breuvage_revigorant 5 0 0 0 0 0
-6 g Gants_de_precision Gants_habiles 0 2 1 0 0 0
-7 k Kriss_affute Dague_mortelle 0 0 4 0 0 0
-8 m Marteau_de_guerre Arme_lourde 0 0 5 0 0 0
-9 n Collier_de_feu Collier_enflamme 0 0 0 0 3 0
-10 o Orbe_de_vision Orbe_lumineux 0 0 0 4 0 0
-11 r Armure_robuste Protection_solide 4 0 0 0 0 0
-12 s Scarabee_chanceux Porte_bonheur 1 1 1 1 1 1
-13 u Urne_glacee Urne_gelee 0 0 0 0 0 4
-14 v Veste_de_voyage Veste_pratique 2 2 0 0 0 0
-15 w Baguette_de_feu Baguette_flamme 0 0 1 0 3 0
-16 x Talisman_perception Talisman_clairvoyant 0 1 0 3 0 0
-17 y Yeux_de_lynx Vision_percante 0 0 0 5 0 0
+1 a Amulette_d_audace Amulette_courageuse 1 1 1 1 1 1 1
+2 b Bottes_legeres Bottes_agiles 1 0 3 0 0 0 0
+3 c Cle_de_bronze Une_cle_en_bronze 1 0 0 0 0 0 0
+4 d Cle_d_argent Une_cle_en_argent 1 0 0 0 0 0 0
+5 e Essence_de_guerison Breuvage_revigorant 1 5 0 0 0 0 0
+6 g Gants_de_precision Gants_habiles 1 0 2 1 0 0 0
+7 k Kriss_affute Dague_mortelle 1 0 0 4 0 0 0
+8 m Marteau_de_guerre Arme_lourde 1 0 0 5 0 0 0
+9 n Collier_de_feu Collier_enflamme 1 0 0 0 0 3 0
+10 o Orbe_de_vision Orbe_lumineux 1 0 0 0 4 0 0
+11 r Armure_robuste Protection_solide 1 4 0 0 0 0 0
+12 s Scarabee_chanceux Porte_bonheur 1 1 1 1 1 1 1
+13 u Urne_glacee Urne_gelee 1 0 0 0 0 0 4
+14 v Veste_de_voyage Veste_pratique 1 2 2 0 0 0 0
+15 w Baguette_de_feu Baguette_flamme 1 0 0 1 0 3 0
+16 x Talisman_perception Talisman_clairvoyant 1 0 1 0 3 0 0
+17 y Yeux_de_lynx Vision_percante 1 0 0 0 5 0 0
 
 [MONSTRES]
 | id | symbole | nom | description | stats_base[6] | stats_afflige[6] | stats_prit[6] | typeIA

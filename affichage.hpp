@@ -6,6 +6,19 @@
 #include <iostream>
 using namespace std;
 
+string underscore_espace(const string& input) {
+    string result = input;
+    for (char& c : result) {
+        if (c == '_') {
+            c = ' ';
+        }
+    }
+    return result;
+}
+
+
+// ---- AFFICHAGE JEU ----
+
 // affiche la carte selon visible / ex_visible
 void afficher_carte(const Jeu &jeu) {
     // boucle sur les cases
@@ -81,6 +94,154 @@ void afficher_modal (Jeu& jeu) {
     }
 }
 
+
+// ---- AFFICHAGE INVENTAIRE ----
+void afficher_inventaire(Jeu &jeu) {
+    effacer_console();
+
+    const Joueur &j = jeu.joueur;
+
+    // agrégation : on regroupe les idConfig identiques en (id, quantité)
+    int ids[TAILLE_ITEMS];
+    int quantites[TAILLE_ITEMS];
+    int nb_types = 0;
+
+    for (int i = 0; i < j.nb_inventaire; i++) {
+        int idConf = j.inventaire[i];
+        int idx = -1;
+        for (int t = 0; t < nb_types; t++) {
+            if (ids[t] == idConf) {
+                idx = t;
+                break;
+            }
+        }
+        if (idx == -1 && nb_types < TAILLE_ITEMS) {
+            ids[nb_types] = idConf;
+            quantites[nb_types] = 1;
+            nb_types++;
+        } else if (idx != -1) {
+            quantites[idx]++;
+        }
+    }
+
+    int largeur = jeu.carte.largeur;
+    int hauteur = jeu.carte.hauteur;
+
+    // Titre
+    string titre = "INVENTAIRE (T = fermer, ESPACE = utiliser)";
+    int x_titre = (largeur - static_cast<int>(titre.size())) / 2;
+    if (x_titre < 0) x_titre = 0;
+    ecrire_string(titre, x_titre, 0);
+
+    if (nb_types == 0) {
+        string vide = "Inventaire vide.";
+        int x_vide = (largeur - static_cast<int>(vide.size())) / 2;
+        if (x_vide < 0) x_vide = 0;
+        ecrire_string(vide, x_vide, hauteur / 2);
+        return;
+    }
+
+    // zone de liste
+    int y_liste = 2;
+    int hauteur_liste = hauteur - 7; // laisse de la place pour détails en bas
+    if (hauteur_liste < 1) hauteur_liste = 1;
+    int max_visible = hauteur_liste;
+
+    // Clamp de la sélection
+    if (jeu.inv_selection_index < 0) jeu.inv_selection_index = 0;
+    if (jeu.inv_selection_index >= nb_types) jeu.inv_selection_index = nb_types - 1;
+
+    // Mise à jour du scroll pour que la sélection reste visible
+    if (jeu.inv_scroll_haut > jeu.inv_selection_index) {
+        jeu.inv_scroll_haut = jeu.inv_selection_index;
+    }
+    if (jeu.inv_scroll_haut < 0) jeu.inv_scroll_haut = 0;
+    if (jeu.inv_selection_index >= jeu.inv_scroll_haut + max_visible) {
+        jeu.inv_scroll_haut = jeu.inv_selection_index - max_visible + 1;
+    }
+    if (jeu.inv_scroll_haut > nb_types - 1) {
+        jeu.inv_scroll_haut = max(0, nb_types - max_visible);
+    }
+
+    // Affichage de la liste
+    for (int ligne = 0; ligne < max_visible; ligne++) {
+        int idx = jeu.inv_scroll_haut + ligne;
+        if (idx >= nb_types) break;
+
+        // retrouver la config de l'item
+        Config_item cfg;
+        // on peut utiliser trouver_config_item_par_id si tu préfères
+        bool found = false;
+        for (int i = 0; i < jeu.nb_cfg_items; i++) {
+            if (jeu.cfg_items[i].id == ids[idx]) {
+                cfg = jeu.cfg_items[i];
+                found = true;
+                break;
+            }
+        }
+        if (!found) continue;
+
+        string nom = underscore_espace(cfg.nom);
+        string ligne_str;
+
+        bool est_selectionne = (idx == jeu.inv_selection_index);
+        if (est_selectionne) {
+            ligne_str += "[" + nom + "]";
+        } else {
+            ligne_str += " " + nom + " ";
+        }
+
+        ligne_str += "  x" + to_string(quantites[idx]);
+
+        // On tronque si trop long
+        if ((int)ligne_str.size() > largeur - 2) {
+            ligne_str = ligne_str.substr(0, largeur - 2);
+        }
+
+        ecrire_string(ligne_str, 1, y_liste + ligne);
+    }
+
+    // Affichage des détails de l'item sélectionné
+    int idx_sel = jeu.inv_selection_index;
+    Config_item cfg_sel;
+    bool found_sel = false;
+    for (int i = 0; i < jeu.nb_cfg_items; i++) {
+        if (jeu.cfg_items[i].id == ids[idx_sel]) {
+            cfg_sel = jeu.cfg_items[i];
+            found_sel = true;
+            break;
+        }
+    }
+
+    if (found_sel) {
+        int y_details = y_liste + max_visible + 1;
+        if (y_details < hauteur) {
+
+            string nom_detail = underscore_espace(cfg_sel.nom);
+            string desc = underscore_espace(cfg_sel.description);
+
+            if ((int)desc.size() > largeur - 2) {
+                desc = desc.substr(0, largeur - 2);
+            }
+
+            ecrire_string("Détails : " + nom_detail, 1, y_details);
+            ecrire_string(desc, 1, y_details + 1);
+
+            // stats bonus
+            int y_stats = y_details + 3;
+            for (int s = 0; s < NB_STATS && y_stats + s < hauteur; s++) {
+                int bonus = cfg_sel.bonus[s];
+                string ligne_stat = jeu.nom_stats[s] + " : ";
+                if (bonus >= 0) ligne_stat += "+";
+                ligne_stat += to_string(bonus);
+                ecrire_string(ligne_stat, 1, y_stats + s);
+            }
+        }
+    }
+}
+
+
+// ---- AFFICHAGE DEBUT/FIN ----
 
 const string ASCII_GAGNE[] = {
 "  __  __   __ __  _ ___ ",

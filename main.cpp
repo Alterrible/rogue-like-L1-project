@@ -41,12 +41,17 @@ int main() {
             afficher_ecran_bienvenue(jeu);
         }
         else if (!jeu.etat_termine && !jeu.modal_active) {
-            afficher_jeu(jeu);
+            if (jeu.inventaire_actif) {
+                afficher_inventaire(jeu);
+            } else {
+                afficher_jeu(jeu);
+            }
         } else if (jeu.modal_active) {
             afficher_modal(jeu);
         } else {
             afficher_game_over(jeu);
         }
+
         int c = saisie_bloquante();
         cmd = static_cast<char>(c);
 

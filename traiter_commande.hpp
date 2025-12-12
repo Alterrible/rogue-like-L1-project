@@ -38,10 +38,67 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
         return false;
     }
 
+    // ouvrir / fermer inventaire
+    if (cmd == 't') {
+        if (!jeu.inventaire_actif) {
+            jeu.inventaire_actif = true;
+            jeu.inv_selection_index = 0;
+            jeu.inv_scroll_haut = 0;
+        } else {
+            jeu.inventaire_actif = false;
+        }
+        return false; 
+    }
+
+    // si inventaire ouvert → intercepter toutes les touches
+    if (jeu.inventaire_actif) {
+
+        // comme on veut afficher le nombre et pas l'inventaire alors on regroupe tout les items par id config
+        int ids[TAILLE_ITEMS];
+        int quantites[TAILLE_ITEMS];
+        int nb_types = 0;
+
+        for (int i = 0; i < jeu.joueur.nb_inventaire; i++) {
+            int idConf = jeu.joueur.inventaire[i];
+            int idx = -1;
+
+            for (int t = 0; t < nb_types; t++)
+                if (ids[t] == idConf) { idx = t; break; }
+
+            if (idx == -1) {
+                ids[nb_types] = idConf;
+                quantites[nb_types] = 1;
+                nb_types++;
+            } else {
+                quantites[idx]++;
+            }
+        }
+
+        // sélection dans la liste
+        if (cmd == 'z' && jeu.inv_selection_index > 0) {
+            jeu.inv_selection_index--;
+        }
+
+        else if (cmd == 's' && jeu.inv_selection_index < nb_types - 1) {
+            jeu.inv_selection_index++;
+        }
+
+        // utiliser l'item sélectionné
+        else if (cmd == ' ') {
+            if (nb_types > 0) {
+                int idConf_sel = ids[jeu.inv_selection_index];
+                utiliser_item(jeu, idConf_sel);
+            }
+        }
+
+        return false;
+    }
+
+
     // déplacement du joueur
     if (commande_deplacement) {
 
-        // vérifie si la case est dans la carte et validité
+        // vérifie si la case est dans la carte et valide
         bool case_valide =
             nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
             nouveauY >= 0 && nouveauY < jeu.carte.hauteur;

@@ -52,8 +52,14 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             it.nom = mots[2];
             it.description = mots[3];
 
+            if (stoi(mots[4]) != 0) {
+                it.conso == true;
+            } else {
+                it.conso == false;
+            }
+
             for (int i = 0; i < NB_STATS; i++) {
-                it.bonus[i] = stoi(mots[4 + i]);
+                it.bonus[i] = stoi(mots[5 + i]);
             }
 
             jeu.nb_cfg_items++;
@@ -213,6 +219,7 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
                         it.y = y;
                         it.idConfig = jeu.cfg_items[i].id;
                         it.actif = true;
+                        it.utilise = false;
 
                         jeu.nb_items++;
                     }

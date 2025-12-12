@@ -41,6 +41,7 @@ struct Config_item {
     string nom;
     string description;
     int bonus[NB_STATS];
+    bool conso;
 };
 
 struct Config_monstre {
@@ -98,6 +99,7 @@ struct Items {
     int y;
     int idConfig;
     bool actif;
+    bool utilise;
 };
 
 struct Carte {
@@ -111,14 +113,16 @@ struct Carte {
 
 // --- Structure principale du jeu ---
 struct Jeu {
-    Carte carte;
-    Joueur joueur;
-
+    // configuration
     Config_joueur cfg_joueur;
     Config_item cfg_items[TAILLE_ITEMS];
     Config_monstre cfg_monstres[TAILLE_MONSTRES];
     Config_porte cfg_portes[TAILLE_PORTE];
     Config_conditions_jeu cfgConditions;
+
+    // données de jeu 
+    Carte carte;
+    Joueur joueur;
 
     Items items[TAILLE_MAX];
     int nb_items;
@@ -128,10 +132,19 @@ struct Jeu {
 
     string nom_stats[NB_STATS];
     int index_stat_vision;
+
+    // état contrainte fain de jeu
     bool etat_termine;
     bool victoire;
+
+    // état modal
     string modal_txt;
     bool modal_active;
+
+    // état de l'inventaire
+    bool inventaire_actif;
+    int inv_selection_index;
+    int inv_scroll_haut;
 
     // compteurs pour éviter débordement lors de l'initialisation également lors ce que l'on a besoin de connaître le nombres d'éléments
     int nb_cfg_items;
