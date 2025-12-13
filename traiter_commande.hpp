@@ -38,7 +38,7 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
         return false;
     }
 
-    // ouvrir / fermer inventaire
+    // ouvrir/fermer inventaire
     if (cmd == 't') {
         jeu.inventaire_actif = !jeu.inventaire_actif;
 
@@ -47,12 +47,10 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
             jeu.inv_scroll_haut = 0;
         }
 
-        return false; // stop propagation
+        return false;
     }
 
-    // ===============================
     // INVENTAIRE ACTIF
-    // ===============================
     if (jeu.inventaire_actif) {
 
         int nb = jeu.nb_inventaire_items;
@@ -65,7 +63,7 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
             jeu.inv_selection_index++;
         }
 
-        // clamp sélection (centralisé)
+        // sélection
         if (jeu.inv_selection_index < 0)
             jeu.inv_selection_index = 0;
 
@@ -81,7 +79,7 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
             }
         }
 
-        return false; // l'inventaire consomme toutes les touches
+        return false;
     }
 
 
