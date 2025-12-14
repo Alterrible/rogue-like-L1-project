@@ -61,7 +61,7 @@ symbole @
 nom Aventurier
 description Explorateur_intrepide
 stats 5 5 5 5 5 5
-inventaire _
+inventaire 5 6
 index_stat_vision 4
 nom_stats vie agilite force vision feu glace
 

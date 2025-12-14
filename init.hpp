@@ -264,10 +264,9 @@ void initialiser_jeu(Jeu &jeu) {
         jeu.joueur.stat[i] = jeu.cfg_joueur.stats[i];
     }
 
-    jeu.joueur.nb_inventaire = jeu.cfg_joueur.inventaire_ids.taille;
 
     for (int i = 0; i < jeu.cfg_joueur.inventaire_ids.taille; i++) {
-        jeu.joueur.inventaire[i] = jeu.cfg_joueur.inventaire_ids.ids[i];
+        ramasser(jeu, jeu.cfg_joueur.inventaire_ids.ids[i]);
     }
 
     jeu.etat_termine = false;
