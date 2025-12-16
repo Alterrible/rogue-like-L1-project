@@ -51,11 +51,10 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             it.symbole = mots[1][0];
             it.nom = mots[2];
             it.description = mots[3];
+            it.conso = true;
 
-            if (stoi(mots[4]) != 0) {
-                it.conso == true;
-            } else {
-                it.conso == false;
+            if (stoi(mots[4]) == 0) {
+                it.conso = false;
             }
 
             for (int i = 0; i < NB_STATS; i++) {
@@ -214,14 +213,13 @@ bool charger_carte(const string& fichier, Jeu& jeu) {
 
                         Items &it = jeu.items[jeu.nb_items];
 
-                        it.id = jeu.cfg_items[i].id;
+                        jeu.nb_items++;
+                        it.id = jeu.nb_items;
                         it.x = static_cast<int>(x);
                         it.y = y;
                         it.idConfig = jeu.cfg_items[i].id;
                         it.actif = true;
                         it.utilise = false;
-
-                        jeu.nb_items++;
                     }
                 }
             }
@@ -264,9 +262,9 @@ void initialiser_jeu(Jeu &jeu) {
         jeu.joueur.stat[i] = jeu.cfg_joueur.stats[i];
     }
 
-
     for (int i = 0; i < jeu.cfg_joueur.inventaire_ids.taille; i++) {
-        ramasser(jeu, jeu.cfg_joueur.inventaire_ids.ids[i]);
+        int id_config = jeu.cfg_joueur.inventaire_ids.ids[i];
+        ramasser(jeu, id_config, true);
     }
 
     jeu.etat_termine = false;

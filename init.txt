@@ -1,9 +1,9 @@
 [ITEMS]
-| id | symbole | nom | description | stats_bonus[6]
+| id | symbole | nom | description | consommable | stats_bonus[6] |
 1 a Amulette_d_audace Amulette_courageuse 1 1 1 1 1 1 1
 2 b Bottes_legeres Bottes_agiles 1 0 3 0 0 0 0
-3 c Cle_de_bronze Une_cle_en_bronze 1 0 0 0 0 0 0
-4 d Cle_d_argent Une_cle_en_argent 1 0 0 0 0 0 0
+3 c Cle_de_bronze Une_cle_en_bronze 0 0 0 0 0 0 0
+4 d Cle_d_argent Une_cle_en_argent 0 0 0 0 0 0 0
 5 e Essence_de_guerison Breuvage_revigorant 1 5 0 0 0 0 0
 6 g Gants_de_precision Gants_habiles 1 0 2 1 0 0 0
 7 k Kriss_affute Dague_mortelle 1 0 0 4 0 0 0
@@ -61,7 +61,7 @@ symbole @
 nom Aventurier
 description Explorateur_intrepide
 stats 5 5 5 5 5 5
-inventaire 5 6
+inventaire 1 2
 index_stat_vision 4
 nom_stats vie agilite force vision feu glace
 

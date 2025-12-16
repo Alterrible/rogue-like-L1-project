@@ -128,7 +128,7 @@ void afficher_inventaire(Jeu &jeu) {
     ecrire_string(sous_titre, x_titre, 1);
 
     // affichage de l'en-tete
-    string header = "| nom                 | utilises | restants |";
+    string header = "  | nom               | utilises | restants |";
     ecrire_string(header, 1, y_liste);
     y_liste++;
 
@@ -163,7 +163,11 @@ void afficher_inventaire(Jeu &jeu) {
 
             selectionnee = (index_haut + i == jeu.inv_selection_index);
 
-            ligne = selectionnee ? ">" : " ";
+            if (selectionnee) {ligne = "> ";} else {ligne = "  ";};
+            ligne += "[";
+            ligne += cfg.symbole;
+            ligne += "]";
+            ligne += " ";
             ligne += nom;
             ligne += string(20 - (int)nom.size() - 1, ' ');
             ligne += "x" + to_string(inv.utilises);
@@ -201,16 +205,18 @@ void afficher_inventaire(Jeu &jeu) {
             string detail = "details : " + underscore_espace(cfg_sel.description).substr(0, largeur - 2); // on crop pour éviter des écrasements de l'autre côté
             ecrire_string(detail, 1, y_liste);
 
-            for (int s = 0; s < NB_STATS; s++) {
-                string ligne_stat;
+            if (cfg_sel.conso == true) {
+                for (int s = 0; s < NB_STATS; s++) {
+                    string ligne_stat;
 
-                ligne_stat = jeu.nom_stats[s] + " : ";
-                if (cfg_sel.bonus[s] >= 0) {
-                    ligne_stat += "+";
+                    ligne_stat = jeu.nom_stats[s] + " : ";
+                    if (cfg_sel.bonus[s] >= 0) {
+                        ligne_stat += "+";
+                    }
+                    ligne_stat += to_string(cfg_sel.bonus[s]);
+
+                    ecrire_string(ligne_stat, 1, y_liste + 2 + s);
                 }
-                ligne_stat += to_string(cfg_sel.bonus[s]);
-
-                ecrire_string(ligne_stat, 1, y_liste + 2 + s);
             }
         }
     }

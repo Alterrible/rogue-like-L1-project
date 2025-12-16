@@ -241,13 +241,14 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONFIG ITEMS
-    cout << "\\nCONFIG ITEMS" << endl;
+    cout << "CONFIG ITEMS" << endl;
     for (int i = 0; i < jeu.nb_cfg_items; i++) {
-        cout << "\\nItem " << i << endl;
+        cout << "Item " << i << endl;
         cout << "id : " << jeu.cfg_items[i].id << endl;
         cout << "symbole : " << jeu.cfg_items[i].symbole << endl;
         cout << "nom : " << jeu.cfg_items[i].nom << endl;
         cout << "description : " << jeu.cfg_items[i].description << endl;
+        cout << "conso : " << jeu.cfg_items[i].conso << endl;
 
         for (int j = 0; j < NB_STATS; j++)
             cout << "bonus[" << j << "] : " << jeu.cfg_items[i].bonus[j] << endl;
@@ -255,10 +256,10 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONFIG MONSTRES
-    cout << "\\nCONFIG MONSTRES" << endl;
+    cout << "CONFIG MONSTRES" << endl;
     for (int i = 0; i < jeu.nb_cfg_monstres; i++) {
         const auto& m = jeu.cfg_monstres[i];
-        cout << "\\nMonstre " << i << endl;
+        cout << "Monstre " << i << endl;
 
         cout << "id : " << m.id << endl;
         cout << "symbole : " << m.symbole << endl;
@@ -275,11 +276,11 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONFIG PORTES
-    cout << "\\nCONFIG PORTES" << endl;
+    cout << "CONFIG PORTES" << endl;
     for (int i = 0; i < jeu.nb_cfg_portes; i++) {
         const auto& p = jeu.cfg_portes[i];
 
-        cout << "\\nPorte " << i << endl;
+        cout << "Porte " << i << endl;
         cout << "id : " << p.id << endl;
         cout << "symbole : " << p.symbole << endl;
         cout << "id_contrainte : " << p.id_contrainte << endl;
@@ -287,22 +288,22 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CONDITIONS
-    cout << "\\nCONDITIONS DE JEU" << endl;
+    cout << "CONDITIONS DE JEU" << endl;
     cout << "nbContraintes : " << jeu.cfgConditions.nbContraintes << endl;
 
-    cout << "\\nContraintes" << endl;
+    cout << "Contraintes" << endl;
     for (int i = 0; i < jeu.cfgConditions.nbContraintes; i++) {
-        cout << "\\nContrainte " << i << endl;
+        cout << "Contrainte " << i << endl;
         afficher_contrainte(jeu.cfgConditions.contraintes[i]);
         cout << "---" << endl;
     }
 
-    afficher_liste_id_contraintes(jeu.cfgConditions.victoire, "\\nConditions victoire");
-    afficher_liste_id_contraintes(jeu.cfgConditions.defaite, "\\nConditions défaite");
+    afficher_liste_id_contraintes(jeu.cfgConditions.victoire, "Conditions victoire");
+    afficher_liste_id_contraintes(jeu.cfgConditions.defaite, "Conditions défaite");
 
  
     // ITEMS SUR LA CARTE
-    cout << "\\nITEMS DANS LA CARTE" << endl;
+    cout << "ITEMS DANS LA CARTE" << endl;
     cout << "nb_items : " << jeu.nb_items << endl;
 
     for (int i = 0; i < jeu.nb_items; i++) {
@@ -314,13 +315,13 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // MONSTRES SUR LA CARTE
-    cout << "\\nMONSTRES DANS LA CARTE" << endl;
+    cout << "MONSTRES DANS LA CARTE" << endl;
     cout << "nb_monstres : " << jeu.nb_monstres << endl;
 
     for (int i = 0; i < jeu.nb_monstres; i++) {
         const auto& mo = jeu.monstres[i];
 
-        cout << "\\nMonstre " << i
+        cout << "Monstre " << i
              << " : idConfig=" << mo.idConfig
              << " x=" << mo.x << " y=" << mo.y
              << " actif=" << mo.actif << endl;
@@ -331,18 +332,18 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
  
     // CARTE
-    cout << "\\nCARTE" << endl;
+    cout << "CARTE" << endl;
     cout << "largeur : " << jeu.carte.largeur << endl;
     cout << "hauteur : " << jeu.carte.hauteur << endl;
 
-    cout << "\\nCases :" << endl;
+    cout << "Cases :" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++)
             cout << jeu.carte.cases[y][x];
         cout << endl;
     }
 
-    cout << "\\nVisibilité :" << endl;
+    cout << "Visibilité :" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
         for (int x = 0; x < jeu.carte.largeur; x++)
             cout << (jeu.carte.visible[y][x] ? "1" : "0");
@@ -352,7 +353,7 @@ void afficher_jeu_debug(const Jeu& jeu) {
  
     // JOUEUR DYNAMIQUE
 
-    cout << "\\nJOUEUR (DYNAMIQUE)" << endl;
+    cout << "JOUEUR (DYNAMIQUE)" << endl;
     cout << "x : " << jeu.joueur.x << endl;
     cout << "y : " << jeu.joueur.y << endl;
     cout << "nb_inventaire : " << jeu.joueur.nb_inventaire << endl;
@@ -367,11 +368,11 @@ void afficher_jeu_debug(const Jeu& jeu) {
  
     // ETAT DU JEU
 
-    cout << "\\nETAT DU JEU" << endl;
+    cout << "ETAT DU JEU" << endl;
     cout << "etat_termine : " << jeu.etat_termine << endl;
     cout << "victoire : " << jeu.victoire << endl;
 
-    cout << "\\n[FIN DEBUG]" << endl;
+    cout << "[FIN DEBUG]" << endl;
 }
 
 #endif

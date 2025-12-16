@@ -91,28 +91,7 @@ bool a_items(Jeu& jeu, int id_item_requis) {
     return false;
 }
 
-// ramasser un item
-#include "inv.hpp"
-void ramasser(Jeu& jeu, int id_item) {
-    Items &it = jeu.items[id_item];
-    Joueur &j = jeu.joueur;
-
-    // ajouter à l’inventaire
-    if (j.nb_inventaire < TAILLE_MAX) {
-        j.inventaire[j.nb_inventaire++] = it.idConfig;
-        maj_inv(jeu, it.idConfig);
-    }
-
-    it.actif = false;
-}
-
-// consomme un item et applique les bonus
-void utiliser_item(Jeu& jeu, int id_config_item) {
-    // recuperation de la configuration de l'item
-    Config_item cfg;
-    bool config_trouvee = trouver_config_item_par_id(jeu, id_config_item, cfg);
-
-    // recherche de l'item dans l'inventaire
+int item_inventaire(Jeu& jeu, int id_config_item, bool config_trouvee) {
     int idx = -1;
     if (config_trouvee) {
         for (int i = 0; i < jeu.nb_inventaire_items; i++) {
@@ -121,6 +100,16 @@ void utiliser_item(Jeu& jeu, int id_config_item) {
             }
         }
     }
+    return idx;
+}
+
+// consomme un item et applique les bonus
+void utiliser_item(Jeu& jeu, int id_config_item) {
+    Config_item cfg;
+    bool config_trouvee = trouver_config_item_par_id(jeu, id_config_item, cfg);
+
+    // recherche de l'item dans l'inventaire
+    int idx = item_inventaire(jeu, id_config_item, config_trouvee);
 
     // verification de la presence de l'item
     bool item_trouve = (idx != -1);
@@ -145,6 +134,46 @@ void utiliser_item(Jeu& jeu, int id_config_item) {
         inv.restants--;
     }
 }
+
+// ramasser un item
+#include "inv.hpp"
+void ramasser(Jeu& jeu, int id_item, bool id_est_config = false) {
+    Joueur& j = jeu.joueur;
+
+    int idConfig;
+    bool desactiver_item = false;
+
+    if (id_est_config) {
+        idConfig = id_item;
+    } else {
+        Items& it = jeu.items[id_item];
+        idConfig = it.idConfig;
+        desactiver_item = true;
+    }
+
+    Config_item cfg;
+    bool config_trouvee = trouver_config_item_par_id(jeu, idConfig, cfg);
+
+    // ajout à l’inventaire
+    if (j.nb_inventaire < TAILLE_MAX) {
+        j.inventaire[j.nb_inventaire++] = idConfig;
+        maj_inv(jeu, idConfig);
+    }
+
+    if (config_trouvee && !cfg.conso) {
+        int idx = item_inventaire(jeu, idConfig, config_trouvee);
+        if (idx >= 0) {
+            Inventaire_item& inv = jeu.inventaire_items[idx];
+            inv.utilises++;
+            inv.restants--;
+        }
+    }
+
+    if (desactiver_item) {
+        jeu.items[id_item].actif = false;
+    }
+}
+
 
 // ---- STATS ----
 
