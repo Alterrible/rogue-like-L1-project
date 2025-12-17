@@ -227,9 +227,12 @@ void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, 
 
     if (trouver_config_monstre_par_id(jeu, m.idConfig, cfg)) {
         for (int s = 0; s < NB_STATS; ++s) {
-            int delta = cfg.stats_afflige[s];
+            int delta = cfg.stats_base[s];
             if (delta > 0) {
-                joueur.stat[s] = max(0, joueur.stat[s] - delta);
+                joueur.stat[s] = joueur.stat[s] - delta;
+                if (joueur.stat[s] < 0) {
+                    joueur.stat[s] = 0;
+                }
             }
         }
     }
@@ -237,22 +240,12 @@ void appliquer_contraintes_monstre_sur_joueur(const Jeu& jeu, const Monstre& m, 
 
 // attaque du joueur vers le monstre
 void attaque(Jeu& jeu, int id_monstre) {
-    Monstre &m = jeu.monstres[id_monstre];
 
-    for (int i = 0; i < TAILLE_MONSTRES; i++) {
-        Config_monstre &cfg = jeu.cfg_monstres[i];
-
-        if (cfg.id == m.idConfig) {
-            for (int s = 0; s < NB_STATS; s++) {
-                if (cfg.stats_prit[s]) {
-                    m.stats[s] -= jeu.joueur.stat[s];
-                    if (m.stats[s] <= 0) m.actif = false;
-                }
-            }
-        }
-    }
+    // entree en combat
+    jeu.combat.actif = true;
+    jeu.combat.id_monstre = id_monstre;
+    jeu.combat.tour_joueur = true;
 }
-
 
 
 // ---- CONTRAINTES & PORTES ----

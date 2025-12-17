@@ -72,18 +72,11 @@ bool charger_configuration(const string& fichier, Jeu& jeu) {
             m.symbole = mots[1][0];
             m.nom = mots[2];
             m.description = mots[3];
-            m.typeIA = stoi(mots[22]);
+            m.id_contrainte = stoi(mots[10]);
+            m.typeIA = stoi(mots[11]);
 
             for (int i = 0; i < NB_STATS; i++) {
                 m.stats_base[i] = stoi(mots[4 + i]);
-            }
-
-            for (int i = 0; i < NB_STATS; i++) {
-                m.stats_afflige[i] = stoi(mots[10 + i]);
-            }
-
-            for (int i = 0; i < NB_STATS; i++) {
-                m.stats_prit[i] = (stoi(mots[16 + i]) > 0);
             }
 
             jeu.nb_cfg_monstres++;
@@ -271,6 +264,10 @@ void initialiser_jeu(Jeu &jeu) {
     jeu.victoire = false;
 
     mettre_a_jour_visibilite(jeu);
+
+    jeu.combat.actif = false;
+    jeu.combat.id_monstre = -1;
+    jeu.combat.tour_joueur = true;
 
     PaireCouleur couleurs[1];
     couleurs[0].texte = COLOR_WHITE;

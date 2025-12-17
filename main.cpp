@@ -7,7 +7,7 @@ using namespace std;
 #include "maj.hpp"
 #include "traiter_commande.hpp"
 
-void mettre_a_jour_jeu(Jeu &jeu){
+void mettre_a_jour_jeu(Jeu &jeu) {
     mettre_a_jour_monstres(jeu);
     mettre_a_jour_visibilite(jeu);
     mettre_a_jour_carte(jeu);

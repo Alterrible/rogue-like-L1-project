@@ -270,8 +270,6 @@ void afficher_jeu_debug(const Jeu& jeu) {
         for (int j = 0; j < NB_STATS; j++)
             cout << "stats_base[" << j << "] : " << m.stats_base[j] << endl;
 
-        for (int j = 0; j < NB_STATS; j++)
-            cout << "stats_afflige[" << j << "] : " << m.stats_afflige[j] << endl;
     }
 
  

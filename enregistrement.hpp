@@ -27,9 +27,11 @@ struct Liste_Id_Equipements {
 // --- Structure Contrainte ---
 struct Contrainte {
     int id;
+    int tout_valide; // 1 tout nécessaire, 2 une section nécessaire, 3 une valeur nécessaire
     int items_possede[TAILLE_MAX];
     int nb_items_possede;
     int stats_min[NB_STATS];
+    bool stat_effective[NB_STATS]; // n'est utile qu'exclusivement pour les "combats"
     bool a_symbole;
     char symbole_atteint;
 };
@@ -51,8 +53,7 @@ struct Config_monstre {
     string description;
     int typeIA;
     int stats_base[NB_STATS];
-    int stats_afflige[NB_STATS];  // représente les dégâts qui vont être affligé (nombre positif passé en négatif au traitement)
-    bool stats_prit[NB_STATS];  // représente les stats qui joue sur lui
+    int id_contrainte;
 };
 
 struct Config_porte {
@@ -118,6 +119,12 @@ struct Carte {
     char ex_visible[TAILLE_MAP_Y][TAILLE_MAP_X];
 };
 
+struct Combat {
+    bool actif;
+    int id_monstre;
+    bool tour_joueur;
+};
+
 // --- Structure principale du jeu ---
 struct Jeu {
     // configuration
@@ -143,6 +150,8 @@ struct Jeu {
     // état contrainte fain de jeu
     bool etat_termine;
     bool victoire;
+
+    Combat combat;
 
     // état modal
     string modal_txt;

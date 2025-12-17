@@ -3,6 +3,7 @@
 
 #include "enregistrement.hpp"
 #include "utils.hpp"
+#include "combat.hpp"
 #include <iostream>
 using namespace std;
 
@@ -14,7 +15,7 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
     bool commande_deplacement = false;
     bool commande_interaction = false;
 
-    // détection entrée
+    // detection entree
     if (cmd == 'z') { nouveauY--; commande_deplacement = true; }
     else if (cmd == 's') { nouveauY++; commande_deplacement = true; }
     else if (cmd == 'q') { nouveauX--; commande_deplacement = true; }
@@ -25,7 +26,7 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
     else if (cmd == 'j') { nouveauX--; commande_interaction = true; }
     else if (cmd == 'l') { nouveauX++; commande_interaction = true; }
 
-    // fermeture du modal et empêche de jouer tant qu'il est ouvert
+    // fermeture modal et blocage
     if (jeu.modal_active || bvn) {
         if (cmd == ' ') {
             if (bvn) {
@@ -35,6 +36,63 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
                 jeu.modal_txt = "";
             }
         }
+        return false;
+    }
+
+    // combat actif
+    if (jeu.combat.actif) {
+
+        afficher_combat(jeu);
+
+        if (jeu.combat.tour_joueur) {
+
+            // choix stat ciblee via touches '0'..'5'
+            if (cmd >= '0' && cmd < ('0' + NB_STATS)) {
+                tour_joueur_combat(jeu, cmd - '0');
+            }
+
+            // acces inventaire en combat
+            if (cmd == 't') {
+                jeu.inventaire_actif = !jeu.inventaire_actif;
+
+                if (jeu.inventaire_actif) {
+                    jeu.inv_selection_index = 0;
+                    jeu.inv_scroll_haut = 0;
+                }
+            }
+
+            // inventaire actif en combat
+            if (jeu.inventaire_actif) {
+
+                int nb = jeu.nb_inventaire_items;
+
+                if (cmd == 'z') {
+                    jeu.inv_selection_index--;
+                }
+                else if (cmd == 's') {
+                    jeu.inv_selection_index++;
+                }
+
+                if (jeu.inv_selection_index < 0)
+                    jeu.inv_selection_index = 0;
+
+                if (jeu.inv_selection_index >= nb && nb > 0)
+                    jeu.inv_selection_index = nb - 1;
+
+                if (cmd == ' ' && nb > 0) {
+                    Inventaire_item& inv = jeu.inventaire_items[jeu.inv_selection_index];
+
+                    if (inv.restants > 0) {
+                        utiliser_item(jeu, inv.id_config);
+                    }
+                }
+            }
+        }
+        else {
+            tour_monstre_combat(jeu);
+        }
+
+        verifier_fin_combat(jeu);
         return false;
     }
 
@@ -50,7 +108,7 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
         return false;
     }
 
-    // INVENTAIRE ACTIF
+    // inventaire actif
     if (jeu.inventaire_actif) {
 
         int nb = jeu.nb_inventaire_items;
@@ -63,14 +121,14 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
             jeu.inv_selection_index++;
         }
 
-        // sélection
+        // selection
         if (jeu.inv_selection_index < 0)
             jeu.inv_selection_index = 0;
 
         if (jeu.inv_selection_index >= nb && nb > 0)
             jeu.inv_selection_index = nb - 1;
 
-        // utiliser l'item sélectionné
+        // utiliser item
         if (cmd == ' ' && nb > 0) {
             Inventaire_item& inv = jeu.inventaire_items[jeu.inv_selection_index];
 
@@ -82,11 +140,9 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
         return false;
     }
 
-
-    // déplacement du joueur
+    // deplacement joueur
     if (commande_deplacement) {
 
-        // vérifie si la case est dans la carte et valide
         bool case_valide =
             nouveauX >= 0 && nouveauX < jeu.carte.largeur &&
             nouveauY >= 0 && nouveauY < jeu.carte.hauteur;
@@ -117,9 +173,16 @@ bool traiter_commande(char cmd, Jeu &jeu, bool& bvn) {
             int id_monstre = trouver_monstre(jeu, nouveauX, nouveauY);
             int id_item = trouver_item(jeu, nouveauX, nouveauY);
 
-            // → monstre ? || → item ?
-            if (id_monstre != -1) attaque(jeu, id_monstre);
-            else if (id_item != -1) ramasser(jeu, id_item);
+            // monstre ou item
+            if (id_monstre != -1) {
+                // entree en combat
+                jeu.combat.actif = true;
+                jeu.combat.id_monstre = id_monstre;
+                jeu.combat.tour_joueur = true;
+            }
+            else if (id_item != -1) {
+                ramasser(jeu, id_item);
+            }
         }
     }
 
