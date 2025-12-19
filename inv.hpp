@@ -169,9 +169,12 @@ void afficher_inventaire(Jeu &jeu) {
             ligne += "]";
             ligne += " ";
             ligne += nom;
-            ligne += string(20 - (int)nom.size() - 1, ' ');
+            const size_t pad_nom = (nom.size() < 19u) ? (19u - nom.size()) : 0u;
+            ligne += string(pad_nom, ' ');
             ligne += "x" + to_string(inv.utilises);
-            ligne += string(10 - (int)to_string(inv.utilises).size(), ' ');
+            const size_t n = to_string(inv.utilises).size();
+            const size_t pad_utilises = (n < 10u) ? (10u - n) : 0u;
+            ligne += string(pad_utilises, ' ');
             ligne += "x" + to_string(inv.restants);
 
             ecrire_string(ligne, 1, y_liste + i);
@@ -202,7 +205,8 @@ void afficher_inventaire(Jeu &jeu) {
 
         // affichage description et stats
         if (cfg_trouvee) {
-            string detail = "details : " + underscore_espace(cfg_sel.description).substr(0, largeur - 2); // on crop pour éviter des écrasements de l'autre côté
+            const size_t maxlen = (largeur > 2) ? static_cast<size_t>(largeur - 2) : 0u;
+            string detail = "details : " + underscore_espace(cfg_sel.description).substr(0, maxlen); // on crop pour éviter des écrasements de l'autre côté
             ecrire_string(detail, 1, y_liste);
 
             if (cfg_sel.conso == true) {

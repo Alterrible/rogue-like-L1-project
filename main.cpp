@@ -67,6 +67,3 @@ int main() {
 
     return 0;
 }
-
-// g++ main.cpp -o main.exe -lncurses
-// g++ main.cpp -o main.exe -lncurses -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wnull-dereference -Wundef -Winline -O2 -g -fsanitize=address,undefined -fstack-protector-strong 

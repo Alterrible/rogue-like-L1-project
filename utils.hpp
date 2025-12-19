@@ -9,7 +9,7 @@
 // ---- FONCTIONS UTILES ----
 
 // permet d'avoir un string avec des espaces
-inline string underscore_espace(const string& input) {
+static string underscore_espace(const string &input) {
     string result = input;
     for (char& c : result) {
         if (c == '_') {
@@ -18,7 +18,6 @@ inline string underscore_espace(const string& input) {
     }
     return result;
 }
-
 
 // découpe une ligne en mots
 int decouper(const string& ligne, string mots[], int max_mots) {
