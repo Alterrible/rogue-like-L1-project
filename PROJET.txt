@@ -1,0 +1,85 @@
+---- DÉPLACEMENT ET INTERACTIONS ----
+Améliorations :
+- Introduction d’un système de coûts d’action ou d’initiative.
+
+---- INVENTAIRE ----
+Limites :
+- Taille maximale fixe.
+- La logique générale est assez chaotique car on a l'inventaire du spawn du joueur, celui qui connaît tout les items par leur id, et celui qui permet la gestion avec l'affichage qui traite avec des idConfig.
+
+Améliorations :
+- Gestion indépendante de chaque objets.
+- Refaire l'interface graphique pour la rendre compatible avec la logique d'item indépendant et la rendre plus jolie l'interface.
+- Notion d’équipement avec des slots ou éléments qui permettrais de les porter qui les rendent actif/inactif.
+- Poids ou rareté des objets.
+- Système de crafting ou de combinaison.
+- Une suppression manuelle.
+
+Modification :
+- Fix, inventaire par idConfig donnée à l'apparition.
+- Ajout d'une interface graphique.
+- Implémentation d'une gestion d'utilisation pour les items qui le permettent.
+
+---- IA MONSTRES ----
+Limites :
+- On retrouve deux phases de fonctionnement de l'ia ce qui correspond à nos deux type d'ia en revanche cela ne correspond pas réellement par exemple à hostile/passive.
+- Pas de fuite ou d’attaque à distance.
+- Leurs logiques passe à travers les murs et vous pouvoir attendre par exemple derrière une porte.
+
+Améliorations :
+- Plusieurs logiques d'ia distinctes.
+- Apporter plus de profondeurs aux combats avec des logiques de fuite ou de comportement suivant les monstres tué à proximité.
+- Une plus grande diversité au niveau des distances d'engagement.
+- Les assigner à des zone de base et les empêcher de "regarder" à travers les murs et portes.
+- Qu'ils puissent constituer une contrainte de fin tel que tout les monstres tué ou bien tel monstre tué (type boss).
+- Qu'ils puissent lâcher des items.
+- Que certains monstres soit tel des pnj auquel ont pourrais interagir pour apporter du narratif au jeu.
+
+
+---- COMBAT ---- 
+Limites :
+- Lorsque l'on se déplace sur le côté et qu'un monstre nous suit cela va lui compter comme une action donc le combat n'avance pas.
+- logiques très basique avec une différence de stats à chaque interactions.
+- très occulte car on ne sait ni combien à de stats le monstre affronté ni combien il en met, on ne connaît pas non plus son nom et sa description.
+
+Améliorations :
+- Interface graphique où l'on peut exploiter le nom et la description du monstre avec lequel on se bat.
+- Passage sur une mécanique intégrant la logique de contrainte.
+- Intégration d'une logique de dépendance entre les stats, exemple : d'abord tomber le shield à 0 avant d'attaquer sur les pv.
+- Possibilité d'esquiver et/ou de rendre le coup.
+- possibilité de fuite.
+- Des attaques spéciales.
+
+
+---- VISION ----
+Limites :
+- Comme on travail avec des rayon que l'on envoie, quand l'on se situ dans un couloir cela rend les murs visible dans la zone active avec des écarts.
+
+Améliorations :
+- Changer la méthode de calcul pour ne plus avoir un cercle autour du joueur.
+
+
+---- AFFICHAGE CARTE / JEU ----
+Limites :
+- Pas de couleur pour chaque entité et pour différencié ce qui est visible actif de qui ne l'est pas
+    → en partie un choix pour ne pas faire apparaître les problèmes avec les murs cité plus haut et purement subjectivement le B/W est esthétique.
+Améliorations :
+- Mettre des couleurs de nuances de gris pour la vision, une fois que la logique sera mise à jour.
+
+
+---- INITIALISATION ----
+Limites :
+- La taille fix de tout.
+- Le parsing est fragile.
+
+Améliorations :
+- Mettre en place un outil pour la personne qui créer le fichier avec une validation des données
+- Cet outil devrait aussi vérifier qu'il n'est pas par exemple nécessaire d'ouvrir une salle avec une clé qui se trouve dans la salle.
+
+
+---- CONTRAINTE ----
+Limites :
+- Limité aux champs prédéfinie.
+
+Améliorations :
+- En lien avec le système de combat il faudrait plusieurs modes de lectures des contraintes ce qui permettrais par exemple de gérer les dépendance de stats.
