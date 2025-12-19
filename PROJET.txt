@@ -1,8 +1,12 @@
 ---- DÉPLACEMENT ET INTERACTIONS ----
+Étudiants : Alexandre OLIVON & Mohamad MOHAMAD BAKIR
+
 Améliorations :
 - Introduction d’un système de coûts d’action ou d’initiative.
 
 ---- INVENTAIRE ----
+Étudiants : Alexandre OLIVON
+
 Limites :
 - Taille maximale fixe.
 - La logique générale est assez chaotique, car on a l'inventaire du spawn du joueur, celui qui connaît tous les items par leur ID, et celui qui permet la gestion avec l'affichage, qui traite avec des idConfig.
@@ -21,6 +25,8 @@ Modification :
 - Implémentation d'une gestion d'utilisation pour les items qui le permettent.
 
 ---- IA MONSTRES ----
+Étudiants : Alexandre OLIVON
+
 Limites :
 - On retrouve deux phases de fonctionnement de l'IA, ce qui correspond à nos deux types d'IA ; en revanche, cela ne correspond pas réellement à des comportements hostile/passif.
 - Pas de fuite ni d’attaque à distance.
@@ -35,7 +41,9 @@ Améliorations :
 - Qu'ils puissent lâcher des items.
 - Que certains monstres soient tels des PNJ auxquels on pourrait interagir pour apporter du narratif au jeu.
 
----- COMBAT ---- 
+---- COMBAT ----
+Étudiants : Alexandre OLIVON
+
 Limites :
 - Lorsque l'on se déplace sur le côté et qu'un monstre nous suit, cela lui est compté comme une action, donc le combat n'avance pas.
 - Logiques très basiques avec une différence de statistiques à chaque interaction.
@@ -50,6 +58,8 @@ Améliorations :
 - Attaques spéciales.
 
 ---- VISION ----
+Étudiants : Alexandre OLIVON & Hilel MOKEDDEM
+
 Limites :
 - Comme on travaille avec des rayons que l'on envoie, lorsque l'on se situe dans un couloir, cela rend les murs visibles dans la zone active avec des écarts.
 
@@ -57,14 +67,19 @@ Améliorations :
 - Changer la méthode de calcul pour ne plus avoir un cercle autour du joueur.
 
 ---- AFFICHAGE CARTE / JEU ----
+Étudiants : Alexandre OLIVON & Naël SOUFFOU
+
 Limites :
 - Pas de couleur pour chaque entité et pour différencier ce qui est visible/actif de ce qui ne l'est pas
     → En partie un choix pour ne pas faire apparaître les problèmes avec les murs cités plus haut, et parce que, subjectivement, le noir et blanc est esthétique.
+- Un bug peut survenir selon le terminal, où la dernière statistique se fait "écraser par la concaténation" dans la hotbar et l’inventaire.
 
 Améliorations :
 - Mettre des nuances de gris pour la vision, une fois que la logique sera mise à jour.
 
 ---- INITIALISATION ----
+Étudiants : Alexandre OLIVON
+
 Limites :
 - La taille fixe de tout.
 - Le parsing est fragile.
@@ -77,6 +92,8 @@ Améliorations :
     → Il faudrait avoir des warnings dans l’outil de vérification de la configuration si ce cas existe.
 
 ---- CONTRAINTE ----
+Étudiants : Alexandre OLIVON
+
 Limites :
 - Limité aux champs prédéfinis.
 
