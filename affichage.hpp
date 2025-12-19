@@ -234,8 +234,9 @@ void afficher_jeu_debug(const Jeu& jeu) {
     cout << "nom : " << jeu.cfg_joueur.nom << endl;
     cout << "description : " << jeu.cfg_joueur.description << endl;
 
-    for (int i = 0; i < NB_STATS; i++)
+    for (int i = 0; i < NB_STATS; i++) {
         cout << "stats[" << i << "] : " << jeu.cfg_joueur.stats[i] << endl;
+    }
 
     afficher_liste_equipements(jeu.cfg_joueur.inventaire_ids, "Inventaire joueur");
 
@@ -250,8 +251,9 @@ void afficher_jeu_debug(const Jeu& jeu) {
         cout << "description : " << jeu.cfg_items[i].description << endl;
         cout << "conso : " << jeu.cfg_items[i].conso << endl;
 
-        for (int j = 0; j < NB_STATS; j++)
+        for (int j = 0; j < NB_STATS; j++) {
             cout << "bonus[" << j << "] : " << jeu.cfg_items[i].bonus[j] << endl;
+        }
     }
 
  
@@ -267,11 +269,13 @@ void afficher_jeu_debug(const Jeu& jeu) {
         cout << "description : " << m.description << endl;
         cout << "type IA : " << m.typeIA << endl;
 
-        for (int j = 0; j < NB_STATS; j++)
+        for (int j = 0; j < NB_STATS; j++) {
             cout << "stats_base[" << j << "] : " << m.stats_base[j] << endl;
+        }
 
-        for (int j = 0; j < NB_STATS; j++)
+        for (int j = 0; j < NB_STATS; j++) {
             cout << "stats_afflige[" << j << "] : " << m.stats_afflige[j] << endl;
+        }
     }
 
  
@@ -308,9 +312,7 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
     for (int i = 0; i < jeu.nb_items; i++) {
         const auto& it = jeu.items[i];
-        cout << "Item " << i << " : id=" << it.id
-             << " x=" << it.x << " y=" << it.y
-             << " idConfig=" << it.idConfig << endl;
+        cout << "Item " << i << " : id=" << it.id << " x=" << it.x << " y=" << it.y << " idConfig=" << it.idConfig << endl;
     }
 
  
@@ -345,8 +347,9 @@ void afficher_jeu_debug(const Jeu& jeu) {
 
     cout << "Visibilité :" << endl;
     for (int y = 0; y < jeu.carte.hauteur; y++) {
-        for (int x = 0; x < jeu.carte.largeur; x++)
+        for (int x = 0; x < jeu.carte.largeur; x++) {
             cout << (jeu.carte.visible[y][x] ? "1" : "0");
+        }
         cout << endl;
     }
 
